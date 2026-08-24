@@ -1,7 +1,7 @@
 import { pgTable, serial, varchar, date, pgEnum, integer } from 'drizzle-orm/pg-core';
 
 export const sessionEnum = pgEnum('session', ['pagi', 'siang', 'malam']);
-export const statusEnum = pgEnum('status', ['hadir', 'alpa', 'izin']);
+export const statusEnum = pgEnum('status', ['hadir', 'alpa', 'izin', 'sakit']);
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),

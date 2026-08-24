@@ -4,42 +4,81 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sistem Presensi Halaqah Al-Atsar</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
   <link href="/src/style.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans min-h-screen">
   
   <div id="app" class="max-w-4xl mx-auto p-4 md:p-6">
     <!-- Header -->
-    <header class="flex justify-between items-center mb-8 bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-      <div>
-        <h1 class="text-2xl font-bold text-green-700">Presensi Halaqah</h1>
-        <p class="text-sm text-gray-500">Al-Atsar</p>
+    <header class="flex justify-between items-center mb-8 bg-[#16673B] p-4 md:p-6 rounded-lg shadow-md">
+      <div class="flex items-center gap-3">
+        <div class="bg-white p-1 rounded-full w-14 h-14 flex items-center justify-center shrink-0">
+          <img src="/logo.png" alt="Logo Al-Atsar" class="w-12 h-12 object-contain" />
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-bold text-white leading-tight">Sistem Presensi Halaqah</h1>
+          <p class="text-sm md:text-base text-green-100">Al-Atsar</p>
+        </div>
       </div>
       <div id="auth-section">
-        <button id="btn-login" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium transition">Login Musyrif</button>
-        <button id="btn-logout" class="hidden text-red-600 hover:bg-red-50 px-4 py-2 rounded font-medium transition">Logout</button>
+        <button id="btn-login" class="bg-white text-[#16673B] hover:bg-gray-100 px-4 py-2 rounded font-medium transition text-sm shadow">Login Musyrif</button>
+        <button id="btn-logout" class="hidden text-white border border-white hover:bg-red-600 px-4 py-2 rounded font-medium transition text-sm">Logout</button>
       </div>
     </header>
+
+    <!-- Tabs -->
+    <div class="flex border-b border-gray-200 mb-6">
+      <button id="tab-rekap" class="py-2 px-4 text-sm font-medium border-b-2 border-[#16673B] text-[#16673B]">Rekap Presensi</button>
+      <button id="tab-musyrif" class="py-2 px-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">Panel Musyrif (Input)</button>
+    </div>
 
     <!-- Main Content -->
     <main class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
       
-      <!-- Controls -->
+      <!-- Panel Musyrif: Add Student Form (Hidden by default) -->
+      <div id="add-student-section" class="hidden mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h2 class="text-lg font-semibold mb-4 text-gray-800">Tambah Data Siswa Baru</h2>
+        <form id="add-student-form" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">NIS</label>
+            <input type="text" id="new-student-id" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]" placeholder="Misal: 1005" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Siswa</label>
+            <input type="text" id="new-student-name" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]" placeholder="Nama Lengkap" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+            <select id="new-student-class" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]">
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>
+          </div>
+          <div class="md:col-span-4 flex justify-end mt-2">
+            <button type="submit" id="btn-add-student" class="bg-[#FF8F00] hover:bg-[#d67800] text-white px-4 py-2 rounded font-medium transition">Tambah Siswa</button>
+          </div>
+        </form>
+        <div id="add-student-message" class="hidden mt-2 text-sm"></div>
+      </div>
+
+      <!-- Controls for Date & Session -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-          <input type="date" id="input-date" class="w-full border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500" />
+          <input type="date" id="input-date" class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]" />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Sesi</label>
-          <select id="input-session" class="w-full border border-gray-300 rounded p-2 focus:ring-green-500 focus:border-green-500">
+          <select id="input-session" class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]">
             <option value="pagi">Pagi</option>
             <option value="siang">Siang</option>
             <option value="malam">Malam</option>
           </select>
         </div>
         <div class="flex items-end">
-          <button id="btn-load" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition">
+          <button id="btn-load" class="w-full bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded font-medium transition">
             Tampilkan Data
           </button>
         </div>
@@ -56,10 +95,11 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Siswa</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Presensi</th>
+                <th scope="col" id="col-aksi" class="hidden px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
               </tr>
             </thead>
             <tbody id="table-body" class="bg-white divide-y divide-gray-200">
@@ -67,11 +107,6 @@
             </tbody>
           </table>
           
-          <div class="mt-6 flex justify-end">
-            <button type="submit" id="btn-save" class="hidden bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-medium transition shadow-sm">
-              Simpan Presensi
-            </button>
-          </div>
         </form>
       </div>
 
@@ -94,7 +129,7 @@
         </div>
         <div class="flex justify-end gap-2">
           <button type="button" id="btn-close-login" class="text-gray-600 hover:bg-gray-100 px-4 py-2 rounded transition">Batal</button>
-          <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition">Login</button>
+          <button type="submit" class="bg-[#16673B] hover:bg-[#0a4827] text-white px-4 py-2 rounded transition">Login</button>
         </div>
       </form>
     </div>

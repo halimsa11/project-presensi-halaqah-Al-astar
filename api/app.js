@@ -57,6 +57,60 @@ app.get('/students', async (c) => {
   return c.json(allStudents);
 });
 
+// Students: Create
+app.post('/students', authMiddleware, async (c) => {
+  const { id, name, class: studentClass } = await c.req.json();
+  
+  if (!id || !name || !studentClass) {
+    return c.json({ error: 'Missing required fields' }, 400);
+  }
+  
+  try {
+    await db.insert(students).values({
+      id,
+      name,
+      class: parseInt(studentClass)
+    });
+    return c.json({ message: 'Student added successfully' }, 201);
+  } catch (error) {
+    return c.json({ error: 'Failed to add student. ID might already exist.' }, 500);
+  }
+});
+
+// Students: Update
+app.put('/students/:id', authMiddleware, async (c) => {
+  const id = c.req.param('id');
+  const { name, class: studentClass } = await c.req.json();
+  
+  if (!name || !studentClass) {
+    return c.json({ error: 'Missing required fields' }, 400);
+  }
+  
+  try {
+    await db.update(students)
+      .set({ name, class: parseInt(studentClass) })
+      .where(eq(students.id, id));
+    return c.json({ message: 'Student updated successfully' });
+  } catch (error) {
+    return c.json({ error: 'Failed to update student' }, 500);
+  }
+});
+
+// Students: Delete
+app.delete('/students/:id', authMiddleware, async (c) => {
+  const id = c.req.param('id');
+  
+  try {
+    // Delete attendance records first (foreign key)
+    await db.delete(attendances).where(eq(attendances.studentId, id));
+    // Delete student
+    await db.delete(students).where(eq(students.id, id));
+    return c.json({ message: 'Student deleted successfully' });
+  } catch (error) {
+    return c.json({ error: 'Failed to delete student' }, 500);
+  }
+});
+
 // Attendance: Get by date and session
 app.get('/attendance', async (c) => {
   const date = c.req.query('date');
