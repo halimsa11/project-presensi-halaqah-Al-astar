@@ -1,0 +1,33 @@
+{
+  "name": "tabel-presensi-halaqah-al-atsar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "drizzle.config.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "server": "node server.js",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.13.3",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.5.4",
+    "drizzle-kit": "^0.31.10",
+    "postcss": "^8.5.26",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.12",
+    "vite": "^8.2.2"
+  }
+}
