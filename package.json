@@ -23,6 +23,7 @@
     "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "autoprefixer": "^10.5.4",
     "drizzle-kit": "^0.31.10",
     "postcss": "^8.5.26",
