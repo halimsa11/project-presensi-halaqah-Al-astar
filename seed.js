@@ -11,6 +11,14 @@ async function seed() {
     username: 'admin',
     passwordHash,
   }).onConflictDoNothing(); // Prevent error if run multiple times
+
+  // Insert Musyrif
+  const musyrifHash = await bcrypt.hash('musyrif123', 10);
+  await db.insert(users).values({
+    username: 'musyrif',
+    passwordHash: musyrifHash,
+  }).onConflictDoNothing();
+
   
   // Insert Students
   const initialStudents = [
