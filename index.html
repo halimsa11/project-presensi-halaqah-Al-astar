@@ -3,138 +3,652 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistem Presensi Halaqah Al-Atsar</title>
+  <title>Presensi Halaqah Al-Atsar</title>
+  <meta name="description" content="Sistem Presensi Digital Halaqah Al-Atsar" />
   <link rel="icon" type="image/png" href="/logo.png" />
-  <link href="/src/style.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #16673B;
+      --green-dark: #0d4527;
+      --green-light: #e8f5ed;
+      --green-mid: #1d8a4a;
+      --amber: #F59E0B;
+      --amber-dark: #B45309;
+      --red: #EF4444;
+      --blue: #3B82F6;
+      --bg: #f0f4f2;
+      --card: #ffffff;
+      --border: #d1e7d9;
+      --text: #1a2e22;
+      --text-muted: #6b8a74;
+      --shadow: 0 2px 16px rgba(22,103,59,0.09);
+      --shadow-lg: 0 6px 32px rgba(22,103,59,0.14);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text);
+    }
+
+    /* ===== HEADER ===== */
+    #app-header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 60%, var(--green-mid) 100%);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      box-shadow: 0 4px 20px rgba(22,103,59,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .header-logo {
+      background: white;
+      border-radius: 50%;
+      width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    .header-logo img { width: 32px; height: 32px; object-fit: contain; }
+    .header-title { color: white; font-size: 1rem; font-weight: 700; }
+    .header-subtitle { color: rgba(255,255,255,0.7); font-size: 0.72rem; }
+
+    /* ===== SUBNAV ===== */
+    #subnav {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(22,103,59,0.06);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    #subnav::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 14px 16px;
+      font-size: 0.83rem; font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-muted);
+      border: none; background: none; cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: color 0.18s, border-color 0.18s;
+      white-space: nowrap;
+      position: relative;
+    }
+    .nav-btn:hover { color: var(--green); }
+    .nav-btn.active { color: var(--green); border-bottom-color: var(--green); }
+    .nav-btn .badge-new {
+      background: #ef4444;
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 99px;
+      position: absolute;
+      top: 8px; right: 4px;
+    }
+
+    .nav-end {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 0;
+      flex-shrink: 0;
+    }
+    .btn-rangkum {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+      border: none; border-radius: 8px;
+      font-size: 0.8rem; font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(30,58,138,0.3);
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+    .btn-rangkum:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(30,58,138,0.35); }
+    .btn-rangkum:active { transform: scale(0.97); }
+
+    /* ===== MAIN CONTAINER ===== */
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 28px 16px 56px;
+    }
+
+    /* ===== PANELS ===== */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: box-shadow 0.2s;
+    }
+    .card-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px; padding-bottom: 16px;
+      border-bottom: 2px solid var(--green-light);
+    }
+    .card-icon {
+      width: 40px; height: 40px;
+      background: var(--green-light);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .card-title { font-size: 1rem; font-weight: 700; color: var(--green-dark); }
+    .card-subtitle { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ===== FORM ===== */
+    label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    input[type="text"], input[type="date"], select {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 0.9rem; font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: white;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      appearance: none;
+    }
+    input:focus, select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(22,103,59,0.12); }
+    select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b8a74' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+    .form-grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+    @media (max-width: 560px) { .form-grid-2 { grid-template-columns: 1fr; } }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem; font-weight: 600; font-family: 'Inter', sans-serif;
+      cursor: pointer; border: none;
+      transition: all 0.18s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--green); color: white; box-shadow: 0 2px 8px rgba(22,103,59,0.28); }
+    .btn-primary:hover { background: var(--green-dark); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+    .btn-amber { background: var(--amber); color: white; box-shadow: 0 2px 8px rgba(245,158,11,0.28); }
+    .btn-amber:hover { background: var(--amber-dark); }
+    .btn-amber-outline { background: transparent; color: var(--amber-dark); border: 1.5px solid var(--amber); }
+    .btn-amber-outline:hover { background: #fef3c7; }
+    .btn-sm { padding: 5px 12px; font-size: 0.78rem; border-radius: 7px; }
+    .btn-red-sm { color: #b91c1c; border: 1.5px solid #fca5a5; background: transparent; }
+    .btn-red-sm:hover { background: #fee2e2; }
+    .btn-indigo-sm { color: #4f46e5; border: 1.5px solid #c7d2fe; background: transparent; }
+    .btn-indigo-sm:hover { background: #eef2ff; }
+
+    /* ===== CONTROLS ===== */
+    .controls-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; margin-bottom: 16px; }
+    .controls-row > div { flex: 1; min-width: 150px; }
+
+    /* ===== HOLIDAY PANEL ===== */
+    .holiday-ctrl {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 1.5px solid #fde68a;
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .holiday-ctrl-left { display: flex; gap: 10px; align-items: center; }
+    .holiday-ctrl-left .icon { font-size: 1.4rem; }
+    .holiday-ctrl-left .hl-title { font-size: 0.85rem; font-weight: 700; color: #92400e; }
+    .holiday-ctrl-left .hl-sub { font-size: 0.73rem; color: #a16207; margin-top: 2px; }
+    .holiday-ctrl-right { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .alert-libur {
+      display: flex; align-items: center; gap: 14px;
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 1.5px solid #fbbf24;
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 16px;
+    }
+    .alert-libur h3 { font-size: 0.9rem; font-weight: 700; color: #92400e; }
+    .alert-libur p { font-size: 0.78rem; color: #a16207; margin-top: 3px; }
+
+    .strip-weekend {
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 0.8rem; color: #92400e; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    /* ===== TABLE ===== */
+    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; min-width: 400px; }
+    thead { background: var(--green-light); }
+    thead th {
+      padding: 12px 16px; text-align: left;
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--green);
+    }
+    thead th.center { text-align: center; }
+    tbody tr { border-top: 1px solid #edf4ef; transition: background 0.15s; }
+    tbody tr:hover { background: #f8fdf9; }
+    tbody td { padding: 13px 16px; font-size: 0.875rem; vertical-align: middle; }
+    .td-name { font-weight: 600; color: var(--text); }
+    .td-class { color: var(--text-muted); font-size: 0.82rem; }
+    .td-center { text-align: center; }
+
+    /* ===== STATUS SELECT ===== */
+    .status-sel {
+      width: 100%; max-width: 130px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 6px 10px;
+      font-size: 0.8rem; font-family: 'Inter', sans-serif; font-weight: 600;
+      cursor: pointer; outline: none; transition: 0.18s;
+    }
+    .s-hadir { background: #dcfce7; color: #15803d; border-color: #86efac; }
+    .s-izin  { background: #fef9c3; color: #a16207; border-color: #fde047; }
+    .s-sakit { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
+    .s-alpa  { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+
+    /* ===== BADGES ===== */
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 99px; font-size: 0.73rem; font-weight: 700; }
+    .badge-hadir { background: #dcfce7; color: #15803d; }
+    .badge-izin  { background: #fef9c3; color: #a16207; }
+    .badge-sakit { background: #dbeafe; color: #1d4ed8; }
+    .badge-alpa  { background: #fee2e2; color: #b91c1c; }
+    .badge-libur { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .badge-belum { background: #f3f4f6; color: #6b7280; }
+
+    /* ===== SAVE ROW ===== */
+    .save-row {
+      display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+      margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--green-light);
+    }
+
+    /* ===== STATS MINI ===== */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    @media (max-width: 560px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    .stat-box {
+      background: white; border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px;
+      text-align: center;
+    }
+    .stat-num { font-size: 1.6rem; font-weight: 800; }
+    .stat-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-top: 2px; }
+    .stat-hadir .stat-num { color: #15803d; }
+    .stat-izin .stat-num  { color: #a16207; }
+    .stat-sakit .stat-num { color: #1d4ed8; }
+    .stat-alpa .stat-num  { color: #b91c1c; }
+
+    /* ===== EMPTY STATE ===== */
+    .empty { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+    .empty-icon { font-size: 2.8rem; margin-bottom: 10px; }
+    .empty p { font-size: 0.85rem; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,30,15,0.55);
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px; z-index: 200;
+      backdrop-filter: blur(4px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: white; border-radius: var(--radius);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.22);
+      width: 100%; max-width: 720px; max-height: 88vh;
+      display: flex; flex-direction: column;
+      transform: translateY(16px) scale(0.97);
+      transition: transform 0.22s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-head {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--green-light);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-head h2 { font-size: 1.05rem; font-weight: 700; color: var(--green-dark); }
+    .modal-head .month-badge {
+      background: var(--green-light); color: var(--green);
+      padding: 4px 12px; border-radius: 99px; font-size: 0.78rem; font-weight: 700;
+    }
+    .modal-close {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: none; background: #f3f4f6;
+      cursor: pointer; font-size: 0.9rem; color: #6b7280;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal-close:hover { background: #e5e7eb; }
+    .modal-body { flex: 1; overflow-y: auto; padding: 20px 24px 24px; }
+
+    /* Summary table */
+    .sum-count { text-align: center; font-size: 1rem; font-weight: 800; }
+    .sum-hadir { color: #15803d; }
+    .sum-izin  { color: #a16207; }
+    .sum-sakit { color: #1d4ed8; }
+    .sum-alpa  { color: #b91c1c; }
+
+    /* ===== LOADING ===== */
+    .loading { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 48px; color: var(--text-muted); font-size: 0.875rem; }
+    .spin { width: 20px; height: 20px; border: 2.5px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== TOAST ===== */
+    #toaster { position: fixed; bottom: 24px; right: 24px; z-index: 400; display: flex; flex-direction: column; gap: 8px; }
+    .toast {
+      background: white; border-radius: 12px;
+      box-shadow: 0 6px 28px rgba(0,0,0,0.13);
+      padding: 12px 18px; font-size: 0.84rem; font-weight: 600;
+      display: flex; align-items: center; gap: 10px;
+      min-width: 220px; max-width: 300px;
+      border-left: 4px solid var(--green);
+      animation: toastIn 0.25s ease;
+    }
+    .toast.error { border-color: var(--red); }
+    .toast.warning { border-color: var(--amber); }
+    @keyframes toastIn { from { transform: translateX(40px); opacity:0; } to { transform: translateX(0); opacity:1; } }
+
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .gap-2 { gap: 8px; }
+    .mt-3 { margin-top: 12px; }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans min-h-screen">
-  
-  <div id="app" class="max-w-4xl mx-auto p-4 md:p-6">
-    <!-- Header -->
-    <header class="flex justify-between items-center mb-8 bg-[#16673B] p-4 md:p-6 rounded-lg shadow-md">
-      <div class="flex items-center gap-3">
-        <div class="bg-white p-1 rounded-full w-14 h-14 flex items-center justify-center shrink-0">
-          <img src="/logo.png" alt="Logo Al-Atsar" class="w-12 h-12 object-contain" />
-        </div>
-        <div>
-          <h1 class="text-xl md:text-2xl font-bold text-white leading-tight">Sistem Presensi Halaqah</h1>
-          <p class="text-sm md:text-base text-green-100">Al-Atsar</p>
-        </div>
-      </div>
-      <div id="auth-section">
-        <button id="btn-login" class="bg-white text-[#16673B] hover:bg-gray-100 px-4 py-2 rounded font-medium transition text-sm shadow">Login Musyrif</button>
-        <button id="btn-logout" class="hidden text-white border border-white hover:bg-red-600 px-4 py-2 rounded font-medium transition text-sm">Logout</button>
-      </div>
-    </header>
+<body>
 
-    <!-- Tabs -->
-    <div class="flex border-b border-gray-200 mb-6">
-      <button id="tab-rekap" class="py-2 px-4 text-sm font-medium border-b-2 border-[#16673B] text-[#16673B]">Rekap Presensi</button>
-      <button id="tab-musyrif" class="py-2 px-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">Panel Musyrif (Input)</button>
+<div id="toaster"></div>
+
+<!-- HEADER -->
+<header id="app-header">
+  <div class="header-brand">
+    <div class="header-logo">
+      <img src="/logo.png" alt="Logo" />
     </div>
+    <div>
+      <div class="header-title">Presensi Halaqah</div>
+      <div class="header-subtitle">Al-Atsar</div>
+    </div>
+  </div>
+</header>
 
-    <!-- Main Content -->
-    <main class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-      
-      <!-- Panel Musyrif: Add Student Form (Hidden by default) -->
-      <div id="add-student-section" class="hidden mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
-        <h2 class="text-lg font-semibold mb-4 text-gray-800">Tambah Data Siswa Baru</h2>
-        <form id="add-student-form" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<!-- SUBNAV -->
+<nav id="subnav">
+  <button class="nav-btn active" data-panel="panel-santri" id="nav-santri">👤 Tambah Santri</button>
+  <button class="nav-btn" data-panel="panel-presensi" id="nav-presensi">✅ Input Presensi</button>
+  <button class="nav-btn" data-panel="panel-lihat" id="nav-lihat">👁 Lihat Presensi</button>
+  <div class="nav-end">
+    <button class="btn-rangkum hidden" id="btn-show-summary">📊 Rangkum Bulan Ini</button>
+  </div>
+</nav>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- ===== PANEL: TAMBAH SANTRI ===== -->
+  <div class="panel active" id="panel-santri">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👤</div>
+        <div>
+          <div class="card-title">Tambah Santri Baru</div>
+          <div class="card-subtitle">Daftarkan santri baru untuk mengikuti presensi halaqah</div>
+        </div>
+      </div>
+      <form id="add-student-form">
+        <div class="form-grid-2">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">NIS</label>
-            <input type="text" id="new-student-id" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]" placeholder="Misal: 1005" />
-          </div>
-          <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Siswa</label>
-            <input type="text" id="new-student-name" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]" placeholder="Nama Lengkap" />
+            <label for="new-student-name">Nama Lengkap</label>
+            <input type="text" id="new-student-name" placeholder="Nama santri" required />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
-            <select id="new-student-class" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]">
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
+            <label for="new-student-class">Kelas</label>
+            <select id="new-student-class" required>
+              <option value="10">Kelas 10</option>
+              <option value="11">Kelas 11</option>
+              <option value="12">Kelas 12</option>
             </select>
           </div>
-          <div class="md:col-span-4 flex justify-end mt-2">
-            <button type="submit" id="btn-add-student" class="bg-[#FF8F00] hover:bg-[#d67800] text-white px-4 py-2 rounded font-medium transition">Tambah Siswa</button>
-          </div>
-        </form>
-        <div id="add-student-message" class="hidden mt-2 text-sm"></div>
-      </div>
-
-      <!-- Controls for Date & Session -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-          <input type="date" id="input-date" class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]" />
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Sesi</label>
-          <select id="input-session" class="w-full border border-gray-300 rounded p-2 focus:ring-[#16673B] focus:border-[#16673B]">
-            <option value="pagi">Pagi</option>
-            <option value="siang">Siang</option>
-            <option value="malam">Malam</option>
-          </select>
-        </div>
-        <div class="flex items-end">
-          <button id="btn-load" class="w-full bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded font-medium transition">
-            Tampilkan Data
-          </button>
-        </div>
-      </div>
-
-      <!-- Loading state -->
-      <div id="loading" class="hidden text-center py-8 text-gray-500">
-        Memuat data...
-      </div>
-
-      <!-- Table -->
-      <div id="table-container" class="hidden overflow-x-auto">
-        <form id="attendance-form">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Presensi</th>
-                <th scope="col" id="col-aksi" class="hidden px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="table-body" class="bg-white divide-y divide-gray-200">
-              <!-- Rows injected by JS -->
-            </tbody>
-          </table>
-          
-        </form>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- Login Modal -->
-  <div id="login-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm">
-      <h2 class="text-xl font-bold mb-4 text-center">Login Musyrif</h2>
-      <div id="login-error" class="hidden bg-red-100 text-red-700 p-2 rounded text-sm mb-4"></div>
-      <form id="login-form">
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-          <input type="text" id="login-username" required class="w-full border border-gray-300 rounded p-2" />
-        </div>
-        <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-          <input type="password" id="login-password" required class="w-full border border-gray-300 rounded p-2" />
-        </div>
-        <div class="flex justify-end gap-2">
-          <button type="button" id="btn-close-login" class="text-gray-600 hover:bg-gray-100 px-4 py-2 rounded transition">Batal</button>
-          <button type="submit" class="bg-[#16673B] hover:bg-[#0a4827] text-white px-4 py-2 rounded transition">Login</button>
+        <div class="flex" style="justify-content:flex-end; margin-top:16px;">
+          <button type="submit" id="btn-add-student" class="btn btn-primary">➕ Tambah Santri</button>
         </div>
       </form>
     </div>
+
+    <!-- Daftar Santri -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📋</div>
+        <div>
+          <div class="card-title">Daftar Santri Terdaftar</div>
+          <div class="card-subtitle" id="santri-count-label">Memuat...</div>
+        </div>
+      </div>
+      <div id="santri-loading" class="loading"><div class="spin"></div> Memuat data santri...</div>
+      <div id="santri-table-wrap" class="table-wrap hidden">
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Santri</th>
+              <th>Kelas</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="santri-table-body"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
-  <script type="module" src="/src/main.js"></script>
+  <!-- ===== PANEL: INPUT PRESENSI ===== -->
+  <div class="panel" id="panel-presensi">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">✅</div>
+        <div>
+          <div class="card-title">Input Presensi</div>
+          <div class="card-subtitle">Pilih tanggal dan sesi, lalu isi status kehadiran santri</div>
+        </div>
+      </div>
+
+      <div class="controls-row">
+        <div>
+          <label for="main-date">Tanggal</label>
+          <input type="date" id="main-date" />
+        </div>
+        <div>
+          <label for="main-session">Sesi</label>
+          <select id="main-session">
+            <option value="pagi">🌤 Pagi</option>
+            <option value="siang">☀️ Siang</option>
+            <option value="malam">🌙 Malam</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Holiday Controls -->
+      <div class="holiday-ctrl" id="holiday-ctrl-box">
+        <div class="holiday-ctrl-left">
+          <span class="icon">🌴</span>
+          <div>
+            <div class="hl-title">Pengaturan Hari Libur</div>
+            <div class="hl-sub">Tandai tanggal ini libur agar presensi dikunci</div>
+          </div>
+        </div>
+        <div class="holiday-ctrl-right">
+          <button type="button" id="btn-mark-holiday" class="btn btn-amber">🌴 Tandai Libur</button>
+          <button type="button" id="btn-cancel-holiday" class="btn btn-amber-outline hidden">❌ Batalkan Libur</button>
+        </div>
+      </div>
+
+      <div id="holiday-weekend-info" class="strip-weekend hidden">
+        <span>🌴</span>
+        <span id="holiday-weekend-text">Hari Sabtu & Minggu sudah otomatis libur.</span>
+      </div>
+
+      <div id="main-holiday-banner" class="alert-libur hidden">
+        <span style="font-size:2rem">🌴</span>
+        <div>
+          <h3 id="main-holiday-title">Hari Ini Libur</h3>
+          <p id="main-holiday-reason">Tidak ada kegiatan halaqah.</p>
+        </div>
+      </div>
+
+      <div id="main-loading" class="loading hidden"><div class="spin"></div> Memuat presensi...</div>
+
+      <div id="main-table-container" class="hidden">
+        <form id="attendance-form">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama Santri</th>
+                  <th>Kelas</th>
+                  <th>Status Presensi</th>
+                </tr>
+              </thead>
+              <tbody id="main-table-body"></tbody>
+            </table>
+          </div>
+          <div id="save-attendance-container" class="save-row hidden">
+            <div id="attendance-message" class="hidden" style="font-size:0.82rem;font-weight:600;"></div>
+            <button type="button" id="btn-save-attendance" class="btn btn-primary">
+              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+              Simpan Presensi
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL: LIHAT PRESENSI ===== -->
+  <div class="panel" id="panel-lihat">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👁</div>
+        <div>
+          <div class="card-title">Lihat Hasil Presensi</div>
+          <div class="card-subtitle">Tampilan rekap harian presensi santri (read-only)</div>
+        </div>
+      </div>
+
+      <div class="controls-row">
+        <div>
+          <label for="view-date">Tanggal</label>
+          <input type="date" id="view-date" />
+        </div>
+        <div>
+          <label for="view-session">Sesi</label>
+          <select id="view-session">
+            <option value="pagi">🌤 Pagi</option>
+            <option value="siang">☀️ Siang</option>
+            <option value="malam">🌙 Malam</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Mini Stats -->
+      <div class="stats-row" id="view-stats">
+        <div class="stat-box stat-hadir"><div class="stat-num" id="stat-hadir">0</div><div class="stat-label">Hadir</div></div>
+        <div class="stat-box stat-izin"><div class="stat-num" id="stat-izin">0</div><div class="stat-label">Izin</div></div>
+        <div class="stat-box stat-sakit"><div class="stat-num" id="stat-sakit">0</div><div class="stat-label">Sakit</div></div>
+        <div class="stat-box stat-alpa"><div class="stat-num" id="stat-alpa">0</div><div class="stat-label">Alpa</div></div>
+      </div>
+
+      <div id="view-holiday-banner" class="alert-libur hidden">
+        <span style="font-size:2rem">🌴</span>
+        <div>
+          <h3 id="view-holiday-title">Hari Ini Libur</h3>
+          <p id="view-holiday-reason">Tidak ada kegiatan halaqah.</p>
+        </div>
+      </div>
+
+      <div id="view-loading" class="loading hidden"><div class="spin"></div> Memuat data...</div>
+
+      <div id="view-table-wrap" class="hidden">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama Santri</th>
+                <th>Kelas</th>
+                <th class="center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="view-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<!-- SUMMARY MODAL -->
+<div id="summary-modal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <h2>Rangkuman Presensi</h2>
+        <span class="month-badge" id="summary-month-badge">—</span>
+      </div>
+      <button class="modal-close" id="btn-close-summary">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="summary-loading" class="loading hidden"><div class="spin"></div> Menghitung data...</div>
+      <div id="summary-stats" class="stats-row" style="margin-bottom:16px;">
+        <div class="stat-box stat-hadir"><div class="stat-num" id="sum-stat-hadir">0</div><div class="stat-label">Total Hadir</div></div>
+        <div class="stat-box stat-izin"><div class="stat-num" id="sum-stat-izin">0</div><div class="stat-label">Total Izin</div></div>
+        <div class="stat-box stat-sakit"><div class="stat-num" id="sum-stat-sakit">0</div><div class="stat-label">Total Sakit</div></div>
+        <div class="stat-box stat-alpa"><div class="stat-num" id="sum-stat-alpa">0</div><div class="stat-label">Total Alpa</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Santri</th>
+              <th>Kelas</th>
+              <th class="center" style="color:#15803d">Hadir</th>
+              <th class="center" style="color:#a16207">Izin</th>
+              <th class="center" style="color:#1d4ed8">Sakit</th>
+              <th class="center" style="color:#b91c1c">Alpa</th>
+            </tr>
+          </thead>
+          <tbody id="summary-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/src/main.js"></script>
 </body>
 </html>

@@ -22,3 +22,9 @@ export const attendances = pgTable('attendances', {
   session: sessionEnum('session').notNull(),
   status: statusEnum('status').notNull(),
 });
+
+export const holidays = pgTable('holidays', {
+  id: serial('id').primaryKey(),
+  date: date('date').notNull().unique(),
+  reason: varchar('reason', { length: 255 }),
+});
