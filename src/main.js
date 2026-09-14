@@ -167,14 +167,21 @@ async function loadSantriList() {
   santriTableWrap?.classList.add('hidden');
   try {
     const res = await fetch(`${API_URL}/students`);
-    students = await res.json();
-  } catch {
-    toast('Gagal memuat daftar santri', 'error');
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || `Server status ${res.status}`);
+    }
+    const data = await res.json();
+    students = Array.isArray(data) ? data : [];
+  } catch (err) {
+    console.error('Error loadSantriList:', err);
+    toast(err.message || 'Gagal memuat daftar santri', 'error');
     students = [];
+  } finally {
+    renderSantriTable();
+    santriLoading?.classList.add('hidden');
+    santriTableWrap?.classList.remove('hidden');
   }
-  renderSantriTable();
-  santriLoading?.classList.add('hidden');
-  santriTableWrap?.classList.remove('hidden');
 }
 
 function renderSantriTable() {
@@ -345,18 +352,22 @@ async function loadAttendance() {
       fetch(`${API_URL}/attendance?date=${date}&session=${session}`),
       fetch(`${API_URL}/holidays`)
     ]);
-    students = await r1.json();
-    attendances = await r2.json();
-    customHolidays = await r3.json();
-  } catch {
+    const d1 = await r1.json().catch(() => []);
+    const d2 = await r2.json().catch(() => []);
+    const d3 = await r3.json().catch(() => []);
+    students = Array.isArray(d1) ? d1 : [];
+    attendances = Array.isArray(d2) ? d2 : [];
+    customHolidays = Array.isArray(d3) ? d3 : [];
+  } catch (err) {
+    console.error('Error loadAttendance:', err);
     toast('Gagal memuat data presensi', 'error');
     students = []; attendances = []; customHolidays = [];
+  } finally {
+    updateHolidayUI();
+    renderAttendanceTable();
+    mainLoading?.classList.add('hidden');
+    mainTableContainer?.classList.remove('hidden');
   }
-
-  updateHolidayUI();
-  renderAttendanceTable();
-  mainLoading?.classList.add('hidden');
-  mainTableContainer?.classList.remove('hidden');
 }
 
 function renderAttendanceTable() {
@@ -499,77 +510,81 @@ async function loadView() {
       fetch(`${API_URL}/attendance?date=${date}&session=${session}`),
       fetch(`${API_URL}/holidays`)
     ]);
-    viewStudents = await r1.json();
-    viewAtts = await r2.json();
-    customHolidays = await r3.json();
-  } catch {
+    const d1 = await r1.json().catch(() => []);
+    const d2 = await r2.json().catch(() => []);
+    const d3 = await r3.json().catch(() => []);
+    viewStudents = Array.isArray(d1) ? d1 : [];
+    viewAtts = Array.isArray(d2) ? d2 : [];
+    customHolidays = Array.isArray(d3) ? d3 : [];
+  } catch (err) {
+    console.error('Error loadView:', err);
     toast('Gagal memuat rekap presensi', 'error');
-  }
-
-  const info = getHolidayInfo(date);
-  if (info.isHoliday) {
-    viewHolidayBanner?.classList.remove('hidden');
-    if (viewHolidayTitle) viewHolidayTitle.textContent = info.title;
-    if (viewHolidayReason) viewHolidayReason.textContent = info.reason;
-  }
-
-  const counts = { hadir: 0, izin: 0, sakit: 0, alpa: 0 };
-  viewStudents.sort((a, b) => a.class !== b.class ? a.class - b.class : a.name.localeCompare(b.name));
-
-  if (viewTableBody) {
-    viewTableBody.innerHTML = '';
-    if (!viewStudents.length) {
-      viewTableBody.innerHTML = `
-        <tr>
-          <td colspan="3">
-            <div class="empty">
-              <div class="empty-icon-wrap">${ICONS.inbox}</div>
-              <p>Belum ada data santri terdaftar.</p>
-            </div>
-          </td>
-        </tr>`;
-    } else {
-      viewStudents.forEach(s => {
-        const att = viewAtts.find(a => a.studentId === s.id);
-        let status = att ? att.status : null;
-
-        let badge;
-        if (info.isHoliday) {
-          badge = `<span class="badge badge-libur">${ICONS.palmtree} Libur</span>`;
-        } else if (!status) {
-          badge = `<span class="badge badge-belum">${ICONS.minus} Belum Diisi</span>`;
-        } else {
-          badge = `<span class="badge badge-${status}">${statusBadgeContent(status)}</span>`;
-          if (counts[status] !== undefined) counts[status]++;
-        }
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>
-            <div class="td-name-cell">
-              <div class="avatar-init" style="background: ${getAvatarStyle(s.name)}">${getInitials(s.name)}</div>
-              <span class="td-name">${s.name}</span>
-            </div>
-          </td>
-          <td><span class="td-class-badge">Kelas ${s.class}</span></td>
-          <td class="td-center">${badge}</td>`;
-        viewTableBody.appendChild(tr);
-      });
+  } finally {
+    const info = getHolidayInfo(date);
+    if (info.isHoliday) {
+      viewHolidayBanner?.classList.remove('hidden');
+      if (viewHolidayTitle) viewHolidayTitle.textContent = info.title;
+      if (viewHolidayReason) viewHolidayReason.textContent = info.reason;
     }
+
+    const counts = { hadir: 0, izin: 0, sakit: 0, alpa: 0 };
+    viewStudents.sort((a, b) => a.class !== b.class ? a.class - b.class : a.name.localeCompare(b.name));
+
+    if (viewTableBody) {
+      viewTableBody.innerHTML = '';
+      if (!viewStudents.length) {
+        viewTableBody.innerHTML = `
+          <tr>
+            <td colspan="3">
+              <div class="empty">
+                <div class="empty-icon-wrap">${ICONS.inbox}</div>
+                <p>Belum ada data santri terdaftar.</p>
+              </div>
+            </td>
+          </tr>`;
+      } else {
+        viewStudents.forEach(s => {
+          const att = viewAtts.find(a => a.studentId === s.id);
+          let status = att ? att.status : null;
+
+          let badge;
+          if (info.isHoliday) {
+            badge = `<span class="badge badge-libur">${ICONS.palmtree} Libur</span>`;
+          } else if (!status) {
+            badge = `<span class="badge badge-belum">${ICONS.minus} Belum Diisi</span>`;
+          } else {
+            badge = `<span class="badge badge-${status}">${statusBadgeContent(status)}</span>`;
+            if (counts[status] !== undefined) counts[status]++;
+          }
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <div class="td-name-cell">
+                <div class="avatar-init" style="background: ${getAvatarStyle(s.name)}">${getInitials(s.name)}</div>
+                <span class="td-name">${s.name}</span>
+              </div>
+            </td>
+            <td><span class="td-class-badge">Kelas ${s.class}</span></td>
+            <td class="td-center">${badge}</td>`;
+          viewTableBody.appendChild(tr);
+        });
+      }
+    }
+
+    const elHadir = document.getElementById('stat-hadir');
+    const elIzin  = document.getElementById('stat-izin');
+    const elSakit = document.getElementById('stat-sakit');
+    const elAlpa  = document.getElementById('stat-alpa');
+
+    if (elHadir) elHadir.textContent = counts.hadir;
+    if (elIzin)  elIzin.textContent  = counts.izin;
+    if (elSakit) elSakit.textContent = counts.sakit;
+    if (elAlpa)  elAlpa.textContent  = counts.alpa;
+
+    viewLoading?.classList.add('hidden');
+    viewTableWrap?.classList.remove('hidden');
   }
-
-  const elHadir = document.getElementById('stat-hadir');
-  const elIzin  = document.getElementById('stat-izin');
-  const elSakit = document.getElementById('stat-sakit');
-  const elAlpa  = document.getElementById('stat-alpa');
-
-  if (elHadir) elHadir.textContent = counts.hadir;
-  if (elIzin)  elIzin.textContent  = counts.izin;
-  if (elSakit) elSakit.textContent = counts.sakit;
-  if (elAlpa)  elAlpa.textContent  = counts.alpa;
-
-  viewLoading?.classList.add('hidden');
-  viewTableWrap?.classList.remove('hidden');
 }
 
 function statusBadgeContent(status) {

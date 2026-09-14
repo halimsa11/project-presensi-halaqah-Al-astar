@@ -5,5 +5,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const sql = neon(process.env.DATABASE_URL);
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  console.error('CRITICAL: DATABASE_URL is not set in environment variables!');
+}
+
+const sql = neon(connectionString || 'postgresql://placeholder:placeholder@localhost:5432/placeholder');
 export const db = drizzle(sql, { schema });
+
