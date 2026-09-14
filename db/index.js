@@ -4,12 +4,7 @@ import * as schema from './schema.js';
 
 // Pada Vercel, env vars diambil dari dashboard (bukan file .env)
 // Pada lokal, pakai dotenv jika tersedia
-try {
-  const dotenv = await import('dotenv');
-  dotenv.config();
-} catch (_) {
-  // dotenv tidak tersedia — tidak apa-apa, env vars dari sistem
-}
+import 'dotenv/config';
 
 const connectionString = process.env.DATABASE_URL;
 
