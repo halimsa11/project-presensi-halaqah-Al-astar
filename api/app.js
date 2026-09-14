@@ -124,7 +124,10 @@ app.get('/attendance/summary', async (c) => {
     return c.json({ error: 'Month (YYYY-MM) is required' }, 400);
   }
   const startDate = `${month}-01`;
-  const endDate   = `${month}-31`; // safe upper bound for any month
+  // Ambil hari terakhir bulan yang valid (bukan hardcode -31)
+  const [y, m] = month.split('-').map(Number);
+  const lastDay = new Date(y, m, 0).getDate(); // day=0 dari bulan berikutnya = hari terakhir bulan ini
+  const endDate = `${month}-${String(lastDay).padStart(2, '0')}`;
   try {
     const records = await db.select().from(attendances).where(
       and(

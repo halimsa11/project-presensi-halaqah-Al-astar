@@ -7,378 +7,839 @@
   <meta name="description" content="Sistem Presensi Digital Halaqah Al-Atsar" />
   <link rel="icon" type="image/png" href="/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green: #16673B;
-      --green-dark: #0d4527;
-      --green-light: #e8f5ed;
-      --green-mid: #1d8a4a;
-      --amber: #F59E0B;
-      --amber-dark: #B45309;
-      --red: #EF4444;
-      --blue: #3B82F6;
-      --bg: #f0f4f2;
-      --card: #ffffff;
-      --border: #d1e7d9;
-      --text: #1a2e22;
-      --text-muted: #6b8a74;
-      --shadow: 0 2px 16px rgba(22,103,59,0.09);
-      --shadow-lg: 0 6px 32px rgba(22,103,59,0.14);
-      --radius: 16px;
-      --radius-sm: 10px;
+      --primary: #065f46;
+      --primary-dark: #044332;
+      --primary-light: #ecfdf5;
+      --primary-mid: #059669;
+      --primary-glow: rgba(5, 150, 105, 0.18);
+      
+      --accent-hadir: #10b981;
+      --accent-hadir-bg: #ecfdf5;
+      --accent-hadir-border: #a7f3d0;
+      --accent-hadir-text: #065f46;
+      
+      --accent-izin: #f59e0b;
+      --accent-izin-bg: #fffbeb;
+      --accent-izin-border: #fde68a;
+      --accent-izin-text: #92400e;
+      
+      --accent-sakit: #3b82f6;
+      --accent-sakit-bg: #eff6ff;
+      --accent-sakit-border: #bfdbfe;
+      --accent-sakit-text: #1e40af;
+      
+      --accent-alpa: #f43f5e;
+      --accent-alpa-bg: #fff1f2;
+      --accent-alpa-border: #fecdd3;
+      --accent-alpa-text: #9f1239;
+      
+      --accent-libur: #d97706;
+      --accent-libur-bg: #fffbeb;
+      --accent-libur-border: #fcd34d;
+
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-light: #f1f5f9;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-sub: #94a3b8;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+      --shadow-lg: 0 12px 32px -4px rgba(6, 95, 70, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 8px;
     }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
       background: var(--bg);
       min-height: 100vh;
       color: var(--text);
+      -webkit-font-smoothing: antialiased;
     }
+
+    /* ===== ICONS COMMON ===== */
+    .icon {
+      width: 18px; height: 18px;
+      display: inline-block;
+      vertical-align: middle;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .icon-sm { width: 15px; height: 15px; }
+    .icon-md { width: 20px; height: 20px; }
+    .icon-lg { width: 24px; height: 24px; }
 
     /* ===== HEADER ===== */
     #app-header {
-      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 60%, var(--green-mid) 100%);
+      background: linear-gradient(135deg, #022c22 0%, #064e3b 45%, #047857 100%);
       padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
-      box-shadow: 0 4px 20px rgba(22,103,59,0.3);
+      height: 70px;
+      box-shadow: 0 4px 20px rgba(4, 120, 87, 0.25);
       position: sticky;
       top: 0;
       z-index: 100;
+      backdrop-filter: blur(8px);
     }
-    .header-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+    .header-logo-wrap {
+      position: relative;
+    }
     .header-logo {
       background: white;
       border-radius: 50%;
-      width: 42px; height: 42px;
+      width: 44px; height: 44px;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.25);
       flex-shrink: 0;
+      transition: transform 0.2s;
     }
+    .header-logo:hover { transform: scale(1.05); }
     .header-logo img { width: 32px; height: 32px; object-fit: contain; }
-    .header-title { color: white; font-size: 1rem; font-weight: 700; }
-    .header-subtitle { color: rgba(255,255,255,0.7); font-size: 0.72rem; }
-
-    /* ===== SUBNAV ===== */
-    #subnav {
-      background: white;
-      border-bottom: 1px solid var(--border);
-      padding: 0 24px;
+    .header-text { display: flex; flex-direction: column; }
+    .header-title {
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
       display: flex;
       align-items: center;
-      gap: 4px;
-      box-shadow: 0 2px 8px rgba(22,103,59,0.06);
+      gap: 8px;
+    }
+    .header-badge {
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 99px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .header-subtitle {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.76rem;
+      font-weight: 500;
+      margin-top: 1px;
+    }
+
+    /* ===== SUBNAV TABS ===== */
+    #subnav-wrap {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 70px;
+      z-index: 90;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+    #subnav {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
     #subnav::-webkit-scrollbar { display: none; }
 
-    .nav-btn {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 14px 16px;
-      font-size: 0.83rem; font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      color: var(--text-muted);
-      border: none; background: none; cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: color 0.18s, border-color 0.18s;
-      white-space: nowrap;
-      position: relative;
-    }
-    .nav-btn:hover { color: var(--green); }
-    .nav-btn.active { color: var(--green); border-bottom-color: var(--green); }
-    .nav-btn .badge-new {
-      background: #ef4444;
-      color: white;
-      font-size: 0.6rem;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 99px;
-      position: absolute;
-      top: 8px; right: 4px;
+    .nav-tabs-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: var(--radius-lg);
     }
 
-    .nav-end {
-      margin-left: auto;
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 0;
-      flex-shrink: 0;
-    }
-    .btn-rangkum {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 16px;
-      background: linear-gradient(135deg, #1e3a8a, #2563eb);
-      color: white;
-      border: none; border-radius: 8px;
-      font-size: 0.8rem; font-weight: 700;
-      font-family: 'Inter', sans-serif;
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(30,58,138,0.3);
-      transition: all 0.18s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
     }
-    .btn-rangkum:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(30,58,138,0.35); }
+    .nav-btn:hover {
+      color: var(--primary);
+      background: rgba(255, 255, 255, 0.6);
+    }
+    .nav-btn.active {
+      color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      font-weight: 700;
+    }
+
+    .btn-rangkum {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.82rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 3px 12px rgba(37, 99, 235, 0.28);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-rangkum:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 16px rgba(37, 99, 235, 0.38);
+      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+    }
     .btn-rangkum:active { transform: scale(0.97); }
 
     /* ===== MAIN CONTAINER ===== */
     #app {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
-      padding: 28px 16px 56px;
+      padding: 24px 16px 64px;
     }
 
     /* ===== PANELS ===== */
     .panel { display: none; }
-    .panel.active { display: block; }
+    .panel.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
     /* ===== CARDS ===== */
     .card {
-      background: var(--card);
-      border-radius: var(--radius);
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
-      padding: 24px;
-      margin-bottom: 20px;
+      padding: 26px;
+      margin-bottom: 24px;
       transition: box-shadow 0.2s;
     }
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+    }
     .card-header {
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 20px; padding-bottom: 16px;
-      border-bottom: 2px solid var(--green-light);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-light);
     }
     .card-icon {
-      width: 40px; height: 40px;
-      background: var(--green-light);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
+      width: 44px; height: 44px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px var(--primary-glow);
     }
-    .card-title { font-size: 1rem; font-weight: 700; color: var(--green-dark); }
-    .card-subtitle { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .card-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
 
-    /* ===== FORM ===== */
-    label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    /* ===== FORM CONTROLS ===== */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--text-sub);
+      pointer-events: none;
+    }
     input[type="text"], input[type="date"], select {
       width: 100%;
       border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: 0.9rem; font-family: 'Inter', sans-serif;
+      border-radius: var(--radius-md);
+      padding: 11px 16px;
+      font-size: 0.92rem;
+      font-family: inherit;
       color: var(--text);
-      background: white;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #ffffff;
+      transition: all 0.2s;
       outline: none;
-      appearance: none;
     }
-    input:focus, select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(22,103,59,0.12); }
-    select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b8a74' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
-    .form-grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
-    @media (max-width: 560px) { .form-grid-2 { grid-template-columns: 1fr; } }
+    .has-icon input, .has-icon select {
+      padding-left: 42px;
+    }
+    input:focus, select:focus {
+      border-color: var(--primary-mid);
+      box-shadow: 0 0 0 3.5px var(--primary-glow);
+      background: #ffffff;
+    }
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .form-grid-2 { grid-template-columns: 1fr; }
+    }
 
     /* ===== BUTTONS ===== */
     .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-      padding: 10px 20px;
-      border-radius: var(--radius-sm);
-      font-size: 0.875rem; font-weight: 600; font-family: 'Inter', sans-serif;
-      cursor: pointer; border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
       transition: all 0.18s;
+      text-decoration: none;
     }
     .btn:active { transform: scale(0.97); }
-    .btn-primary { background: var(--green); color: white; box-shadow: 0 2px 8px rgba(22,103,59,0.28); }
-    .btn-primary:hover { background: var(--green-dark); }
-    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
-    .btn-amber { background: var(--amber); color: white; box-shadow: 0 2px 8px rgba(245,158,11,0.28); }
-    .btn-amber:hover { background: var(--amber-dark); }
-    .btn-amber-outline { background: transparent; color: var(--amber-dark); border: 1.5px solid var(--amber); }
-    .btn-amber-outline:hover { background: #fef3c7; }
-    .btn-sm { padding: 5px 12px; font-size: 0.78rem; border-radius: 7px; }
-    .btn-red-sm { color: #b91c1c; border: 1.5px solid #fca5a5; background: transparent; }
-    .btn-red-sm:hover { background: #fee2e2; }
-    .btn-indigo-sm { color: #4f46e5; border: 1.5px solid #c7d2fe; background: transparent; }
-    .btn-indigo-sm:hover { background: #eef2ff; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+      color: white;
+      box-shadow: 0 3px 12px var(--primary-glow);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      box-shadow: 0 5px 16px rgba(4, 120, 87, 0.3);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-amber {
+      background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+      color: white;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.25);
+    }
+    .btn-amber:hover {
+      background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+    }
+    .btn-amber-outline {
+      background: #ffffff;
+      color: #b45309;
+      border: 1.5px solid #fcd34d;
+    }
+    .btn-amber-outline:hover {
+      background: #fffbeb;
+      border-color: #f59e0b;
+    }
+    
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: var(--radius-sm);
+    }
+    .btn-action-edit {
+      color: #3b82f6;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+    .btn-action-edit:hover {
+      background: #dbeafe;
+      border-color: #93c5fd;
+      color: #1d4ed8;
+    }
+    .btn-action-delete {
+      color: #ef4444;
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+    }
+    .btn-action-delete:hover {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #b91c1c;
+    }
 
-    /* ===== CONTROLS ===== */
-    .controls-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; margin-bottom: 16px; }
-    .controls-row > div { flex: 1; min-width: 150px; }
+    /* ===== CONTROLS ROW ===== */
+    .controls-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 540px) {
+      .controls-row { grid-template-columns: 1fr; }
+    }
 
     /* ===== HOLIDAY PANEL ===== */
     .holiday-ctrl {
-      background: linear-gradient(135deg, #fffbeb, #fef3c7);
-      border: 1.5px solid #fde68a;
-      border-radius: var(--radius-sm);
-      padding: 14px 18px;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      background: linear-gradient(135deg, #fffdfa 0%, #fffbeb 100%);
+      border: 1.5px solid #fef3c7;
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
-    .holiday-ctrl-left { display: flex; gap: 10px; align-items: center; }
-    .holiday-ctrl-left .icon { font-size: 1.4rem; }
-    .holiday-ctrl-left .hl-title { font-size: 0.85rem; font-weight: 700; color: #92400e; }
-    .holiday-ctrl-left .hl-sub { font-size: 0.73rem; color: #a16207; margin-top: 2px; }
-    .holiday-ctrl-right { display: flex; gap: 8px; flex-wrap: wrap; }
+    .holiday-ctrl-left {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .holiday-ctrl-icon {
+      width: 40px; height: 40px;
+      background: #fef3c7;
+      color: #d97706;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .holiday-ctrl-left .hl-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #92400e;
+    }
+    .holiday-ctrl-left .hl-sub {
+      font-size: 0.78rem;
+      color: #b45309;
+      margin-top: 2px;
+    }
+    .holiday-ctrl-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
     .alert-libur {
-      display: flex; align-items: center; gap: 14px;
-      background: linear-gradient(135deg, #fffbeb, #fef3c7);
-      border: 1.5px solid #fbbf24;
-      border-radius: var(--radius-sm);
-      padding: 14px 18px;
-      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 1.5px solid #fcd34d;
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+      margin-bottom: 20px;
     }
-    .alert-libur h3 { font-size: 0.9rem; font-weight: 700; color: #92400e; }
-    .alert-libur p { font-size: 0.78rem; color: #a16207; margin-top: 3px; }
+    .alert-libur-icon {
+      width: 46px; height: 46px;
+      background: #fde68a;
+      color: #92400e;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .alert-libur h3 { font-size: 0.96rem; font-weight: 800; color: #78350f; }
+    .alert-libur p { font-size: 0.82rem; color: #92400e; margin-top: 3px; }
 
     .strip-weekend {
-      background: #fffbeb; border: 1px solid #fde68a;
-      border-radius: 8px; padding: 10px 14px;
-      font-size: 0.8rem; color: #92400e; font-weight: 500;
-      display: flex; align-items: center; gap: 8px;
-      margin-bottom: 16px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 0.84rem;
+      color: #92400e;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
     }
 
-    /* ===== TABLE ===== */
-    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
-    table { width: 100%; border-collapse: collapse; min-width: 400px; }
-    thead { background: var(--green-light); }
+    /* ===== STATS ROW ===== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 640px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    }
+    .stat-box {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1.5px solid var(--border);
+      transition: all 0.2s;
+    }
+    .stat-box:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .stat-icon-wrap {
+      width: 42px; height: 42px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .stat-hadir .stat-icon-wrap { background: var(--accent-hadir-bg); color: var(--accent-hadir-text); border: 1px solid var(--accent-hadir-border); }
+    .stat-izin .stat-icon-wrap  { background: var(--accent-izin-bg); color: var(--accent-izin-text); border: 1px solid var(--accent-izin-border); }
+    .stat-sakit .stat-icon-wrap { background: var(--accent-sakit-bg); color: var(--accent-sakit-text); border: 1px solid var(--accent-sakit-border); }
+    .stat-alpa .stat-icon-wrap  { background: var(--accent-alpa-bg); color: var(--accent-alpa-text); border: 1px solid var(--accent-alpa-border); }
+
+    .stat-num { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+    .stat-label { font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-top: 4px; }
+    .stat-hadir .stat-num { color: var(--accent-hadir-text); }
+    .stat-izin .stat-num  { color: var(--accent-izin-text); }
+    .stat-sakit .stat-num { color: var(--accent-sakit-text); }
+    .stat-alpa .stat-num  { color: var(--accent-alpa-text); }
+
+    /* ===== TABLE STYLING ===== */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 480px;
+    }
+    thead {
+      background: #f8fafc;
+      border-bottom: 1.5px solid var(--border);
+    }
     thead th {
-      padding: 12px 16px; text-align: left;
-      font-size: 0.7rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.06em;
-      color: var(--green);
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
     }
     thead th.center { text-align: center; }
-    tbody tr { border-top: 1px solid #edf4ef; transition: background 0.15s; }
-    tbody tr:hover { background: #f8fdf9; }
-    tbody td { padding: 13px 16px; font-size: 0.875rem; vertical-align: middle; }
-    .td-name { font-weight: 600; color: var(--text); }
-    .td-class { color: var(--text-muted); font-size: 0.82rem; }
+    tbody tr {
+      border-top: 1px solid var(--border-light);
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: #f8fafc; }
+    tbody td {
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+    .td-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .avatar-init {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
+    }
+    .td-name { font-weight: 700; color: var(--text); }
+    .td-class-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 99px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid #e2e8f0;
+    }
     .td-center { text-align: center; }
 
     /* ===== STATUS SELECT ===== */
     .status-sel {
-      width: 100%; max-width: 130px;
+      width: 100%;
+      max-width: 140px;
       border: 1.5px solid var(--border);
-      border-radius: 8px; padding: 6px 10px;
-      font-size: 0.8rem; font-family: 'Inter', sans-serif; font-weight: 600;
-      cursor: pointer; outline: none; transition: 0.18s;
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 0.84rem;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
     }
-    .s-hadir { background: #dcfce7; color: #15803d; border-color: #86efac; }
-    .s-izin  { background: #fef9c3; color: #a16207; border-color: #fde047; }
-    .s-sakit { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
-    .s-alpa  { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+    .s-hadir { background: var(--accent-hadir-bg); color: var(--accent-hadir-text); border-color: var(--accent-hadir-border); }
+    .s-izin  { background: var(--accent-izin-bg); color: var(--accent-izin-text); border-color: var(--accent-izin-border); }
+    .s-sakit { background: var(--accent-sakit-bg); color: var(--accent-sakit-text); border-color: var(--accent-sakit-border); }
+    .s-alpa  { background: var(--accent-alpa-bg); color: var(--accent-alpa-text); border-color: var(--accent-alpa-border); }
 
     /* ===== BADGES ===== */
-    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 99px; font-size: 0.73rem; font-weight: 700; }
-    .badge-hadir { background: #dcfce7; color: #15803d; }
-    .badge-izin  { background: #fef9c3; color: #a16207; }
-    .badge-sakit { background: #dbeafe; color: #1d4ed8; }
-    .badge-alpa  { background: #fee2e2; color: #b91c1c; }
-    .badge-libur { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-    .badge-belum { background: #f3f4f6; color: #6b7280; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .badge-hadir { background: var(--accent-hadir-bg); color: var(--accent-hadir-text); border: 1px solid var(--accent-hadir-border); }
+    .badge-izin  { background: var(--accent-izin-bg); color: var(--accent-izin-text); border: 1px solid var(--accent-izin-border); }
+    .badge-sakit { background: var(--accent-sakit-bg); color: var(--accent-sakit-text); border: 1px solid var(--accent-sakit-border); }
+    .badge-alpa  { background: var(--accent-alpa-bg); color: var(--accent-alpa-text); border: 1px solid var(--accent-alpa-border); }
+    .badge-libur { background: var(--accent-libur-bg); color: #92400e; border: 1px solid var(--accent-libur-border); }
+    .badge-belum { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
 
     /* ===== SAVE ROW ===== */
     .save-row {
-      display: flex; align-items: center; justify-content: flex-end; gap: 12px;
-      margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--green-light);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-light);
     }
-
-    /* ===== STATS MINI ===== */
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-    @media (max-width: 560px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
-    .stat-box {
-      background: white; border: 1px solid var(--border);
-      border-radius: 12px; padding: 14px 16px;
-      text-align: center;
-    }
-    .stat-num { font-size: 1.6rem; font-weight: 800; }
-    .stat-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-top: 2px; }
-    .stat-hadir .stat-num { color: #15803d; }
-    .stat-izin .stat-num  { color: #a16207; }
-    .stat-sakit .stat-num { color: #1d4ed8; }
-    .stat-alpa .stat-num  { color: #b91c1c; }
 
     /* ===== EMPTY STATE ===== */
-    .empty { text-align: center; padding: 48px 24px; color: var(--text-muted); }
-    .empty-icon { font-size: 2.8rem; margin-bottom: 10px; }
-    .empty p { font-size: 0.85rem; }
+    .empty {
+      text-align: center;
+      padding: 56px 24px;
+      color: var(--text-muted);
+    }
+    .empty-icon-wrap {
+      width: 64px; height: 64px;
+      margin: 0 auto 16px;
+      background: #f1f5f9;
+      color: #94a3b8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .empty p { font-size: 0.9rem; font-weight: 500; }
 
     /* ===== MODAL ===== */
     .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(10,30,15,0.55);
-      display: flex; align-items: center; justify-content: center;
-      padding: 16px; z-index: 200;
-      backdrop-filter: blur(4px);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.22s;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 200;
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
     }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
     .modal {
-      background: white; border-radius: var(--radius);
-      box-shadow: 0 24px 80px rgba(0,0,0,0.22);
-      width: 100%; max-width: 720px; max-height: 88vh;
-      display: flex; flex-direction: column;
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 760px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
       transform: translateY(16px) scale(0.97);
-      transition: transform 0.22s;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid var(--border);
     }
     .modal-overlay.open .modal { transform: translateY(0) scale(1); }
     .modal-head {
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--green-light);
-      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 26px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
-    .modal-head h2 { font-size: 1.05rem; font-weight: 700; color: var(--green-dark); }
-    .modal-head .month-badge {
-      background: var(--green-light); color: var(--green);
-      padding: 4px 12px; border-radius: 99px; font-size: 0.78rem; font-weight: 700;
+    .modal-head-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-head h2 {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .month-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--accent-hadir-border);
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 700;
     }
     .modal-close {
-      width: 30px; height: 30px; border-radius: 50%;
-      border: none; background: #f3f4f6;
-      cursor: pointer; font-size: 0.9rem; color: #6b7280;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
     }
-    .modal-close:hover { background: #e5e7eb; }
-    .modal-body { flex: 1; overflow-y: auto; padding: 20px 24px 24px; }
+    .modal-close:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 26px 28px;
+    }
 
-    /* Summary table */
-    .sum-count { text-align: center; font-size: 1rem; font-weight: 800; }
-    .sum-hadir { color: #15803d; }
-    .sum-izin  { color: #a16207; }
-    .sum-sakit { color: #1d4ed8; }
-    .sum-alpa  { color: #b91c1c; }
+    /* Summary table counts */
+    .sum-count {
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+    .sum-hadir { color: var(--accent-hadir-text); }
+    .sum-izin  { color: var(--accent-izin-text); }
+    .sum-sakit { color: var(--accent-sakit-text); }
+    .sum-alpa  { color: var(--accent-alpa-text); }
 
-    /* ===== LOADING ===== */
-    .loading { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 48px; color: var(--text-muted); font-size: 0.875rem; }
-    .spin { width: 20px; height: 20px; border: 2.5px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    /* ===== LOADING SPINNER ===== */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 48px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .spin {
+      width: 22px; height: 22px;
+      border: 2.5px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ===== TOAST ===== */
-    #toaster { position: fixed; bottom: 24px; right: 24px; z-index: 400; display: flex; flex-direction: column; gap: 8px; }
-    .toast {
-      background: white; border-radius: 12px;
-      box-shadow: 0 6px 28px rgba(0,0,0,0.13);
-      padding: 12px 18px; font-size: 0.84rem; font-weight: 600;
-      display: flex; align-items: center; gap: 10px;
-      min-width: 220px; max-width: 300px;
-      border-left: 4px solid var(--green);
-      animation: toastIn 0.25s ease;
+    /* ===== TOASTER ===== */
+    #toaster {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 400;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .toast.error { border-color: var(--red); }
-    .toast.warning { border-color: var(--amber); }
-    @keyframes toastIn { from { transform: translateX(40px); opacity:0; } to { transform: translateX(0); opacity:1; } }
+    .toast {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+      padding: 13px 18px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 260px;
+      max-width: 360px;
+      border-left: 4px solid var(--primary);
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.error { border-left-color: var(--accent-alpa); }
+    .toast.warning { border-left-color: var(--accent-izin); }
+    @keyframes toastIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
     .hidden { display: none !important; }
     .flex { display: flex; }
     .gap-2 { gap: 8px; }
-    .mt-3 { margin-top: 12px; }
   </style>
 </head>
 <body>
@@ -388,56 +849,98 @@
 <!-- HEADER -->
 <header id="app-header">
   <div class="header-brand">
-    <div class="header-logo">
-      <img src="/logo.png" alt="Logo" />
+    <div class="header-logo-wrap">
+      <div class="header-logo">
+        <img src="/logo.png" alt="Logo" />
+      </div>
     </div>
-    <div>
-      <div class="header-title">Presensi Halaqah</div>
-      <div class="header-subtitle">Al-Atsar</div>
+    <div class="header-text">
+      <div class="header-title">
+        Presensi Halaqah
+        <span class="header-badge">Al-Atsar</span>
+      </div>
+      <div class="header-subtitle">Pencatatan Kehadiran Santri Halaqah Qur'an</div>
     </div>
   </div>
 </header>
 
 <!-- SUBNAV -->
-<nav id="subnav">
-  <button class="nav-btn active" data-panel="panel-santri" id="nav-santri">👤 Tambah Santri</button>
-  <button class="nav-btn" data-panel="panel-presensi" id="nav-presensi">✅ Input Presensi</button>
-  <button class="nav-btn" data-panel="panel-lihat" id="nav-lihat">👁 Lihat Presensi</button>
-  <div class="nav-end">
-    <button class="btn-rangkum hidden" id="btn-show-summary">📊 Rangkum Bulan Ini</button>
-  </div>
-</nav>
+<div id="subnav-wrap">
+  <nav id="subnav">
+    <div class="nav-tabs-group">
+      <button class="nav-btn active" data-panel="panel-santri" id="nav-santri">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+        <span>Data Santri</span>
+      </button>
+      <button class="nav-btn" data-panel="panel-presensi" id="nav-presensi">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+        <span>Input Presensi</span>
+      </button>
+      <button class="nav-btn" data-panel="panel-lihat" id="nav-lihat">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Lihat Presensi</span>
+      </button>
+    </div>
+    <div>
+      <button class="btn-rangkum hidden" id="btn-show-summary">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
+        <span>Rangkum Bulan Ini</span>
+      </button>
+    </div>
+  </nav>
+</div>
 
 <!-- APP -->
 <div id="app">
 
-  <!-- ===== PANEL: TAMBAH SANTRI ===== -->
+  <!-- ===== PANEL: DATA SANTRI ===== -->
   <div class="panel active" id="panel-santri">
     <div class="card">
       <div class="card-header">
-        <div class="card-icon">👤</div>
+        <div class="card-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+        </div>
         <div>
           <div class="card-title">Tambah Santri Baru</div>
-          <div class="card-subtitle">Daftarkan santri baru untuk mengikuti presensi halaqah</div>
+          <div class="card-subtitle">Daftarkan santri baru ke dalam data halaqah</div>
         </div>
       </div>
       <form id="add-student-form">
         <div class="form-grid-2">
-          <div>
-            <label for="new-student-name">Nama Lengkap</label>
-            <input type="text" id="new-student-name" placeholder="Nama santri" required />
+          <div class="form-group">
+            <label for="new-student-name">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Nama Lengkap Santri
+            </label>
+            <div class="input-wrap has-icon">
+              <span class="input-icon">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input type="text" id="new-student-name" placeholder="Contoh: Muhammad Halim" required />
+            </div>
           </div>
-          <div>
-            <label for="new-student-class">Kelas</label>
-            <select id="new-student-class" required>
-              <option value="10">Kelas 10</option>
-              <option value="11">Kelas 11</option>
-              <option value="12">Kelas 12</option>
-            </select>
+          <div class="form-group">
+            <label for="new-student-class">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              Tingkat Kelas
+            </label>
+            <div class="input-wrap has-icon">
+              <span class="input-icon">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+              </span>
+              <select id="new-student-class" required>
+                <option value="10">Kelas 10</option>
+                <option value="11">Kelas 11</option>
+                <option value="12">Kelas 12</option>
+              </select>
+            </div>
           </div>
         </div>
-        <div class="flex" style="justify-content:flex-end; margin-top:16px;">
-          <button type="submit" id="btn-add-student" class="btn btn-primary">➕ Tambah Santri</button>
+        <div class="flex" style="justify-content:flex-end; margin-top:20px;">
+          <button type="submit" id="btn-add-student" class="btn btn-primary">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+            <span>Tambah Santri</span>
+          </button>
         </div>
       </form>
     </div>
@@ -445,10 +948,12 @@
     <!-- Daftar Santri -->
     <div class="card">
       <div class="card-header">
-        <div class="card-icon">📋</div>
+        <div class="card-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
         <div>
           <div class="card-title">Daftar Santri Terdaftar</div>
-          <div class="card-subtitle" id="santri-count-label">Memuat...</div>
+          <div class="card-subtitle" id="santri-count-label">Memuat daftar santri...</div>
         </div>
       </div>
       <div id="santri-loading" class="loading"><div class="spin"></div> Memuat data santri...</div>
@@ -456,9 +961,9 @@
         <table>
           <thead>
             <tr>
-              <th>Nama Santri</th>
+              <th>Santri</th>
               <th>Kelas</th>
-              <th>Aksi</th>
+              <th style="width:140px; text-align:right;">Aksi</th>
             </tr>
           </thead>
           <tbody id="santri-table-body"></tbody>
@@ -471,57 +976,85 @@
   <div class="panel" id="panel-presensi">
     <div class="card">
       <div class="card-header">
-        <div class="card-icon">✅</div>
+        <div class="card-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+        </div>
         <div>
-          <div class="card-title">Input Presensi</div>
-          <div class="card-subtitle">Pilih tanggal dan sesi, lalu isi status kehadiran santri</div>
+          <div class="card-title">Input Presensi Santri</div>
+          <div class="card-subtitle">Pilih tanggal dan sesi halaqah untuk mengisi absensi kehadiran</div>
         </div>
       </div>
 
       <div class="controls-row">
-        <div>
-          <label for="main-date">Tanggal</label>
-          <input type="date" id="main-date" />
+        <div class="form-group">
+          <label for="main-date">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+            Tanggal Halaqah
+          </label>
+          <div class="input-wrap has-icon">
+            <span class="input-icon">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+            </span>
+            <input type="date" id="main-date" />
+          </div>
         </div>
-        <div>
-          <label for="main-session">Sesi</label>
-          <select id="main-session">
-            <option value="pagi">🌤 Pagi</option>
-            <option value="siang">☀️ Siang</option>
-            <option value="malam">🌙 Malam</option>
-          </select>
+        <div class="form-group">
+          <label for="main-session">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Sesi Halaqah
+          </label>
+          <div class="input-wrap has-icon">
+            <span class="input-icon">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            </span>
+            <select id="main-session">
+              <option value="pagi">Sesi Pagi (Subuh)</option>
+              <option value="siang">Sesi Siang (Ashar)</option>
+              <option value="malam">Sesi Malam (Maghrib/Isya)</option>
+            </select>
+          </div>
         </div>
       </div>
 
       <!-- Holiday Controls -->
       <div class="holiday-ctrl" id="holiday-ctrl-box">
         <div class="holiday-ctrl-left">
-          <span class="icon">🌴</span>
+          <div class="holiday-ctrl-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z"/><path d="M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5h-2c0-1.66-1.57-3-3.5-3a3.83 3.83 0 0 0-2.67 1.07"/><path d="M5.8 13.5A7.8 7.8 0 0 0 2 18h2c0-2.21 1.79-4 4-4"/><path d="M11 22v-6.5c0-1.93-1.57-3.5-3.5-3.5H7"/><path d="M18 22v-9a4 4 0 0 0-4-4h-1"/></svg>
+          </div>
           <div>
             <div class="hl-title">Pengaturan Hari Libur</div>
-            <div class="hl-sub">Tandai tanggal ini libur agar presensi dikunci</div>
+            <div class="hl-sub">Kunci presensi jika kegiatan halaqah diliburkan</div>
           </div>
         </div>
         <div class="holiday-ctrl-right">
-          <button type="button" id="btn-mark-holiday" class="btn btn-amber">🌴 Tandai Libur</button>
-          <button type="button" id="btn-cancel-holiday" class="btn btn-amber-outline hidden">❌ Batalkan Libur</button>
+          <button type="button" id="btn-mark-holiday" class="btn btn-amber btn-sm">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364-.707-.707M6.343 6.343l-.707-.707m12.728 0-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/></svg>
+            <span>Tandai Libur</span>
+          </button>
+          <button type="button" id="btn-cancel-holiday" class="btn btn-amber-outline btn-sm hidden">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+            <span>Batalkan Libur</span>
+          </button>
         </div>
       </div>
 
       <div id="holiday-weekend-info" class="strip-weekend hidden">
-        <span>🌴</span>
-        <span id="holiday-weekend-text">Hari Sabtu & Minggu sudah otomatis libur.</span>
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+        <span id="holiday-weekend-text">Hari Sabtu & Minggu adalah jadwal libur rutin akhir pekan.</span>
       </div>
 
       <div id="main-holiday-banner" class="alert-libur hidden">
-        <span style="font-size:2rem">🌴</span>
+        <div class="alert-libur-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z"/><path d="M18 22v-9a4 4 0 0 0-4-4h-1"/></svg>
+        </div>
         <div>
-          <h3 id="main-holiday-title">Hari Ini Libur</h3>
-          <p id="main-holiday-reason">Tidak ada kegiatan halaqah.</p>
+          <h3 id="main-holiday-title">Hari Ini Libur Halaqah</h3>
+          <p id="main-holiday-reason">Tidak ada kegiatan halaqah pada tanggal ini.</p>
         </div>
       </div>
 
-      <div id="main-loading" class="loading hidden"><div class="spin"></div> Memuat presensi...</div>
+      <div id="main-loading" class="loading hidden"><div class="spin"></div> Memuat data presensi...</div>
 
       <div id="main-table-container" class="hidden">
         <form id="attendance-form">
@@ -529,19 +1062,19 @@
             <table>
               <thead>
                 <tr>
-                  <th>Nama Santri</th>
+                  <th>Santri</th>
                   <th>Kelas</th>
-                  <th>Status Presensi</th>
+                  <th style="width:160px;">Status Kehadiran</th>
                 </tr>
               </thead>
               <tbody id="main-table-body"></tbody>
             </table>
           </div>
           <div id="save-attendance-container" class="save-row hidden">
-            <div id="attendance-message" class="hidden" style="font-size:0.82rem;font-weight:600;"></div>
+            <div id="attendance-message" class="hidden" style="font-size:0.84rem;font-weight:600;"></div>
             <button type="button" id="btn-save-attendance" class="btn btn-primary">
-              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-              Simpan Presensi
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <span>Simpan Presensi</span>
             </button>
           </div>
         </form>
@@ -553,54 +1086,106 @@
   <div class="panel" id="panel-lihat">
     <div class="card">
       <div class="card-header">
-        <div class="card-icon">👁</div>
+        <div class="card-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
         <div>
-          <div class="card-title">Lihat Hasil Presensi</div>
-          <div class="card-subtitle">Tampilan rekap harian presensi santri (read-only)</div>
+          <div class="card-title">Lihat Rekap Presensi</div>
+          <div class="card-subtitle">Laporan presensi harian per sesi halaqah</div>
         </div>
       </div>
 
       <div class="controls-row">
-        <div>
-          <label for="view-date">Tanggal</label>
-          <input type="date" id="view-date" />
+        <div class="form-group">
+          <label for="view-date">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+            Pilih Tanggal
+          </label>
+          <div class="input-wrap has-icon">
+            <span class="input-icon">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+            </span>
+            <input type="date" id="view-date" />
+          </div>
         </div>
-        <div>
-          <label for="view-session">Sesi</label>
-          <select id="view-session">
-            <option value="pagi">🌤 Pagi</option>
-            <option value="siang">☀️ Siang</option>
-            <option value="malam">🌙 Malam</option>
-          </select>
+        <div class="form-group">
+          <label for="view-session">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Pilih Sesi
+          </label>
+          <div class="input-wrap has-icon">
+            <span class="input-icon">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/></svg>
+            </span>
+            <select id="view-session">
+              <option value="pagi">Sesi Pagi (Subuh)</option>
+              <option value="siang">Sesi Siang (Ashar)</option>
+              <option value="malam">Sesi Malam (Maghrib/Isya)</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <!-- Mini Stats -->
+      <!-- Stats Grid -->
       <div class="stats-row" id="view-stats">
-        <div class="stat-box stat-hadir"><div class="stat-num" id="stat-hadir">0</div><div class="stat-label">Hadir</div></div>
-        <div class="stat-box stat-izin"><div class="stat-num" id="stat-izin">0</div><div class="stat-label">Izin</div></div>
-        <div class="stat-box stat-sakit"><div class="stat-num" id="stat-sakit">0</div><div class="stat-label">Sakit</div></div>
-        <div class="stat-box stat-alpa"><div class="stat-num" id="stat-alpa">0</div><div class="stat-label">Alpa</div></div>
+        <div class="stat-box stat-hadir">
+          <div class="stat-icon-wrap">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="stat-hadir">0</div>
+            <div class="stat-label">Hadir</div>
+          </div>
+        </div>
+        <div class="stat-box stat-izin">
+          <div class="stat-icon-wrap">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="stat-izin">0</div>
+            <div class="stat-label">Izin</div>
+          </div>
+        </div>
+        <div class="stat-box stat-sakit">
+          <div class="stat-icon-wrap">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="stat-sakit">0</div>
+            <div class="stat-label">Sakit</div>
+          </div>
+        </div>
+        <div class="stat-box stat-alpa">
+          <div class="stat-icon-wrap">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="stat-alpa">0</div>
+            <div class="stat-label">Alpa</div>
+          </div>
+        </div>
       </div>
 
       <div id="view-holiday-banner" class="alert-libur hidden">
-        <span style="font-size:2rem">🌴</span>
+        <div class="alert-libur-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z"/><path d="M18 22v-9a4 4 0 0 0-4-4h-1"/></svg>
+        </div>
         <div>
-          <h3 id="view-holiday-title">Hari Ini Libur</h3>
+          <h3 id="view-holiday-title">Hari Ini Libur Halaqah</h3>
           <p id="view-holiday-reason">Tidak ada kegiatan halaqah.</p>
         </div>
       </div>
 
-      <div id="view-loading" class="loading hidden"><div class="spin"></div> Memuat data...</div>
+      <div id="view-loading" class="loading hidden"><div class="spin"></div> Memuat rekap presensi...</div>
 
       <div id="view-table-wrap" class="hidden">
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Nama Santri</th>
+                <th>Santri</th>
                 <th>Kelas</th>
-                <th class="center">Status</th>
+                <th class="center" style="width:160px;">Status Kehadiran</th>
               </tr>
             </thead>
             <tbody id="view-table-body"></tbody>
@@ -616,30 +1201,69 @@
 <div id="summary-modal" class="modal-overlay">
   <div class="modal">
     <div class="modal-head">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <h2>Rangkuman Presensi</h2>
+      <div class="modal-head-title-wrap">
+        <div class="card-icon" style="width:36px; height:36px; border-radius:10px;">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
+        </div>
+        <h2 id="summary-modal-title">Rangkuman Presensi Bulanan</h2>
         <span class="month-badge" id="summary-month-badge">—</span>
       </div>
-      <button class="modal-close" id="btn-close-summary">✕</button>
+      <button class="modal-close" id="btn-close-summary" aria-label="Tutup">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+      </button>
     </div>
     <div class="modal-body">
-      <div id="summary-loading" class="loading hidden"><div class="spin"></div> Menghitung data...</div>
-      <div id="summary-stats" class="stats-row" style="margin-bottom:16px;">
-        <div class="stat-box stat-hadir"><div class="stat-num" id="sum-stat-hadir">0</div><div class="stat-label">Total Hadir</div></div>
-        <div class="stat-box stat-izin"><div class="stat-num" id="sum-stat-izin">0</div><div class="stat-label">Total Izin</div></div>
-        <div class="stat-box stat-sakit"><div class="stat-num" id="sum-stat-sakit">0</div><div class="stat-label">Total Sakit</div></div>
-        <div class="stat-box stat-alpa"><div class="stat-num" id="sum-stat-alpa">0</div><div class="stat-label">Total Alpa</div></div>
+      <div id="summary-loading" class="loading hidden"><div class="spin"></div> Mengkalkulasi data rangkuman...</div>
+      
+      <div id="summary-stats" class="stats-row" style="margin-bottom:20px;">
+        <div class="stat-box stat-hadir">
+          <div class="stat-icon-wrap">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="sum-stat-hadir">0</div>
+            <div class="stat-label">Total Hadir</div>
+          </div>
+        </div>
+        <div class="stat-box stat-izin">
+          <div class="stat-icon-wrap">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="sum-stat-izin">0</div>
+            <div class="stat-label">Total Izin</div>
+          </div>
+        </div>
+        <div class="stat-box stat-sakit">
+          <div class="stat-icon-wrap">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="sum-stat-sakit">0</div>
+            <div class="stat-label">Total Sakit</div>
+          </div>
+        </div>
+        <div class="stat-box stat-alpa">
+          <div class="stat-icon-wrap">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="sum-stat-alpa">0</div>
+            <div class="stat-label">Total Alpa</div>
+          </div>
+        </div>
       </div>
+
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Nama Santri</th>
+              <th>Santri</th>
               <th>Kelas</th>
-              <th class="center" style="color:#15803d">Hadir</th>
-              <th class="center" style="color:#a16207">Izin</th>
-              <th class="center" style="color:#1d4ed8">Sakit</th>
-              <th class="center" style="color:#b91c1c">Alpa</th>
+              <th class="center" style="color:var(--accent-hadir-text)">Hadir</th>
+              <th class="center" style="color:var(--accent-izin-text)">Izin</th>
+              <th class="center" style="color:var(--accent-sakit-text)">Sakit</th>
+              <th class="center" style="color:var(--accent-alpa-text)">Alpa</th>
             </tr>
           </thead>
           <tbody id="summary-table-body"></tbody>
