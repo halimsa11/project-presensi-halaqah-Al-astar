@@ -316,6 +316,19 @@
       border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== RESPONSIVE MOBILE ===== */
+    @media (max-width: 480px) {
+      .header-brand { flex-direction: column; text-align: center; gap: 8px; }
+      #app-header { height: auto; padding: 16px; }
+      
+      .profile-card { flex-direction: column; text-align: center; }
+      .prof-details { justify-content: center; }
+      
+      .month-nav { flex-direction: column; gap: 12px; align-items: stretch; }
+      .month-nav input[type="month"] { width: 100%; }
+      .month-title { text-align: center; }
+    }
   </style>
 </head>
 <body>
