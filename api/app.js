@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { db } from '../db/index.js';
 import { students, attendances, holidays } from '../db/schema.js';
-import { eq, and, gte, lte } from 'drizzle-orm';
+import { eq, and, gte, lte, or, isNull } from 'drizzle-orm';
 
 const app = new Hono().basePath('/api');
 
@@ -28,20 +28,50 @@ app.get('/holidays', async (c) => {
 });
 
 app.post('/holidays', async (c) => {
-  const { date, reason } = await c.req.json();
+  const { date, reason, type, session } = await c.req.json();
   if (!date) return c.json({ error: 'Date is required' }, 400);
+
+  const holidayType = type || 'day';
+
+  if (holidayType === 'session' && !session) {
+    return c.json({ error: 'Session is required for session holiday' }, 400);
+  }
+
   try {
-    await db.insert(holidays).values({ date, reason: reason || 'Libur Halaqah' }).onConflictDoNothing();
+    // Check if duplicate exists
+    if (holidayType === 'day') {
+      const existing = await db.select().from(holidays).where(
+        and(eq(holidays.date, date), eq(holidays.type, 'day'))
+      );
+      if (existing.length > 0) {
+        return c.json({ message: 'Hari libur sudah ada' }, 200);
+      }
+    } else {
+      const existing = await db.select().from(holidays).where(
+        and(eq(holidays.date, date), eq(holidays.type, 'session'), eq(holidays.session, session))
+      );
+      if (existing.length > 0) {
+        return c.json({ message: 'Libur sesi sudah ada' }, 200);
+      }
+    }
+
+    await db.insert(holidays).values({
+      date,
+      type: holidayType,
+      session: holidayType === 'session' ? session : null,
+      reason: reason || (holidayType === 'day' ? 'Libur Halaqah' : `Libur Sesi ${session}`)
+    });
     return c.json({ message: 'Hari libur berhasil ditambahkan' }, 201);
   } catch (err) {
+    console.error('Holiday insert error:', err);
     return c.json({ error: 'Gagal menambahkan hari libur' }, 500);
   }
 });
 
-app.delete('/holidays/:date', async (c) => {
-  const date = c.req.param('date');
+app.delete('/holidays/:id', async (c) => {
+  const id = c.req.param('id');
   try {
-    await db.delete(holidays).where(eq(holidays.date, date));
+    await db.delete(holidays).where(eq(holidays.id, parseInt(id)));
     return c.json({ message: 'Hari libur dihapus' });
   } catch (err) {
     return c.json({ error: 'Gagal menghapus hari libur' }, 500);
@@ -51,13 +81,21 @@ app.delete('/holidays/:date', async (c) => {
 // ============ STUDENTS ============
 
 app.get('/students', async (c) => {
-  const allStudents = await db.select().from(students);
+  const session = c.req.query('session');
+  let allStudents = await db.select().from(students);
+
+  // Filter by session eligibility
+  if (session === 'pagi' || session === 'malam') {
+    allStudents = allStudents.filter(s => s.type === 'boarding');
+  }
+  // siang = semua (boarding + reguler)
+
   return c.json(allStudents);
 });
 
-// Auto-generate ID — user only provides name + class
+// Auto-generate ID — user only provides name + class + type + nis
 app.post('/students', async (c) => {
-  const { name, class: studentClass } = await c.req.json();
+  const { name, class: studentClass, type, nis } = await c.req.json();
   if (!name || !studentClass) {
     return c.json({ error: 'Nama dan kelas harus diisi' }, 400);
   }
@@ -66,28 +104,39 @@ app.post('/students', async (c) => {
   try {
     await db.insert(students).values({
       id: autoId,
+      nis: nis ? nis.trim() : null,
       name: name.trim(),
-      class: parseInt(studentClass)
+      class: parseInt(studentClass),
+      type: type || 'boarding'
     });
     return c.json({ message: 'Santri berhasil ditambahkan', id: autoId }, 201);
   } catch (error) {
     console.error(error);
+    if (error.message?.includes('students_nis_unique')) {
+      return c.json({ error: 'NIS sudah digunakan santri lain' }, 400);
+    }
     return c.json({ error: 'Gagal menambahkan santri' }, 500);
   }
 });
 
 app.put('/students/:id', async (c) => {
   const id = c.req.param('id');
-  const { name, class: studentClass } = await c.req.json();
+  const { name, class: studentClass, type, nis } = await c.req.json();
   if (!name || !studentClass) {
     return c.json({ error: 'Nama dan kelas harus diisi' }, 400);
   }
   try {
+    const updateData = { name: name.trim(), class: parseInt(studentClass) };
+    if (type) updateData.type = type;
+    if (nis !== undefined) updateData.nis = nis ? nis.trim() : null;
     await db.update(students)
-      .set({ name: name.trim(), class: parseInt(studentClass) })
+      .set(updateData)
       .where(eq(students.id, id));
     return c.json({ message: 'Santri berhasil diperbarui' });
   } catch (error) {
+    if (error.message?.includes('students_nis_unique')) {
+      return c.json({ error: 'NIS sudah digunakan santri lain' }, 400);
+    }
     return c.json({ error: 'Gagal memperbarui santri' }, 500);
   }
 });
@@ -156,6 +205,81 @@ app.post('/attendance', async (c) => {
     );
   }
   return c.json({ message: 'Presensi berhasil disimpan' });
+});
+
+// ============ WALI SISWA (PUBLIC) ============
+
+app.get('/wali/lookup', async (c) => {
+  const nis = c.req.query('nis');
+  const month = c.req.query('month'); // YYYY-MM, optional
+  
+  if (!nis) {
+    return c.json({ error: 'NIS harus diisi' }, 400);
+  }
+  
+  try {
+    const studentList = await db.select().from(students).where(eq(students.nis, nis.trim()));
+    if (studentList.length === 0) {
+      return c.json({ error: 'Santri dengan NIS tersebut tidak ditemukan' }, 404);
+    }
+    
+    const student = studentList[0];
+    
+    // Determine month range
+    const targetMonth = month || new Date().toISOString().substring(0, 7);
+    const [y, m] = targetMonth.split('-').map(Number);
+    const startDate = `${targetMonth}-01`;
+    const lastDay = new Date(y, m, 0).getDate();
+    const endDate = `${targetMonth}-${String(lastDay).padStart(2, '0')}`;
+    
+    // Get attendance records for the month
+    const attRecords = await db.select().from(attendances).where(
+      and(
+        eq(attendances.studentId, student.id),
+        gte(attendances.date, startDate),
+        lte(attendances.date, endDate)
+      )
+    );
+    
+    // Get holidays for the month
+    const holidayRecords = await db.select().from(holidays).where(
+      and(
+        gte(holidays.date, startDate),
+        lte(holidays.date, endDate)
+      )
+    );
+    
+    // Calculate summary
+    const summary = { hadir: 0, izin: 0, sakit: 0, alpa: 0 };
+    attRecords.forEach(a => {
+      if (summary[a.status] !== undefined) summary[a.status]++;
+    });
+    
+    return c.json({
+      student: {
+        name: student.name,
+        nis: student.nis,
+        class: student.class,
+        type: student.type
+      },
+      month: targetMonth,
+      attendance: attRecords.map(a => ({
+        date: a.date,
+        session: a.session,
+        status: a.status
+      })),
+      holidays: holidayRecords.map(h => ({
+        date: h.date,
+        type: h.type,
+        session: h.session,
+        reason: h.reason
+      })),
+      summary
+    });
+  } catch (err) {
+    console.error('Wali lookup error:', err);
+    return c.json({ error: 'Gagal mengambil data santri' }, 500);
+  }
 });
 
 export default app;

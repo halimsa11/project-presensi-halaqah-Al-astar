@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Wali Siswa - Halaqah Al-Atsar</title>
+  <meta name="description" content="Portal cek presensi untuk wali siswa Halaqah Al-Atsar" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #065f46;
+      --primary-dark: #044332;
+      --primary-light: #ecfdf5;
+      --primary-mid: #059669;
+      --primary-glow: rgba(5, 150, 105, 0.18);
+      
+      --accent-hadir: #10b981;
+      --accent-hadir-bg: #ecfdf5;
+      --accent-hadir-text: #065f46;
+      
+      --accent-izin: #f59e0b;
+      --accent-izin-bg: #fffbeb;
+      --accent-izin-text: #92400e;
+      
+      --accent-sakit: #3b82f6;
+      --accent-sakit-bg: #eff6ff;
+      --accent-sakit-text: #1e40af;
+      
+      --accent-alpa: #f43f5e;
+      --accent-alpa-bg: #fff1f2;
+      --accent-alpa-text: #9f1239;
+
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-light: #f1f5f9;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-sub: #94a3b8;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .icon {
+      width: 18px; height: 18px;
+      display: inline-block;
+      vertical-align: middle;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .icon-sm { width: 15px; height: 15px; }
+    .icon-md { width: 20px; height: 20px; }
+    .icon-lg { width: 24px; height: 24px; }
+
+    /* ===== HEADER ===== */
+    #app-header {
+      background: linear-gradient(135deg, #022c22 0%, #064e3b 45%, #047857 100%);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 70px;
+      box-shadow: 0 4px 20px rgba(4, 120, 87, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+    .header-logo {
+      background: white;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.25);
+      flex-shrink: 0;
+    }
+    .header-logo img { width: 32px; height: 32px; object-fit: contain; }
+    .header-title {
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-badge {
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 99px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .header-subtitle {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.76rem;
+      font-weight: 500;
+      margin-top: 1px;
+    }
+
+    /* ===== MAIN CONTAINER ===== */
+    #app {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 32px 16px 64px;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 26px;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .card-icon {
+      width: 44px; height: 44px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .card-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* ===== FORM CONTROLS ===== */
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-icon { position: absolute; left: 14px; color: var(--text-sub); pointer-events: none; }
+    input[type="text"], input[type="month"] {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 11px 16px 11px 42px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--text);
+      transition: all 0.2s;
+      outline: none;
+    }
+    input:focus {
+      border-color: var(--primary-mid);
+      box-shadow: 0 0 0 3.5px var(--primary-glow);
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 22px; border-radius: var(--radius-md);
+      font-size: 0.95rem; font-weight: 700; font-family: inherit;
+      cursor: pointer; border: none; transition: all 0.18s; width: 100%;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+      color: white; box-shadow: 0 3px 12px var(--primary-glow);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    }
+    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+    /* ===== STATS GRID ===== */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 24px 0;
+    }
+    .stat-box {
+      background: #ffffff; border-radius: var(--radius-lg); padding: 16px;
+      display: flex; align-items: center; gap: 14px;
+      border: 1.5px solid var(--border);
+    }
+    .stat-icon-wrap {
+      width: 38px; height: 38px; border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .stat-hadir .stat-icon-wrap { background: var(--accent-hadir-bg); color: var(--accent-hadir-text); }
+    .stat-izin .stat-icon-wrap  { background: var(--accent-izin-bg); color: var(--accent-izin-text); }
+    .stat-sakit .stat-icon-wrap { background: var(--accent-sakit-bg); color: var(--accent-sakit-text); }
+    .stat-alpa .stat-icon-wrap  { background: var(--accent-alpa-bg); color: var(--accent-alpa-text); }
+    .stat-num { font-size: 1.3rem; font-weight: 800; line-height: 1; }
+    .stat-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
+    
+    .stat-hadir .stat-num { color: var(--accent-hadir-text); }
+    .stat-izin .stat-num  { color: var(--accent-izin-text); }
+    .stat-sakit .stat-num { color: var(--accent-sakit-text); }
+    .stat-alpa .stat-num  { color: var(--accent-alpa-text); }
+
+    /* ===== PROFILE ===== */
+    .profile-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+    .avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      color: white; font-size: 1.3rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    }
+    .prof-name { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .prof-details { display: flex; gap: 8px; flex-wrap: wrap; }
+    
+    .badge {
+      display: inline-flex; align-items: center; padding: 4px 10px;
+      border-radius: 99px; font-size: 0.75rem; font-weight: 700;
+      border: 1px solid var(--border); background: white;
+    }
+    
+    /* ===== CALENDAR LIST ===== */
+    .month-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .month-nav input[type="month"] { width: auto; padding: 8px 12px 8px 40px; font-size: 0.9rem; }
+    .month-title { font-weight: 800; font-size: 1.05rem; }
+
+    .record-list { display: flex; flex-direction: column; gap: 12px; }
+    .record-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 16px; border-radius: var(--radius-md);
+      border: 1px solid var(--border); background: #f8fafc;
+    }
+    .r-date { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+    .r-session { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .r-status { font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+
+    .status-hadir { color: var(--accent-hadir-text); }
+    .status-izin { color: var(--accent-izin-text); }
+    .status-sakit { color: var(--accent-sakit-text); }
+    .status-alpa { color: var(--accent-alpa-text); }
+    .status-libur { color: #92400e; }
+
+    /* ===== ERROR / EMPTY ===== */
+    .error-msg {
+      background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3;
+      padding: 14px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.9rem;
+      margin-bottom: 16px; display: none; align-items: center; gap: 10px;
+    }
+    .empty { text-align: center; padding: 32px 16px; color: var(--text-muted); }
+    .empty-icon { width: 48px; height: 48px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: #64748b; }
+    
+    .hidden { display: none !important; }
+
+    /* ANIMATION */
+    .spin {
+      width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<header id="app-header">
+  <div class="header-brand">
+    <div class="header-logo"><img src="/logo.png" alt="Logo" /></div>
+    <div class="header-text">
+      <div class="header-title">Portal Wali Siswa</div>
+      <div class="header-subtitle">Halaqah Al-Atsar</div>
+    </div>
+  </div>
+</header>
+
+<div id="app">
+
+  <!-- FORM NIS -->
+  <div class="card" id="search-card">
+    <div class="card-header" style="border:none; padding-bottom:0;">
+      <div class="card-icon">
+        <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div>
+        <div class="card-title">Cek Presensi Siswa</div>
+        <div class="card-subtitle">Masukkan NIS untuk melihat data kehadiran</div>
+      </div>
+    </div>
+
+    <form id="search-form" style="margin-top:20px;">
+      <div id="error-box" class="error-msg">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+        <span id="error-text">NIS tidak ditemukan.</span>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="nis-input">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+          Nomor Induk Siswa (NIS)
+        </label>
+        <div class="input-wrap has-icon">
+          <span class="input-icon">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <input type="text" id="nis-input" placeholder="Masukkan NIS anak Anda..." required autocomplete="off" />
+        </div>
+      </div>
+      
+      <button type="submit" id="btn-search" class="btn btn-primary">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
+        <span>Lihat Data Presensi</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- RESULT CARD -->
+  <div class="card hidden" id="result-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+      <h3 style="font-size: 1.1rem; font-weight:800;">Data Siswa</h3>
+      <button id="btn-back" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; font-size:0.9rem; text-decoration:underline;">Cari NIS Lain</button>
+    </div>
+
+    <div class="profile-card">
+      <div class="avatar" id="prof-init">M</div>
+      <div>
+        <div class="prof-name" id="prof-name">Nama Siswa</div>
+        <div class="prof-details">
+          <span class="badge" id="prof-nis">NIS: 12345</span>
+          <span class="badge" id="prof-class">Kelas 10</span>
+          <span class="badge" id="prof-type" style="background:#eff6ff; color:#1e40af; border-color:#93c5fd;">Boarding</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="month-nav">
+      <div class="month-title" id="month-title">Presensi Bulan Ini</div>
+      <div class="input-wrap has-icon">
+        <span class="input-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></span>
+        <input type="month" id="month-input" />
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box stat-hadir">
+        <div class="stat-icon-wrap"><svg class="icon icon-md" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div><div class="stat-num" id="stat-hadir">0</div><div class="stat-label">Hadir</div></div>
+      </div>
+      <div class="stat-box stat-izin">
+        <div class="stat-icon-wrap"><svg class="icon icon-md" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg></div>
+        <div><div class="stat-num" id="stat-izin">0</div><div class="stat-label">Izin</div></div>
+      </div>
+      <div class="stat-box stat-sakit">
+        <div class="stat-icon-wrap"><svg class="icon icon-md" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div>
+        <div><div class="stat-num" id="stat-sakit">0</div><div class="stat-label">Sakit</div></div>
+      </div>
+      <div class="stat-box stat-alpa">
+        <div class="stat-icon-wrap"><svg class="icon icon-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg></div>
+        <div><div class="stat-num" id="stat-alpa">0</div><div class="stat-label">Alpa</div></div>
+      </div>
+    </div>
+
+    <h4 style="font-size: 0.9rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:12px; margin-top:24px;">Riwayat Harian</h4>
+    
+    <div id="record-container" class="record-list">
+      <!-- Records injected by JS -->
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const API_URL = '/api';
+  
+  const searchForm = document.getElementById('search-form');
+  const nisInput = document.getElementById('nis-input');
+  const btnSearch = document.getElementById('btn-search');
+  const errorBox = document.getElementById('error-box');
+  const errorText = document.getElementById('error-text');
+  
+  const searchCard = document.getElementById('search-card');
+  const resultCard = document.getElementById('result-card');
+  const btnBack = document.getElementById('btn-back');
+  const monthInput = document.getElementById('month-input');
+  const monthTitle = document.getElementById('month-title');
+  
+  // Set default month
+  const today = new Date();
+  const currentMonth = today.toISOString().substring(0, 7);
+  monthInput.value = currentMonth;
+  
+  let currentNis = '';
+
+  const MONTH_NAMES = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  
+  function getInitials(name) {
+    if (!name) return 'S';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  const ICONS = {
+    hadir: `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+    izin: `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>`,
+    sakit: `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`,
+    alpa: `<svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>`,
+    libur: `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z"/><path d="M18 22v-9a4 4 0 0 0-4-4h-1"/></svg>`
+  };
+
+  const SESSION_LABELS = { pagi: 'Pagi (Subuh)', siang: 'Siang (Ashar)', malam: 'Malam (Isya)' };
+
+  function renderData(data) {
+    const { student, summary, attendance, holidays } = data;
+    
+    // Profile
+    document.getElementById('prof-name').textContent = student.name;
+    document.getElementById('prof-init').textContent = getInitials(student.name);
+    document.getElementById('prof-nis').textContent = `NIS: ${student.nis}`;
+    document.getElementById('prof-class').textContent = `Kelas ${student.class}`;
+    
+    const typeBadge = document.getElementById('prof-type');
+    if (student.type === 'reguler') {
+      typeBadge.textContent = 'Reguler (PP)';
+      typeBadge.style.background = '#f5f3ff'; typeBadge.style.color = '#5b21b6'; typeBadge.style.borderColor = '#c4b5fd';
+    } else {
+      typeBadge.textContent = 'Boarding';
+      typeBadge.style.background = '#eff6ff'; typeBadge.style.color = '#1e40af'; typeBadge.style.borderColor = '#93c5fd';
+    }
+
+    // Stats
+    document.getElementById('stat-hadir').textContent = summary.hadir;
+    document.getElementById('stat-izin').textContent = summary.izin;
+    document.getElementById('stat-sakit').textContent = summary.sakit;
+    document.getElementById('stat-alpa').textContent = summary.alpa;
+
+    // Month Title
+    const [y, m] = monthInput.value.split('-');
+    monthTitle.textContent = `Presensi ${MONTH_NAMES[parseInt(m)-1]} ${y}`;
+
+    // Records
+    const container = document.getElementById('record-container');
+    container.innerHTML = '';
+
+    if (attendance.length === 0 && holidays.length === 0) {
+      container.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon"><svg class="icon icon-lg" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></div>
+          <p>Belum ada data presensi di bulan ini.</p>
+        </div>`;
+      return;
+    }
+
+    // Combine and sort (newest first)
+    const combined = [];
+    attendance.forEach(a => combined.push({ ...a, _type: 'att' }));
+    holidays.forEach(h => combined.push({ ...h, _type: 'holiday' }));
+    
+    combined.sort((a, b) => {
+      if (a.date !== b.date) return b.date.localeCompare(a.date);
+      // For same date, we just need stable sort.
+      return 0;
+    });
+
+    combined.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'record-item';
+      
+      const dateObj = new Date(item.date);
+      const dateStr = `${dateObj.getDate()} ${MONTH_NAMES[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+
+      if (item._type === 'att') {
+        const statusLabel = item.status.charAt(0).toUpperCase() + item.status.slice(1);
+        el.innerHTML = `
+          <div>
+            <div class="r-date">${dateStr}</div>
+            <div class="r-session">Sesi ${SESSION_LABELS[item.session] || item.session}</div>
+          </div>
+          <div class="r-status status-${item.status}">
+            ${ICONS[item.status]} ${statusLabel}
+          </div>
+        `;
+      } else {
+        // Holiday
+        // Filter out session holidays that don't apply to this student
+        if (item.type === 'session') {
+          if (student.type === 'reguler' && item.session !== 'siang') return; // reguler only cares about siang
+        }
+        
+        const label = item.type === 'session' ? `Libur Sesi ${SESSION_LABELS[item.session] || item.session}` : 'Libur Halaqah';
+        el.style.background = '#fffbeb';
+        el.style.borderColor = '#fef3c7';
+        el.innerHTML = `
+          <div>
+            <div class="r-date">${dateStr}</div>
+            <div class="r-session" style="color:#b45309;">${item.reason || label}</div>
+          </div>
+          <div class="r-status status-libur">
+            ${ICONS.libur} ${item.type === 'session' ? 'Libur Sesi' : 'Libur'}
+          </div>
+        `;
+      }
+      container.appendChild(el);
+    });
+  }
+
+  async function fetchLookup(nis, month) {
+    try {
+      errorBox.style.display = 'none';
+      btnSearch.disabled = true;
+      btnSearch.innerHTML = `<div class="spin"></div> <span>Mencari...</span>`;
+
+      const res = await fetch(`${API_URL}/wali/lookup?nis=${encodeURIComponent(nis)}&month=${month}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Terjadi kesalahan sistem');
+      }
+
+      currentNis = nis;
+      renderData(data);
+      
+      searchCard.classList.add('hidden');
+      resultCard.classList.remove('hidden');
+      window.scrollTo(0, 0);
+
+    } catch (err) {
+      errorText.textContent = err.message;
+      errorBox.style.display = 'flex';
+    } finally {
+      btnSearch.disabled = false;
+      btnSearch.innerHTML = `<svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg> <span>Lihat Data Presensi</span>`;
+    }
+  }
+
+  searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nis = nisInput.value.trim();
+    if (nis) fetchLookup(nis, monthInput.value);
+  });
+
+  monthInput.addEventListener('change', () => {
+    if (currentNis) fetchLookup(currentNis, monthInput.value);
+  });
+
+  btnBack.addEventListener('click', () => {
+    resultCard.classList.add('hidden');
+    searchCard.classList.remove('hidden');
+    nisInput.value = '';
+    nisInput.focus();
+    currentNis = '';
+  });
+</script>
+</body>
+</html>

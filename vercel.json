@@ -12,6 +12,10 @@
       "destination": "/api"
     },
     {
+      "source": "/wali-siswa",
+      "destination": "/wali.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

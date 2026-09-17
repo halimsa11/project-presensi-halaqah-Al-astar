@@ -17,7 +17,8 @@ const ICONS = {
   trash: `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>`,
   palmtree: `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z"/><path d="M18 22v-9a4 4 0 0 0-4-4h-1"/></svg>`,
   inbox: `<svg class="icon icon-lg" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>`,
-  minus: `<svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"/></svg>`
+  minus: `<svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"/></svg>`,
+  clock: `<svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
 };
 
 // ============ AVATAR COLOR HELPER ============
@@ -48,6 +49,19 @@ function getInitials(name) {
   return name.substring(0, 2).toUpperCase();
 }
 
+function getTypeBadge(type) {
+  if (type === 'reguler') {
+    return '<span class="td-type-badge td-type-reguler">Reguler (PP)</span>';
+  }
+  return '<span class="td-type-badge td-type-boarding">Boarding</span>';
+}
+
+const SESSION_LABELS = {
+  pagi: 'Pagi',
+  siang: 'Siang',
+  malam: 'Malam'
+};
+
 // ============ DOM ============
 const mainDate    = document.getElementById('main-date');
 const mainSession = document.getElementById('main-session');
@@ -67,13 +81,15 @@ const saveAttendanceContainer = document.getElementById('save-attendance-contain
 const btnSaveAttendance      = document.getElementById('btn-save-attendance');
 const attendanceMessage      = document.getElementById('attendance-message');
 
-const btnMarkHoliday    = document.getElementById('btn-mark-holiday');
-const btnCancelHoliday  = document.getElementById('btn-cancel-holiday');
-const holidayWeekendInfo = document.getElementById('holiday-weekend-info');
-const holidayWeekendText = document.getElementById('holiday-weekend-text');
-const mainHolidayBanner  = document.getElementById('main-holiday-banner');
-const mainHolidayTitle   = document.getElementById('main-holiday-title');
-const mainHolidayReason  = document.getElementById('main-holiday-reason');
+const btnMarkHoliday         = document.getElementById('btn-mark-holiday');
+const btnMarkSessionHoliday  = document.getElementById('btn-mark-session-holiday');
+const btnCancelHoliday       = document.getElementById('btn-cancel-holiday');
+const btnCancelSessionHoliday = document.getElementById('btn-cancel-session-holiday');
+const holidayWeekendInfo     = document.getElementById('holiday-weekend-info');
+const holidayWeekendText     = document.getElementById('holiday-weekend-text');
+const mainHolidayBanner      = document.getElementById('main-holiday-banner');
+const mainHolidayTitle       = document.getElementById('main-holiday-title');
+const mainHolidayReason      = document.getElementById('main-holiday-reason');
 
 const viewLoading       = document.getElementById('view-loading');
 const viewTableWrap     = document.getElementById('view-table-wrap');
@@ -131,19 +147,55 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 });
 
 // ============ HOLIDAY HELPER ============
-function getHolidayInfo(dateStr) {
-  if (!dateStr) return { isHoliday: false };
+// Returns holiday info considering both day-level and session-level holidays
+function getHolidayInfo(dateStr, session) {
+  if (!dateStr) return { isHoliday: false, isSessionHoliday: false };
   const d = new Date(dateStr + 'T00:00:00');
   const day = d.getDay();
+  
+  // Weekend check
   if (day === 0 || day === 6) {
     const name = day === 0 ? 'Ahad' : 'Sabtu';
-    return { isHoliday: true, title: `Libur Rutin ${name}`, reason: `Hari ${name} — jadwal libur rutin akhir pekan.`, isWeekend: true };
+    return { 
+      isHoliday: true, 
+      isSessionHoliday: false,
+      title: `Libur Rutin ${name}`, 
+      reason: `Hari ${name} — jadwal libur rutin akhir pekan.`, 
+      isWeekend: true 
+    };
   }
-  const custom = customHolidays.find(h => h.date === dateStr);
-  if (custom) {
-    return { isHoliday: true, title: 'Hari Libur Halaqah', reason: custom.reason || 'Kegiatan halaqah diliburkan.', isWeekend: false };
+  
+  // Check day-level custom holiday
+  const dayHoliday = customHolidays.find(h => h.date === dateStr && h.type === 'day');
+  if (dayHoliday) {
+    return { 
+      isHoliday: true, 
+      isSessionHoliday: false,
+      title: 'Hari Libur Halaqah', 
+      reason: dayHoliday.reason || 'Kegiatan halaqah diliburkan.',
+      isWeekend: false,
+      holidayId: dayHoliday.id
+    };
   }
-  return { isHoliday: false };
+  
+  // Check session-level holiday
+  if (session) {
+    const sessionHoliday = customHolidays.find(
+      h => h.date === dateStr && h.type === 'session' && h.session === session
+    );
+    if (sessionHoliday) {
+      return { 
+        isHoliday: true, 
+        isSessionHoliday: true,
+        title: `Libur Sesi ${SESSION_LABELS[session] || session}`, 
+        reason: sessionHoliday.reason || `Sesi ${SESSION_LABELS[session] || session} diliburkan.`,
+        isWeekend: false,
+        holidayId: sessionHoliday.id
+      };
+    }
+  }
+  
+  return { isHoliday: false, isSessionHoliday: false };
 }
 
 function checkRangkumButton(dateStr) {
@@ -187,15 +239,15 @@ async function loadSantriList() {
 function renderSantriTable() {
   if (!santriTableBody) return;
   santriTableBody.innerHTML = '';
-  if (santriCountLabel) santriCountLabel.textContent = `${students.length} santri aktif terdaftar`;
+  if (santriCountLabel) santriCountLabel.textContent = `${students.length} siswa aktif terdaftar`;
 
   if (!students.length) {
     santriTableBody.innerHTML = `
       <tr>
-        <td colspan="3">
+        <td colspan="5">
           <div class="empty">
             <div class="empty-icon-wrap">${ICONS.inbox}</div>
-            <p>Belum ada santri terdaftar. Silakan tambahkan pada form di atas.</p>
+            <p>Belum ada siswa terdaftar. Silakan tambahkan pada form di atas.</p>
           </div>
         </td>
       </tr>`;
@@ -213,7 +265,13 @@ function renderSantriTable() {
         </div>
       </td>
       <td>
+        <span class="td-class-badge" style="background: #f8fafc; border: 1px solid #e2e8f0; font-family: monospace;">${s.nis || '-'}</span>
+      </td>
+      <td>
         <span class="td-class-badge">Kelas ${s.class}</span>
+      </td>
+      <td>
+        ${getTypeBadge(s.type)}
       </td>
       <td style="text-align:right;">
         <div class="flex gap-2" style="justify-content: flex-end;">
@@ -221,7 +279,7 @@ function renderSantriTable() {
             ${ICONS.edit}
             <span>Edit</span>
           </button>
-          <button type="button" class="btn btn-sm btn-action-delete btn-delete" data-id="${s.id}" title="Hapus santri">
+          <button type="button" class="btn btn-sm btn-action-delete btn-delete" data-id="${s.id}" title="Hapus siswa">
             ${ICONS.trash}
           </button>
         </div>
@@ -235,21 +293,28 @@ function renderSantriTable() {
       const id = e.currentTarget.dataset.id;
       const s = students.find(x => x.id === id);
       if (!s) return;
-      const newName = prompt('Ubah Nama Santri:', s.name);
+      const newName = prompt('Ubah Nama Siswa:', s.name);
       if (newName === null) return;
+      const newNis = prompt('Ubah NIS (Opsional):', s.nis || '');
+      if (newNis === null) return;
       const newClass = prompt('Ubah Kelas (10 / 11 / 12):', s.class);
       if (newClass === null) return;
-      if (!newName.trim()) return toast('Nama santri tidak boleh kosong', 'error');
+      const newType = prompt('Ubah Tipe (boarding / reguler):', s.type || 'boarding');
+      if (newType === null) return;
+      
+      if (!newName.trim()) return toast('Nama siswa tidak boleh kosong', 'error');
+      if (newType !== 'boarding' && newType !== 'reguler') return toast('Tipe harus "boarding" atau "reguler"', 'error');
       try {
         const res = await fetch(`${API_URL}/students/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: newName.trim(), class: newClass })
+          body: JSON.stringify({ name: newName.trim(), nis: newNis.trim(), class: newClass, type: newType })
         });
-        if (!res.ok) throw new Error();
-        toast('Data santri berhasil diperbarui');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Gagal memperbarui data siswa');
+        toast('Data siswa berhasil diperbarui');
         loadSantriList();
-      } catch { toast('Gagal memperbarui data santri', 'error'); }
+      } catch (err) { toast(err.message, 'error'); }
     });
   });
 
@@ -258,23 +323,29 @@ function renderSantriTable() {
     btn.addEventListener('click', async e => {
       const id = e.currentTarget.dataset.id;
       const s = students.find(x => x.id === id);
-      if (!confirm(`Hapus santri "${s?.name}"? Seluruh riwayat presensinya akan ikut dihapus.`)) return;
+      if (!confirm(`Hapus siswa "${s?.name}"? Seluruh riwayat presensinya akan ikut dihapus.`)) return;
       try {
         const res = await fetch(`${API_URL}/students/${id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error();
-        toast('Santri berhasil dihapus', 'warning');
+        toast('Siswa berhasil dihapus', 'warning');
         loadSantriList();
-      } catch { toast('Gagal menghapus santri', 'error'); }
+      } catch { toast('Gagal menghapus siswa', 'error'); }
     });
   });
 }
 
 addStudentForm?.addEventListener('submit', async e => {
   e.preventDefault();
+  const nisInput = document.getElementById('new-student-nis');
   const nameInput = document.getElementById('new-student-name');
   const classInput = document.getElementById('new-student-class');
+  const typeInput = document.getElementById('new-student-type');
+  
+  const nis = nisInput ? nisInput.value.trim() : '';
   const name = nameInput ? nameInput.value.trim() : '';
   const cls  = classInput ? classInput.value : '10';
+  const type = typeInput ? typeInput.value : 'boarding';
+  
   const btn  = document.getElementById('btn-add-student');
   if (btn) {
     btn.disabled = true;
@@ -284,10 +355,10 @@ addStudentForm?.addEventListener('submit', async e => {
     const res = await fetch(`${API_URL}/students`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, class: cls })
+      body: JSON.stringify({ name, nis, class: cls, type })
     });
     const data = await res.json();
-    if (!res.ok) { toast(data.error || 'Gagal menambahkan santri', 'error'); }
+    if (!res.ok) { toast(data.error || 'Gagal menambahkan siswa', 'error'); }
     else {
       toast(`${name} berhasil didaftarkan`);
       addStudentForm.reset();
@@ -297,32 +368,66 @@ addStudentForm?.addEventListener('submit', async e => {
   finally {
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = `<svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg> <span>Tambah Santri</span>`;
+      btn.innerHTML = `<svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg> <span>Tambah Siswa</span>`;
     }
   }
 });
 
 // ============ PANEL: INPUT PRESENSI ============
 function updateHolidayUI() {
-  const info = getHolidayInfo(mainDate?.value);
+  const date = mainDate?.value;
+  const session = mainSession?.value;
+  const info = getHolidayInfo(date, session);
   const weekend = holidayWeekendInfo;
-  const markBtn = btnMarkHoliday;
-  const cancelBtn = btnCancelHoliday;
+
+  // Find if there's a specific session holiday for current session
+  const sessionHoliday = customHolidays.find(
+    h => h.date === date && h.type === 'session' && h.session === session
+  );
+  const dayHoliday = customHolidays.find(
+    h => h.date === date && h.type === 'day'
+  );
 
   if (info.isWeekend) {
     weekend?.classList.remove('hidden');
     if (holidayWeekendText) holidayWeekendText.textContent = `${info.title} — ${info.reason}`;
-    markBtn?.classList.add('hidden');
-    cancelBtn?.classList.add('hidden');
-  } else if (info.isHoliday) {
-    weekend?.classList.remove('hidden');
-    if (holidayWeekendText) holidayWeekendText.textContent = `Libur khusus: ${info.reason}`;
-    markBtn?.classList.add('hidden');
-    cancelBtn?.classList.remove('hidden');
+    btnMarkHoliday?.classList.add('hidden');
+    btnMarkSessionHoliday?.classList.add('hidden');
+    btnCancelHoliday?.classList.add('hidden');
+    btnCancelSessionHoliday?.classList.add('hidden');
   } else {
-    weekend?.classList.add('hidden');
-    markBtn?.classList.remove('hidden');
-    cancelBtn?.classList.add('hidden');
+    // Day holiday buttons
+    if (dayHoliday) {
+      btnMarkHoliday?.classList.add('hidden');
+      btnCancelHoliday?.classList.remove('hidden');
+    } else {
+      btnMarkHoliday?.classList.remove('hidden');
+      btnCancelHoliday?.classList.add('hidden');
+    }
+    
+    // Session holiday buttons
+    if (sessionHoliday) {
+      btnMarkSessionHoliday?.classList.add('hidden');
+      btnCancelSessionHoliday?.classList.remove('hidden');
+    } else if (!dayHoliday) {
+      btnMarkSessionHoliday?.classList.remove('hidden');
+      btnCancelSessionHoliday?.classList.add('hidden');
+    } else {
+      // Day is already holiday, hide session buttons
+      btnMarkSessionHoliday?.classList.add('hidden');
+      btnCancelSessionHoliday?.classList.add('hidden');
+    }
+
+    if (info.isHoliday && !info.isWeekend) {
+      weekend?.classList.remove('hidden');
+      if (info.isSessionHoliday) {
+        if (holidayWeekendText) holidayWeekendText.textContent = `Libur sesi: ${info.reason}`;
+      } else {
+        if (holidayWeekendText) holidayWeekendText.textContent = `Libur khusus: ${info.reason}`;
+      }
+    } else {
+      weekend?.classList.add('hidden');
+    }
   }
 
   if (info.isHoliday) {
@@ -348,7 +453,7 @@ async function loadAttendance() {
 
   try {
     const [r1, r2, r3] = await Promise.all([
-      fetch(`${API_URL}/students`),
+      fetch(`${API_URL}/students?session=${session}`),
       fetch(`${API_URL}/attendance?date=${date}&session=${session}`),
       fetch(`${API_URL}/holidays`)
     ]);
@@ -373,15 +478,18 @@ async function loadAttendance() {
 function renderAttendanceTable() {
   if (!mainTableBody) return;
   mainTableBody.innerHTML = '';
-  const info = getHolidayInfo(mainDate?.value);
+  const session = mainSession?.value;
+  const info = getHolidayInfo(mainDate?.value, session);
 
   if (!students.length) {
     mainTableBody.innerHTML = `
       <tr>
-        <td colspan="3">
+        <td colspan="4">
           <div class="empty">
             <div class="empty-icon-wrap">${ICONS.inbox}</div>
-            <p>Belum ada data santri. Silakan tambah santri terlebih dahulu.</p>
+            <p>${(session === 'pagi' || session === 'malam') 
+              ? 'Tidak ada siswa boarding untuk sesi ini, atau belum ada data siswa.' 
+              : 'Belum ada data siswa. Silakan tambah siswa terlebih dahulu.'}</p>
           </div>
         </td>
       </tr>`;
@@ -398,7 +506,7 @@ function renderAttendanceTable() {
 
     let statusCell;
     if (info.isHoliday) {
-      statusCell = `<span class="badge badge-libur">${ICONS.palmtree} Libur</span>`;
+      statusCell = `<span class="badge ${info.isSessionHoliday ? 'badge-libur-sesi' : 'badge-libur'}">${ICONS.palmtree} ${info.isSessionHoliday ? 'Libur Sesi' : 'Libur'}</span>`;
     } else {
       statusCell = `
         <select class="status-sel s-${status}" data-id="${s.id}">
@@ -417,6 +525,7 @@ function renderAttendanceTable() {
         </div>
       </td>
       <td><span class="td-class-badge">Kelas ${s.class}</span></td>
+      <td>${getTypeBadge(s.type)}</td>
       <td>${statusCell}</td>`;
     mainTableBody.appendChild(tr);
   });
@@ -433,39 +542,83 @@ function renderAttendanceTable() {
 mainDate?.addEventListener('change', loadAttendance);
 mainSession?.addEventListener('change', loadAttendance);
 
+// ============ HOLIDAY ACTIONS ============
+
+// Mark full day as holiday
 btnMarkHoliday?.addEventListener('click', async () => {
   const date = mainDate?.value;
   if (!date) return toast('Pilih tanggal terlebih dahulu!', 'warning');
-  const reason = prompt('Keterangan libur:', 'Libur Halaqah');
+  const reason = prompt('Keterangan libur hari:', 'Libur Halaqah');
   if (reason === null) return;
   try {
     const res = await fetch(`${API_URL}/holidays`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ date, reason: reason.trim() || 'Libur Halaqah' })
+      body: JSON.stringify({ date, type: 'day', reason: reason.trim() || 'Libur Halaqah' })
     });
     if (!res.ok) throw new Error();
-    toast(`Tanggal ${date} ditandai libur halaqah`);
+    toast(`Tanggal ${date} ditandai libur halaqah (semua sesi)`);
     await loadAttendance();
   } catch { toast('Gagal menandai hari libur', 'error'); }
 });
 
+// Mark session as holiday
+btnMarkSessionHoliday?.addEventListener('click', async () => {
+  const date = mainDate?.value;
+  const session = mainSession?.value;
+  if (!date) return toast('Pilih tanggal terlebih dahulu!', 'warning');
+  const sessionLabel = SESSION_LABELS[session] || session;
+  const reason = prompt(`Keterangan libur sesi ${sessionLabel}:`, `Libur Sesi ${sessionLabel}`);
+  if (reason === null) return;
+  try {
+    const res = await fetch(`${API_URL}/holidays`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, type: 'session', session, reason: reason.trim() || `Libur Sesi ${sessionLabel}` })
+    });
+    if (!res.ok) throw new Error();
+    toast(`Sesi ${sessionLabel} tanggal ${date} ditandai libur`);
+    await loadAttendance();
+  } catch { toast('Gagal menandai libur sesi', 'error'); }
+});
+
+// Cancel day holiday
 btnCancelHoliday?.addEventListener('click', async () => {
   const date = mainDate?.value;
-  if (!confirm(`Batalkan status libur untuk tanggal ${date}?`)) return;
+  const dayHoliday = customHolidays.find(h => h.date === date && h.type === 'day');
+  if (!dayHoliday) return;
+  if (!confirm(`Batalkan status libur hari untuk tanggal ${date}?`)) return;
   try {
-    const res = await fetch(`${API_URL}/holidays/${date}`, { method: 'DELETE' });
+    const res = await fetch(`${API_URL}/holidays/${dayHoliday.id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error();
-    toast('Status libur berhasil dibatalkan', 'warning');
+    toast('Status libur hari berhasil dibatalkan', 'warning');
     await loadAttendance();
   } catch { toast('Gagal membatalkan libur', 'error'); }
+});
+
+// Cancel session holiday
+btnCancelSessionHoliday?.addEventListener('click', async () => {
+  const date = mainDate?.value;
+  const session = mainSession?.value;
+  const sessionHoliday = customHolidays.find(
+    h => h.date === date && h.type === 'session' && h.session === session
+  );
+  if (!sessionHoliday) return;
+  const sessionLabel = SESSION_LABELS[session] || session;
+  if (!confirm(`Batalkan status libur sesi ${sessionLabel} untuk tanggal ${date}?`)) return;
+  try {
+    const res = await fetch(`${API_URL}/holidays/${sessionHoliday.id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error();
+    toast(`Status libur sesi ${sessionLabel} berhasil dibatalkan`, 'warning');
+    await loadAttendance();
+  } catch { toast('Gagal membatalkan libur sesi', 'error'); }
 });
 
 btnSaveAttendance?.addEventListener('click', async () => {
   const date = mainDate?.value;
   const session = mainSession?.value;
   const sels = mainTableBody?.querySelectorAll('.status-sel') || [];
-  if (!sels.length) return toast('Tidak ada santri untuk diabsen', 'warning');
+  if (!sels.length) return toast('Tidak ada siswa untuk diabsen', 'warning');
   const records = [...sels].map(s => ({ studentId: s.dataset.id, status: s.value }));
 
   if (btnSaveAttendance) {
@@ -506,7 +659,7 @@ async function loadView() {
   let viewStudents = [], viewAtts = [];
   try {
     const [r1, r2, r3] = await Promise.all([
-      fetch(`${API_URL}/students`),
+      fetch(`${API_URL}/students?session=${session}`),
       fetch(`${API_URL}/attendance?date=${date}&session=${session}`),
       fetch(`${API_URL}/holidays`)
     ]);
@@ -520,7 +673,7 @@ async function loadView() {
     console.error('Error loadView:', err);
     toast('Gagal memuat rekap presensi', 'error');
   } finally {
-    const info = getHolidayInfo(date);
+    const info = getHolidayInfo(date, session);
     if (info.isHoliday) {
       viewHolidayBanner?.classList.remove('hidden');
       if (viewHolidayTitle) viewHolidayTitle.textContent = info.title;
@@ -535,10 +688,12 @@ async function loadView() {
       if (!viewStudents.length) {
         viewTableBody.innerHTML = `
           <tr>
-            <td colspan="3">
+            <td colspan="4">
               <div class="empty">
                 <div class="empty-icon-wrap">${ICONS.inbox}</div>
-                <p>Belum ada data santri terdaftar.</p>
+                <p>${(session === 'pagi' || session === 'malam') 
+                  ? 'Tidak ada siswa boarding untuk sesi ini.' 
+                  : 'Belum ada data siswa terdaftar.'}</p>
               </div>
             </td>
           </tr>`;
@@ -549,7 +704,7 @@ async function loadView() {
 
           let badge;
           if (info.isHoliday) {
-            badge = `<span class="badge badge-libur">${ICONS.palmtree} Libur</span>`;
+            badge = `<span class="badge ${info.isSessionHoliday ? 'badge-libur-sesi' : 'badge-libur'}">${ICONS.palmtree} ${info.isSessionHoliday ? 'Libur Sesi' : 'Libur'}</span>`;
           } else if (!status) {
             badge = `<span class="badge badge-belum">${ICONS.minus} Belum Diisi</span>`;
           } else {
@@ -566,6 +721,7 @@ async function loadView() {
               </div>
             </td>
             <td><span class="td-class-badge">Kelas ${s.class}</span></td>
+            <td>${getTypeBadge(s.type)}</td>
             <td class="td-center">${badge}</td>`;
           viewTableBody.appendChild(tr);
         });
@@ -652,7 +808,7 @@ btnShowSummary?.addEventListener('click', async () => {
             <td colspan="6">
               <div class="empty">
                 <div class="empty-icon-wrap">${ICONS.inbox}</div>
-                <p>Belum ada santri terdaftar pada periode ini.</p>
+                <p>Belum ada siswa terdaftar pada periode ini.</p>
               </div>
             </td>
           </tr>`;
