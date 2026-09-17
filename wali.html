@@ -319,8 +319,12 @@
 
     /* ===== RESPONSIVE MOBILE ===== */
     @media (max-width: 480px) {
-      .header-brand { flex-direction: column; text-align: center; gap: 8px; }
-      #app-header { height: auto; padding: 16px; }
+      .header-brand { flex-direction: row; text-align: left; gap: 10px; }
+      #app-header { height: auto; padding: 12px 16px; justify-content: center; }
+      .header-logo { width: 36px; height: 36px; }
+      .header-logo img { width: 22px; height: 22px; }
+      .header-title { font-size: 0.95rem; }
+      .header-subtitle { font-size: 0.7rem; }
       
       .profile-card { flex-direction: column; text-align: center; }
       .prof-details { justify-content: center; }
