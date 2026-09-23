@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Presensi Halaqah Al-Atsar</title>
+  <meta name="description" content="Login Admin Sistem Presensi Digital Halaqah Al-Atsar" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #065f46;
+      --primary-dark: #044332;
+      --primary-light: #ecfdf5;
+      --primary-mid: #059669;
+      --primary-glow: rgba(5, 150, 105, 0.18);
+
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-light: #f1f5f9;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-sub: #94a3b8;
+
+      --shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+      --shadow-lg: 0 12px 32px -4px rgba(6, 95, 70, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .icon {
+      width: 18px; height: 18px;
+      display: inline-block;
+      vertical-align: middle;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .icon-sm { width: 15px; height: 15px; }
+    .icon-md { width: 20px; height: 20px; }
+    .icon-lg { width: 24px; height: 24px; }
+
+    /* ===== HEADER ===== */
+    #login-header {
+      background: linear-gradient(135deg, #022c22 0%, #064e3b 45%, #047857 100%);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 70px;
+      box-shadow: 0 4px 20px rgba(4, 120, 87, 0.25);
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+    .header-logo {
+      background: white;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.25);
+      flex-shrink: 0;
+    }
+    .header-logo img { width: 32px; height: 32px; object-fit: contain; }
+    .header-text { display: flex; flex-direction: column; }
+    .header-title {
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-badge {
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 99px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .header-subtitle {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.76rem;
+      font-weight: 500;
+      margin-top: 1px;
+    }
+
+    /* ===== LOGIN CONTAINER ===== */
+    .login-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 420px;
+      transition: box-shadow 0.2s;
+    }
+
+    .login-card-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-icon-wrap {
+      width: 64px; height: 64px;
+      margin: 0 auto 18px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .login-card-header h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .login-card-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ===== FORM ===== */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--text-sub);
+      pointer-events: none;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 13px 16px 13px 44px;
+      font-size: 0.94rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #ffffff;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    .input-wrap input:focus {
+      border-color: var(--primary-mid);
+      box-shadow: 0 0 0 3.5px var(--primary-glow);
+      background: #ffffff;
+    }
+
+    .input-wrap input::placeholder {
+      color: var(--text-sub);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: var(--text-sub);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s;
+    }
+    .password-toggle:hover { color: var(--text-muted); }
+
+    /* ===== BUTTON ===== */
+    .btn-login {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+      color: white;
+      box-shadow: 0 3px 12px var(--primary-glow);
+      transition: all 0.18s;
+      margin-top: 8px;
+    }
+    .btn-login:hover {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      box-shadow: 0 5px 16px rgba(4, 120, 87, 0.3);
+      transform: translateY(-1px);
+    }
+    .btn-login:active { transform: scale(0.98); }
+    .btn-login:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ===== ERROR MESSAGE ===== */
+    .login-error {
+      background: #fff1f2;
+      border: 1.5px solid #fecdd3;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #9f1239;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .login-error.show {
+      display: flex;
+    }
+
+    /* ===== FOOTER ===== */
+    .login-footer {
+      text-align: center;
+      padding: 24px 16px;
+      color: var(--text-sub);
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+
+    /* ===== SPINNER ===== */
+    .spin {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== TOASTER ===== */
+    #toaster {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 400;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+      padding: 13px 18px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 260px;
+      max-width: 360px;
+      border-left: 4px solid var(--primary);
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.error { border-left-color: #f43f5e; }
+    @keyframes toastIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 480px) {
+      #login-header { height: auto; padding: 12px 16px; }
+      .header-logo { width: 38px; height: 38px; }
+      .header-logo img { width: 24px; height: 24px; }
+      .header-title { font-size: 1rem; }
+      .header-subtitle { font-size: 0.7rem; }
+
+      .login-container { padding: 24px 14px; }
+      .login-card { padding: 28px 22px; }
+      .login-card-header h2 { font-size: 1.15rem; }
+      .login-icon-wrap { width: 56px; height: 56px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="toaster"></div>
+
+<!-- HEADER -->
+<header id="login-header">
+  <div class="header-brand">
+    <div class="header-logo">
+      <img src="/logo.png" alt="Logo" />
+    </div>
+    <div class="header-text">
+      <div class="header-title">
+        Presensi Halaqah
+        <span class="header-badge">Al-Atsar</span>
+      </div>
+      <div class="header-subtitle">Pencatatan Kehadiran Siswa Halaqah Qur'an</div>
+    </div>
+  </div>
+</header>
+
+<!-- LOGIN FORM -->
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-card-header">
+      <div class="login-icon-wrap">
+        <svg class="icon icon-lg" viewBox="0 0 24 24" style="width:28px;height:28px;">
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <h2>Login Admin</h2>
+      <p>Masuk ke panel admin presensi halaqah</p>
+    </div>
+
+    <div id="login-error" class="login-error">
+      <svg class="icon icon-sm" viewBox="0 0 24 24" style="flex-shrink:0;">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="15" x2="9" y1="9" y2="15"/>
+        <line x1="9" x2="15" y1="9" y2="15"/>
+      </svg>
+      <span id="login-error-text">Username atau password salah</span>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="username">
+          <svg class="icon icon-sm" viewBox="0 0 24 24">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          Username
+        </label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg class="icon icon-sm" viewBox="0 0 24 24">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </span>
+          <input type="text" id="username" placeholder="Masukkan username" required autocomplete="username" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">
+          <svg class="icon icon-sm" viewBox="0 0 24 24">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          Password
+        </label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg class="icon icon-sm" viewBox="0 0 24 24">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </span>
+          <input type="password" id="password" placeholder="Masukkan password" required autocomplete="current-password" />
+          <button type="button" class="password-toggle" id="toggle-password" aria-label="Toggle password">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" id="eye-icon">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login" id="btn-login">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" style="stroke:white;">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+          <polyline points="10 17 15 12 10 7"/>
+          <line x1="15" x2="3" y1="12" y2="12"/>
+        </svg>
+        <span>Masuk</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="login-footer">
+  &copy; 2024 Halaqah Al-Atsar — Sistem Presensi Digital
+</div>
+
+<script>
+  // If already logged in, redirect to dashboard
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    fetch('/api/auth/me', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    }).then(res => {
+      if (res.ok) window.location.href = '/';
+    }).catch(() => {});
+  }
+
+  // Toggle password visibility
+  const toggleBtn = document.getElementById('toggle-password');
+  const passwordInput = document.getElementById('password');
+  const eyeIcon = document.getElementById('eye-icon');
+  
+  toggleBtn.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    eyeIcon.innerHTML = isPassword
+      ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-7-10-7a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 7 10 7a18.5 18.5 0 0 1-1.58 2.29"/><line x1="1" x2="23" y1="1" y2="23"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>'
+      : '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+  });
+
+  // Toast
+  function toast(msg, type = 'success') {
+    const el = document.createElement('div');
+    el.className = 'toast' + (type === 'error' ? ' error' : '');
+    const iconSvg = type === 'error'
+      ? '<svg class="icon icon-sm" viewBox="0 0 24 24" style="color:#f43f5e;"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>'
+      : '<svg class="icon icon-sm" viewBox="0 0 24 24" style="color:#059669;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+    el.innerHTML = iconSvg + '<span>' + msg + '</span>';
+    document.getElementById('toaster').appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
+
+  // Login form submit
+  const loginForm = document.getElementById('login-form');
+  const loginBtn = document.getElementById('btn-login');
+  const loginError = document.getElementById('login-error');
+  const loginErrorText = document.getElementById('login-error-text');
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.classList.remove('show');
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!username || !password) {
+      loginErrorText.textContent = 'Username dan password harus diisi';
+      loginError.classList.add('show');
+      return;
+    }
+
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = '<div class="spin"></div> <span>Memproses...</span>';
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        loginErrorText.textContent = data.error || 'Username atau password salah';
+        loginError.classList.add('show');
+        return;
+      }
+
+      localStorage.setItem('auth_token', data.token);
+      localStorage.setItem('auth_role', data.role);
+      localStorage.setItem('auth_username', data.username);
+      toast('Login berhasil! Mengalihkan...');
+      
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 600);
+    } catch (err) {
+      loginErrorText.textContent = 'Gagal terhubung ke server';
+      loginError.classList.add('show');
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.innerHTML = '<svg class="icon icon-sm" viewBox="0 0 24 24" style="stroke:white;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg> <span>Masuk</span>';
+    }
+  });
+</script>
+</body>
+</html>

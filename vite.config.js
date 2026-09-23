@@ -17,7 +17,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: './index.html',
-        wali: './wali.html'
+        wali: './wali.html',
+        login: './login.html'
       }
     }
   }

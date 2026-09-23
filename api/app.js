@@ -3,10 +3,69 @@ import { cors } from 'hono/cors';
 import { db } from '../db/index.js';
 import { students, attendances, holidays } from '../db/schema.js';
 import { eq, and, gte, lte, or, isNull } from 'drizzle-orm';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const app = new Hono().basePath('/api');
 
 app.use('*', cors());
+
+// ============ AUTH CONFIG ============
+const JWT_SECRET = process.env.JWT_SECRET || 'rahasia_aman_halaqah';
+
+const ADMIN_USERS = [
+  {
+    username: 'admin',
+    passwordHash: '$2b$10$OQcnyJCW.vp7b9DOQl9H4eXFKXqsuZZ2l43GxHhFx35HS8F9u4H4W', // admin123
+    role: 'admin'
+  },
+  {
+    username: "syafi'i_ikhsan",
+    passwordHash: '$2b$10$Kst1CfyDD5EVpOBNthLpXurTxdtuV6WlzTCXbcKobzPM3NRg5hVeK', // al_atsar
+    role: 'superadmin'
+  }
+];
+
+// ============ AUTH MIDDLEWARE ============
+async function authMiddleware(c, next) {
+  const path = c.req.path;
+
+  // Public routes — skip auth
+  if (
+    path === '/api/auth/login' ||
+    path === '/api/' ||
+    path === '/api' ||
+    path.startsWith('/api/wali') ||
+    path === '/api/health'
+  ) {
+    return next();
+  }
+
+  const authHeader = c.req.header('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return c.json({ error: 'Akses ditolak. Silakan login terlebih dahulu.' }, 401);
+  }
+
+  const token = authHeader.slice(7);
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    c.set('user', decoded);
+    return next();
+  } catch (err) {
+    return c.json({ error: 'Token tidak valid atau sudah kadaluarsa. Silakan login ulang.' }, 401);
+  }
+}
+
+// Role check middleware for superadmin-only routes
+function requireSuperAdmin(c) {
+  const user = c.get('user');
+  if (!user || user.role !== 'superadmin') {
+    return c.json({ error: 'Hanya Super Admin yang dapat mengakses fitur ini.' }, 403);
+  }
+  return null; // no error
+}
+
+app.use('*', authMiddleware);
 
 app.onError((err, c) => {
   console.error('API Error:', err);
@@ -14,6 +73,47 @@ app.onError((err, c) => {
 });
 
 app.get('/', (c) => c.json({ message: 'API is running' }));
+
+// ============ AUTH ENDPOINTS ============
+
+app.post('/auth/login', async (c) => {
+  const { username, password } = await c.req.json();
+
+  if (!username || !password) {
+    return c.json({ error: 'Username dan password harus diisi' }, 400);
+  }
+
+  const user = ADMIN_USERS.find(u => u.username === username);
+  if (!user) {
+    return c.json({ error: 'Username atau password salah' }, 401);
+  }
+
+  const isValid = await bcrypt.compare(password, user.passwordHash);
+  if (!isValid) {
+    return c.json({ error: 'Username atau password salah' }, 401);
+  }
+
+  const token = jwt.sign(
+    { username: user.username, role: user.role },
+    JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  return c.json({
+    message: 'Login berhasil',
+    token,
+    username: user.username,
+    role: user.role
+  });
+});
+
+app.get('/auth/me', (c) => {
+  const user = c.get('user');
+  return c.json({
+    username: user.username,
+    role: user.role
+  });
+});
 
 // ============ HOLIDAYS ============
 
@@ -94,7 +194,11 @@ app.get('/students', async (c) => {
 });
 
 // Auto-generate ID — user only provides name + class + type + nis
+// SUPERADMIN ONLY
 app.post('/students', async (c) => {
+  const roleErr = requireSuperAdmin(c);
+  if (roleErr) return roleErr;
+
   const { name, class: studentClass, type, nis } = await c.req.json();
   if (!name || !studentClass) {
     return c.json({ error: 'Nama dan kelas harus diisi' }, 400);
@@ -120,6 +224,9 @@ app.post('/students', async (c) => {
 });
 
 app.put('/students/:id', async (c) => {
+  const roleErr = requireSuperAdmin(c);
+  if (roleErr) return roleErr;
+
   const id = c.req.param('id');
   const { name, class: studentClass, type, nis } = await c.req.json();
   if (!name || !studentClass) {
@@ -142,6 +249,9 @@ app.put('/students/:id', async (c) => {
 });
 
 app.delete('/students/:id', async (c) => {
+  const roleErr = requireSuperAdmin(c);
+  if (roleErr) return roleErr;
+
   const id = c.req.param('id');
   try {
     await db.delete(attendances).where(eq(attendances.studentId, id));

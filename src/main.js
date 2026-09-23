@@ -3,7 +3,95 @@ const API_URL = '/api';
 let students = [];
 let attendances = [];
 let customHolidays = [];
-let currentPanel = 'panel-santri';
+let currentPanel = 'panel-presensi';
+let authToken = null;
+let authRole = null;
+let authUsername = null;
+
+// ============ AUTH ============
+function getAuthHeaders() {
+  const headers = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  return headers;
+}
+
+function authFetch(url, options = {}) {
+  if (!options.headers) options.headers = {};
+  if (authToken) options.headers['Authorization'] = `Bearer ${authToken}`;
+  return fetch(url, options);
+}
+
+async function checkAuth() {
+  authToken = localStorage.getItem('auth_token');
+  authRole = localStorage.getItem('auth_role');
+  authUsername = localStorage.getItem('auth_username');
+
+  if (!authToken) {
+    window.location.href = '/login.html';
+    return false;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/auth/me`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    if (!res.ok) {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('auth_role');
+      localStorage.removeItem('auth_username');
+      window.location.href = '/login.html';
+      return false;
+    }
+    const data = await res.json();
+    authRole = data.role;
+    authUsername = data.username;
+    localStorage.setItem('auth_role', authRole);
+    localStorage.setItem('auth_username', authUsername);
+    return true;
+  } catch {
+    window.location.href = '/login.html';
+    return false;
+  }
+}
+
+function setupRoleUI() {
+  // Update header user info
+  const headerUsername = document.getElementById('header-username');
+  const headerRoleLabel = document.getElementById('header-role-label');
+  const headerAvatar = document.getElementById('header-avatar');
+
+  if (headerUsername) headerUsername.textContent = authUsername || 'Admin';
+  if (headerRoleLabel) headerRoleLabel.textContent = authRole === 'superadmin' ? 'Super Admin' : 'Admin';
+  if (headerAvatar) {
+    const initials = (authUsername || 'AD').substring(0, 2).toUpperCase();
+    headerAvatar.textContent = initials;
+  }
+
+  // Show/hide Data Siswa tab based on role
+  const navSantri = document.getElementById('nav-santri');
+  const panelSantri = document.getElementById('panel-santri');
+
+  if (authRole === 'superadmin') {
+    // Show Data Siswa tab for superadmin
+    navSantri?.classList.remove('hidden');
+  } else {
+    // Keep hidden for admin biasa
+    navSantri?.classList.add('hidden');
+    if (panelSantri) panelSantri.classList.add('hidden');
+  }
+}
+
+function setupLogout() {
+  const btnLogout = document.getElementById('btn-logout');
+  btnLogout?.addEventListener('click', () => {
+    if (confirm('Yakin ingin logout?')) {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('auth_role');
+      localStorage.removeItem('auth_username');
+      window.location.href = '/login.html';
+    }
+  });
+}
 
 // ============ SVG ICONS ============
 const ICONS = {
@@ -206,7 +294,7 @@ function checkRangkumButton(dateStr) {
 // ============ LOAD HOLIDAYS ============
 async function fetchHolidays() {
   try {
-    const res = await fetch(`${API_URL}/holidays`);
+    const res = await authFetch(`${API_URL}/holidays`);
     customHolidays = await res.json();
   } catch {
     customHolidays = [];
@@ -218,7 +306,7 @@ async function loadSantriList() {
   santriLoading?.classList.remove('hidden');
   santriTableWrap?.classList.add('hidden');
   try {
-    const res = await fetch(`${API_URL}/students`);
+    const res = await authFetch(`${API_URL}/students`);
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}));
       throw new Error(errData.error || `Server status ${res.status}`);
@@ -305,9 +393,9 @@ function renderSantriTable() {
       if (!newName.trim()) return toast('Nama siswa tidak boleh kosong', 'error');
       if (newType !== 'boarding' && newType !== 'reguler') return toast('Tipe harus "boarding" atau "reguler"', 'error');
       try {
-        const res = await fetch(`${API_URL}/students/${id}`, {
+        const res = await authFetch(`${API_URL}/students/${id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getAuthHeaders(),
           body: JSON.stringify({ name: newName.trim(), nis: newNis.trim(), class: newClass, type: newType })
         });
         const data = await res.json();
@@ -325,7 +413,7 @@ function renderSantriTable() {
       const s = students.find(x => x.id === id);
       if (!confirm(`Hapus siswa "${s?.name}"? Seluruh riwayat presensinya akan ikut dihapus.`)) return;
       try {
-        const res = await fetch(`${API_URL}/students/${id}`, { method: 'DELETE' });
+        const res = await authFetch(`${API_URL}/students/${id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error();
         toast('Siswa berhasil dihapus', 'warning');
         loadSantriList();
@@ -352,9 +440,9 @@ addStudentForm?.addEventListener('submit', async e => {
     btn.innerHTML = `<div class="spin" style="width:16px;height:16px;"></div> <span>Menyimpan...</span>`;
   }
   try {
-    const res = await fetch(`${API_URL}/students`, {
+    const res = await authFetch(`${API_URL}/students`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ name, nis, class: cls, type })
     });
     const data = await res.json();
@@ -453,9 +541,9 @@ async function loadAttendance() {
 
   try {
     const [r1, r2, r3] = await Promise.all([
-      fetch(`${API_URL}/students?session=${session}`),
-      fetch(`${API_URL}/attendance?date=${date}&session=${session}`),
-      fetch(`${API_URL}/holidays`)
+      authFetch(`${API_URL}/students?session=${session}`),
+      authFetch(`${API_URL}/attendance?date=${date}&session=${session}`),
+      authFetch(`${API_URL}/holidays`)
     ]);
     const d1 = await r1.json().catch(() => []);
     const d2 = await r2.json().catch(() => []);
@@ -551,9 +639,9 @@ btnMarkHoliday?.addEventListener('click', async () => {
   const reason = prompt('Keterangan libur hari:', 'Libur Halaqah');
   if (reason === null) return;
   try {
-    const res = await fetch(`${API_URL}/holidays`, {
+    const res = await authFetch(`${API_URL}/holidays`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ date, type: 'day', reason: reason.trim() || 'Libur Halaqah' })
     });
     if (!res.ok) throw new Error();
@@ -571,9 +659,9 @@ btnMarkSessionHoliday?.addEventListener('click', async () => {
   const reason = prompt(`Keterangan libur sesi ${sessionLabel}:`, `Libur Sesi ${sessionLabel}`);
   if (reason === null) return;
   try {
-    const res = await fetch(`${API_URL}/holidays`, {
+    const res = await authFetch(`${API_URL}/holidays`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ date, type: 'session', session, reason: reason.trim() || `Libur Sesi ${sessionLabel}` })
     });
     if (!res.ok) throw new Error();
@@ -589,7 +677,7 @@ btnCancelHoliday?.addEventListener('click', async () => {
   if (!dayHoliday) return;
   if (!confirm(`Batalkan status libur hari untuk tanggal ${date}?`)) return;
   try {
-    const res = await fetch(`${API_URL}/holidays/${dayHoliday.id}`, { method: 'DELETE' });
+    const res = await authFetch(`${API_URL}/holidays/${dayHoliday.id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error();
     toast('Status libur hari berhasil dibatalkan', 'warning');
     await loadAttendance();
@@ -607,7 +695,7 @@ btnCancelSessionHoliday?.addEventListener('click', async () => {
   const sessionLabel = SESSION_LABELS[session] || session;
   if (!confirm(`Batalkan status libur sesi ${sessionLabel} untuk tanggal ${date}?`)) return;
   try {
-    const res = await fetch(`${API_URL}/holidays/${sessionHoliday.id}`, { method: 'DELETE' });
+    const res = await authFetch(`${API_URL}/holidays/${sessionHoliday.id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error();
     toast(`Status libur sesi ${sessionLabel} berhasil dibatalkan`, 'warning');
     await loadAttendance();
@@ -627,9 +715,9 @@ btnSaveAttendance?.addEventListener('click', async () => {
   }
 
   try {
-    const res = await fetch(`${API_URL}/attendance`, {
+    const res = await authFetch(`${API_URL}/attendance`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ date, session, records })
     });
     if (!res.ok) throw new Error();
@@ -659,9 +747,9 @@ async function loadView() {
   let viewStudents = [], viewAtts = [];
   try {
     const [r1, r2, r3] = await Promise.all([
-      fetch(`${API_URL}/students?session=${session}`),
-      fetch(`${API_URL}/attendance?date=${date}&session=${session}`),
-      fetch(`${API_URL}/holidays`)
+      authFetch(`${API_URL}/students?session=${session}`),
+      authFetch(`${API_URL}/attendance?date=${date}&session=${session}`),
+      authFetch(`${API_URL}/holidays`)
     ]);
     const d1 = await r1.json().catch(() => []);
     const d2 = await r2.json().catch(() => []);
@@ -783,8 +871,8 @@ btnShowSummary?.addEventListener('click', async () => {
 
   try {
     const [r1, r2] = await Promise.all([
-      fetch(`${API_URL}/students`),
-      fetch(`${API_URL}/attendance/summary?month=${month}`)
+      authFetch(`${API_URL}/students`),
+      authFetch(`${API_URL}/attendance/summary?month=${month}`)
     ]);
 
     if (!r1.ok || !r2.ok) {
@@ -858,5 +946,16 @@ btnCloseSummary?.addEventListener('click', () => summaryModal?.classList.remove(
 summaryModal?.addEventListener('click', e => { if (e.target === summaryModal) summaryModal.classList.remove('open'); });
 
 // ============ INIT ============
-checkRangkumButton(todayStr);
-loadSantriList();
+async function initApp() {
+  const isAuth = await checkAuth();
+  if (!isAuth) return;
+  
+  setupRoleUI();
+  setupLogout();
+  checkRangkumButton(todayStr);
+  
+  // Load default panel (presensi)
+  loadAttendance();
+}
+
+initApp();

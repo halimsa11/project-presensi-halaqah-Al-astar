@@ -892,6 +892,67 @@
       
       .header-right { display: none; } /* Hide user profile on very small screens to save space if needed, or adjust */
     }
+
+    /* ===== HEADER RIGHT (User Info + Logout) ===== */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .header-user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.9);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .header-user-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.3);
+      border: 2px solid rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a7f3d0;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .header-user-name { display: flex; flex-direction: column; }
+    .header-user-name span:first-child { font-weight: 700; }
+    .header-user-name .role-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.9);
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fecaca;
+    }
+    @media (max-width: 768px) {
+      .header-user-name { display: none; }
+      .btn-logout span { display: none; }
+      .btn-logout { padding: 7px 10px; }
+    }
   </style>
 </head>
 <body>
@@ -914,17 +975,34 @@
       <div class="header-subtitle">Pencatatan Kehadiran Siswa Halaqah Qur'an</div>
     </div>
   </div>
+  <div class="header-right" id="header-right">
+    <div class="header-user-info">
+      <div class="header-user-avatar" id="header-avatar">AD</div>
+      <div class="header-user-name">
+        <span id="header-username">Admin</span>
+        <span class="role-label" id="header-role-label">Admin</span>
+      </div>
+    </div>
+    <button class="btn-logout" id="btn-logout" title="Logout">
+      <svg class="icon icon-sm" viewBox="0 0 24 24" style="stroke:currentColor;">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" x2="9" y1="12" y2="12"/>
+      </svg>
+      <span>Logout</span>
+    </button>
+  </div>
 </header>
 
 <!-- SUBNAV -->
 <div id="subnav-wrap">
   <nav id="subnav">
     <div class="nav-tabs-group">
-      <button class="nav-btn active" data-panel="panel-santri" id="nav-santri">
+      <button class="nav-btn hidden" data-panel="panel-santri" id="nav-santri">
         <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
         <span>Data Siswa</span>
       </button>
-      <button class="nav-btn" data-panel="panel-presensi" id="nav-presensi">
+      <button class="nav-btn active" data-panel="panel-presensi" id="nav-presensi">
         <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
         <span>Input Presensi</span>
       </button>
@@ -946,7 +1024,7 @@
 <div id="app">
 
   <!-- ===== PANEL: DATA SANTRI ===== -->
-  <div class="panel active" id="panel-santri">
+  <div class="panel hidden" id="panel-santri">
     <div class="card">
       <div class="card-header">
         <div class="card-icon">
@@ -1054,7 +1132,7 @@
   </div>
 
   <!-- ===== PANEL: INPUT PRESENSI ===== -->
-  <div class="panel" id="panel-presensi">
+  <div class="panel active" id="panel-presensi">
     <div class="card">
       <div class="card-header">
         <div class="card-icon">
