@@ -15,8 +15,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'rahasia_aman_halaqah';
 
 const ADMIN_USERS = [
   {
-    username: 'admin',
-    passwordHash: '$2b$10$OQcnyJCW.vp7b9DOQl9H4eXFKXqsuZZ2l43GxHhFx35HS8F9u4H4W', // admin123
+    username: 'schooldirector_alatsar',
+    passwordHash: '$2b$10$jSEO1xyZWiL0x8BAtsvl9uZVONtXOhr5AYImp3h8sNuOBrjKjsxUS', // @Alatsarsolo
     role: 'admin'
   },
   {
