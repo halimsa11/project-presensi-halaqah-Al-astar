@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,9 +9,17 @@
   <link rel="icon" type="image/png" href="/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --primary: #065f46;
@@ -18,27 +27,27 @@
       --primary-light: #ecfdf5;
       --primary-mid: #059669;
       --primary-glow: rgba(5, 150, 105, 0.18);
-      
+
       --accent-hadir: #10b981;
       --accent-hadir-bg: #ecfdf5;
       --accent-hadir-border: #a7f3d0;
       --accent-hadir-text: #065f46;
-      
+
       --accent-izin: #f59e0b;
       --accent-izin-bg: #fffbeb;
       --accent-izin-border: #fde68a;
       --accent-izin-text: #92400e;
-      
+
       --accent-sakit: #3b82f6;
       --accent-sakit-bg: #eff6ff;
       --accent-sakit-border: #bfdbfe;
       --accent-sakit-text: #1e40af;
-      
+
       --accent-alpa: #f43f5e;
       --accent-alpa-bg: #fff1f2;
       --accent-alpa-border: #fecdd3;
       --accent-alpa-text: #9f1239;
-      
+
       --accent-libur: #d97706;
       --accent-libur-bg: #fffbeb;
       --accent-libur-border: #fcd34d;
@@ -50,7 +59,7 @@
       --text: #0f172a;
       --text-muted: #64748b;
       --text-sub: #94a3b8;
-      
+
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       --shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
       --shadow-lg: 0 12px 32px -4px rgba(6, 95, 70, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
@@ -70,7 +79,8 @@
 
     /* ===== ICONS COMMON ===== */
     .icon {
-      width: 18px; height: 18px;
+      width: 18px;
+      height: 18px;
       display: inline-block;
       vertical-align: middle;
       stroke-width: 2;
@@ -80,9 +90,21 @@
       stroke-linejoin: round;
       flex-shrink: 0;
     }
-    .icon-sm { width: 15px; height: 15px; }
-    .icon-md { width: 20px; height: 20px; }
-    .icon-lg { width: 24px; height: 24px; }
+
+    .icon-sm {
+      width: 15px;
+      height: 15px;
+    }
+
+    .icon-md {
+      width: 20px;
+      height: 20px;
+    }
+
+    .icon-lg {
+      width: 24px;
+      height: 24px;
+    }
 
     /* ===== HEADER ===== */
     #app-header {
@@ -98,27 +120,46 @@
       z-index: 100;
       backdrop-filter: blur(8px);
     }
+
     .header-brand {
       display: flex;
       align-items: center;
       gap: 14px;
       text-decoration: none;
     }
+
     .header-logo-wrap {
       position: relative;
     }
+
     .header-logo {
       background: white;
       border-radius: 50%;
-      width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.25);
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.25);
       flex-shrink: 0;
       transition: transform 0.2s;
     }
-    .header-logo:hover { transform: scale(1.05); }
-    .header-logo img { width: 32px; height: 32px; object-fit: contain; }
-    .header-text { display: flex; flex-direction: column; }
+
+    .header-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .header-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .header-text {
+      display: flex;
+      flex-direction: column;
+    }
+
     .header-title {
       color: #ffffff;
       font-size: 1.05rem;
@@ -128,6 +169,7 @@
       align-items: center;
       gap: 8px;
     }
+
     .header-badge {
       background: rgba(16, 185, 129, 0.25);
       border: 1px solid rgba(16, 185, 129, 0.4);
@@ -139,8 +181,9 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
+
     .header-subtitle {
-      color: rgba(255,255,255,0.75);
+      color: rgba(255, 255, 255, 0.75);
       font-size: 0.76rem;
       font-weight: 500;
       margin-top: 1px;
@@ -153,8 +196,9 @@
       position: sticky;
       top: 70px;
       z-index: 90;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
     }
+
     #subnav {
       max-width: 960px;
       margin: 0 auto;
@@ -166,7 +210,10 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
-    #subnav::-webkit-scrollbar { display: none; }
+
+    #subnav::-webkit-scrollbar {
+      display: none;
+    }
 
     .nav-tabs-group {
       display: flex;
@@ -193,10 +240,12 @@
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
     }
+
     .nav-btn:hover {
       color: var(--primary);
       background: rgba(255, 255, 255, 0.6);
     }
+
     .nav-btn.active {
       color: var(--primary);
       background: #ffffff;
@@ -221,12 +270,16 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
+
     .btn-rangkum:hover {
       transform: translateY(-1px);
       box-shadow: 0 5px 16px rgba(37, 99, 235, 0.38);
       background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
     }
-    .btn-rangkum:active { transform: scale(0.97); }
+
+    .btn-rangkum:active {
+      transform: scale(0.97);
+    }
 
     /* ===== MAIN CONTAINER ===== */
     #app {
@@ -236,9 +289,26 @@
     }
 
     /* ===== PANELS ===== */
-    .panel { display: none; }
-    .panel.active { display: block; animation: fadeIn 0.25s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     /* ===== CARDS ===== */
     .card {
@@ -250,9 +320,11 @@
       margin-bottom: 24px;
       transition: box-shadow 0.2s;
     }
+
     .card:hover {
       box-shadow: var(--shadow-lg);
     }
+
     .card-header {
       display: flex;
       align-items: center;
@@ -261,8 +333,10 @@
       padding-bottom: 18px;
       border-bottom: 1px solid var(--border-light);
     }
+
     .card-icon {
-      width: 44px; height: 44px;
+      width: 44px;
+      height: 44px;
       background: var(--primary-light);
       color: var(--primary);
       border-radius: var(--radius-lg);
@@ -271,12 +345,14 @@
       justify-content: center;
       box-shadow: 0 2px 8px var(--primary-glow);
     }
+
     .card-title {
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--text);
       letter-spacing: -0.01em;
     }
+
     .card-subtitle {
       font-size: 0.8rem;
       color: var(--text-muted);
@@ -289,6 +365,7 @@
       flex-direction: column;
       gap: 6px;
     }
+
     label {
       display: flex;
       align-items: center;
@@ -299,18 +376,23 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
+
     .input-wrap {
       position: relative;
       display: flex;
       align-items: center;
     }
+
     .input-icon {
       position: absolute;
       left: 14px;
       color: var(--text-sub);
       pointer-events: none;
     }
-    input[type="text"], input[type="date"], select {
+
+    input[type="text"],
+    input[type="date"],
+    select {
       width: 100%;
       border: 1.5px solid var(--border);
       border-radius: var(--radius-md);
@@ -322,14 +404,19 @@
       transition: all 0.2s;
       outline: none;
     }
-    .has-icon input, .has-icon select {
+
+    .has-icon input,
+    .has-icon select {
       padding-left: 42px;
     }
-    input:focus, select:focus {
+
+    input:focus,
+    select:focus {
       border-color: var(--primary-mid);
       box-shadow: 0 0 0 3.5px var(--primary-glow);
       background: #ffffff;
     }
+
     select {
       cursor: pointer;
       appearance: none;
@@ -338,13 +425,17 @@
       background-position: right 14px center;
       padding-right: 40px;
     }
+
     .form-grid-2 {
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 16px;
     }
+
     @media (max-width: 600px) {
-      .form-grid-2 { grid-template-columns: 1fr; }
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* ===== BUTTONS ===== */
@@ -363,59 +454,73 @@
       transition: all 0.18s;
       text-decoration: none;
     }
-    .btn:active { transform: scale(0.97); }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
     .btn-primary {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
       color: white;
       box-shadow: 0 3px 12px var(--primary-glow);
     }
+
     .btn-primary:hover {
       background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
       box-shadow: 0 5px 16px rgba(4, 120, 87, 0.3);
     }
+
     .btn-primary:disabled {
       opacity: 0.6;
       cursor: not-allowed;
       transform: none;
     }
+
     .btn-amber {
       background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
       color: white;
       box-shadow: 0 3px 10px rgba(217, 119, 6, 0.25);
     }
+
     .btn-amber:hover {
       background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
     }
+
     .btn-amber-outline {
       background: #ffffff;
       color: #b45309;
       border: 1.5px solid #fcd34d;
     }
+
     .btn-amber-outline:hover {
       background: #fffbeb;
       border-color: #f59e0b;
     }
-    
+
     .btn-sm {
       padding: 6px 12px;
       font-size: 0.8rem;
       border-radius: var(--radius-sm);
     }
+
     .btn-action-edit {
       color: #3b82f6;
       background: #eff6ff;
       border: 1px solid #bfdbfe;
     }
+
     .btn-action-edit:hover {
       background: #dbeafe;
       border-color: #93c5fd;
       color: #1d4ed8;
     }
+
     .btn-action-delete {
       color: #ef4444;
       background: #fff1f2;
       border: 1px solid #fecdd3;
     }
+
     .btn-action-delete:hover {
       background: #fee2e2;
       border-color: #fca5a5;
@@ -429,8 +534,11 @@
       gap: 16px;
       margin-bottom: 20px;
     }
+
     @media (max-width: 540px) {
-      .controls-row { grid-template-columns: 1fr; }
+      .controls-row {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* ===== HOLIDAY PANEL ===== */
@@ -446,13 +554,16 @@
       flex-wrap: wrap;
       margin-bottom: 20px;
     }
+
     .holiday-ctrl-left {
       display: flex;
       gap: 14px;
       align-items: center;
     }
+
     .holiday-ctrl-icon {
-      width: 40px; height: 40px;
+      width: 40px;
+      height: 40px;
       background: #fef3c7;
       color: #d97706;
       border-radius: var(--radius-md);
@@ -460,16 +571,19 @@
       align-items: center;
       justify-content: center;
     }
+
     .holiday-ctrl-left .hl-title {
       font-size: 0.9rem;
       font-weight: 700;
       color: #92400e;
     }
+
     .holiday-ctrl-left .hl-sub {
       font-size: 0.78rem;
       color: #b45309;
       margin-top: 2px;
     }
+
     .holiday-ctrl-right {
       display: flex;
       gap: 10px;
@@ -486,8 +600,10 @@
       padding: 18px 22px;
       margin-bottom: 20px;
     }
+
     .alert-libur-icon {
-      width: 46px; height: 46px;
+      width: 46px;
+      height: 46px;
       background: #fde68a;
       color: #92400e;
       border-radius: 50%;
@@ -496,8 +612,18 @@
       justify-content: center;
       flex-shrink: 0;
     }
-    .alert-libur h3 { font-size: 0.96rem; font-weight: 800; color: #78350f; }
-    .alert-libur p { font-size: 0.82rem; color: #92400e; margin-top: 3px; }
+
+    .alert-libur h3 {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #78350f;
+    }
+
+    .alert-libur p {
+      font-size: 0.82rem;
+      color: #92400e;
+      margin-top: 3px;
+    }
 
     .strip-weekend {
       background: #fffbeb;
@@ -520,9 +646,14 @@
       gap: 14px;
       margin-bottom: 24px;
     }
+
     @media (max-width: 640px) {
-      .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
     }
+
     .stat-box {
       background: #ffffff;
       border-radius: var(--radius-lg);
@@ -533,29 +664,76 @@
       border: 1.5px solid var(--border);
       transition: all 0.2s;
     }
+
     .stat-box:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow);
     }
+
     .stat-icon-wrap {
-      width: 42px; height: 42px;
+      width: 42px;
+      height: 42px;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-    .stat-hadir .stat-icon-wrap { background: var(--accent-hadir-bg); color: var(--accent-hadir-text); border: 1px solid var(--accent-hadir-border); }
-    .stat-izin .stat-icon-wrap  { background: var(--accent-izin-bg); color: var(--accent-izin-text); border: 1px solid var(--accent-izin-border); }
-    .stat-sakit .stat-icon-wrap { background: var(--accent-sakit-bg); color: var(--accent-sakit-text); border: 1px solid var(--accent-sakit-border); }
-    .stat-alpa .stat-icon-wrap  { background: var(--accent-alpa-bg); color: var(--accent-alpa-text); border: 1px solid var(--accent-alpa-border); }
 
-    .stat-num { font-size: 1.5rem; font-weight: 800; line-height: 1; }
-    .stat-label { font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-top: 4px; }
-    .stat-hadir .stat-num { color: var(--accent-hadir-text); }
-    .stat-izin .stat-num  { color: var(--accent-izin-text); }
-    .stat-sakit .stat-num { color: var(--accent-sakit-text); }
-    .stat-alpa .stat-num  { color: var(--accent-alpa-text); }
+    .stat-hadir .stat-icon-wrap {
+      background: var(--accent-hadir-bg);
+      color: var(--accent-hadir-text);
+      border: 1px solid var(--accent-hadir-border);
+    }
+
+    .stat-izin .stat-icon-wrap {
+      background: var(--accent-izin-bg);
+      color: var(--accent-izin-text);
+      border: 1px solid var(--accent-izin-border);
+    }
+
+    .stat-sakit .stat-icon-wrap {
+      background: var(--accent-sakit-bg);
+      color: var(--accent-sakit-text);
+      border: 1px solid var(--accent-sakit-border);
+    }
+
+    .stat-alpa .stat-icon-wrap {
+      background: var(--accent-alpa-bg);
+      color: var(--accent-alpa-text);
+      border: 1px solid var(--accent-alpa-border);
+    }
+
+    .stat-num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .stat-hadir .stat-num {
+      color: var(--accent-hadir-text);
+    }
+
+    .stat-izin .stat-num {
+      color: var(--accent-izin-text);
+    }
+
+    .stat-sakit .stat-num {
+      color: var(--accent-sakit-text);
+    }
+
+    .stat-alpa .stat-num {
+      color: var(--accent-alpa-text);
+    }
 
     /* ===== TABLE STYLING ===== */
     .table-wrap {
@@ -564,15 +742,18 @@
       border: 1.5px solid var(--border);
       background: #ffffff;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       min-width: 480px;
     }
+
     thead {
       background: #f8fafc;
       border-bottom: 1.5px solid var(--border);
     }
+
     thead th {
       padding: 14px 18px;
       text-align: left;
@@ -582,24 +763,35 @@
       letter-spacing: 0.06em;
       color: var(--text-muted);
     }
-    thead th.center { text-align: center; }
+
+    thead th.center {
+      text-align: center;
+    }
+
     tbody tr {
       border-top: 1px solid var(--border-light);
       transition: background 0.15s;
     }
-    tbody tr:hover { background: #f8fafc; }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
     tbody td {
       padding: 14px 18px;
       font-size: 0.9rem;
       vertical-align: middle;
     }
+
     .td-name-cell {
       display: flex;
       align-items: center;
       gap: 12px;
     }
+
     .avatar-init {
-      width: 34px; height: 34px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: linear-gradient(135deg, #059669 0%, #10b981 100%);
       color: white;
@@ -611,8 +803,13 @@
       flex-shrink: 0;
       box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
     }
-    .td-name { font-weight: 700; color: var(--text); }
-     .td-class-badge {
+
+    .td-name {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .td-class-badge {
       display: inline-flex;
       align-items: center;
       padding: 3px 10px;
@@ -623,6 +820,7 @@
       font-weight: 600;
       border: 1px solid #e2e8f0;
     }
+
     .td-type-badge {
       display: inline-flex;
       align-items: center;
@@ -634,17 +832,22 @@
       letter-spacing: 0.02em;
       text-transform: uppercase;
     }
+
     .td-type-boarding {
       background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
       color: #1e40af;
       border: 1px solid #93c5fd;
     }
+
     .td-type-reguler {
       background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
       color: #5b21b6;
       border: 1px solid #c4b5fd;
     }
-    .td-center { text-align: center; }
+
+    .td-center {
+      text-align: center;
+    }
 
     /* ===== STATUS SELECT ===== */
     .status-sel {
@@ -660,10 +863,30 @@
       outline: none;
       transition: all 0.2s;
     }
-    .s-hadir { background: var(--accent-hadir-bg); color: var(--accent-hadir-text); border-color: var(--accent-hadir-border); }
-    .s-izin  { background: var(--accent-izin-bg); color: var(--accent-izin-text); border-color: var(--accent-izin-border); }
-    .s-sakit { background: var(--accent-sakit-bg); color: var(--accent-sakit-text); border-color: var(--accent-sakit-border); }
-    .s-alpa  { background: var(--accent-alpa-bg); color: var(--accent-alpa-text); border-color: var(--accent-alpa-border); }
+
+    .s-hadir {
+      background: var(--accent-hadir-bg);
+      color: var(--accent-hadir-text);
+      border-color: var(--accent-hadir-border);
+    }
+
+    .s-izin {
+      background: var(--accent-izin-bg);
+      color: var(--accent-izin-text);
+      border-color: var(--accent-izin-border);
+    }
+
+    .s-sakit {
+      background: var(--accent-sakit-bg);
+      color: var(--accent-sakit-text);
+      border-color: var(--accent-sakit-border);
+    }
+
+    .s-alpa {
+      background: var(--accent-alpa-bg);
+      color: var(--accent-alpa-text);
+      border-color: var(--accent-alpa-border);
+    }
 
     /* ===== BADGES ===== */
     .badge {
@@ -676,13 +899,48 @@
       font-weight: 700;
       letter-spacing: 0.01em;
     }
-    .badge-hadir { background: var(--accent-hadir-bg); color: var(--accent-hadir-text); border: 1px solid var(--accent-hadir-border); }
-    .badge-izin  { background: var(--accent-izin-bg); color: var(--accent-izin-text); border: 1px solid var(--accent-izin-border); }
-    .badge-sakit { background: var(--accent-sakit-bg); color: var(--accent-sakit-text); border: 1px solid var(--accent-sakit-border); }
-    .badge-alpa  { background: var(--accent-alpa-bg); color: var(--accent-alpa-text); border: 1px solid var(--accent-alpa-border); }
-    .badge-libur { background: var(--accent-libur-bg); color: #92400e; border: 1px solid var(--accent-libur-border); }
-    .badge-belum { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
-    .badge-libur-sesi { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #78350f; border: 1px solid #fbbf24; }
+
+    .badge-hadir {
+      background: var(--accent-hadir-bg);
+      color: var(--accent-hadir-text);
+      border: 1px solid var(--accent-hadir-border);
+    }
+
+    .badge-izin {
+      background: var(--accent-izin-bg);
+      color: var(--accent-izin-text);
+      border: 1px solid var(--accent-izin-border);
+    }
+
+    .badge-sakit {
+      background: var(--accent-sakit-bg);
+      color: var(--accent-sakit-text);
+      border: 1px solid var(--accent-sakit-border);
+    }
+
+    .badge-alpa {
+      background: var(--accent-alpa-bg);
+      color: var(--accent-alpa-text);
+      border: 1px solid var(--accent-alpa-border);
+    }
+
+    .badge-libur {
+      background: var(--accent-libur-bg);
+      color: #92400e;
+      border: 1px solid var(--accent-libur-border);
+    }
+
+    .badge-belum {
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+    }
+
+    .badge-libur-sesi {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #78350f;
+      border: 1px solid #fbbf24;
+    }
 
     /* ===== SAVE ROW ===== */
     .save-row {
@@ -701,8 +959,10 @@
       padding: 56px 24px;
       color: var(--text-muted);
     }
+
     .empty-icon-wrap {
-      width: 64px; height: 64px;
+      width: 64px;
+      height: 64px;
       margin: 0 auto 16px;
       background: #f1f5f9;
       color: #94a3b8;
@@ -711,7 +971,11 @@
       align-items: center;
       justify-content: center;
     }
-    .empty p { font-size: 0.9rem; font-weight: 500; }
+
+    .empty p {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
 
     /* ===== MODAL ===== */
     .modal-overlay {
@@ -728,7 +992,12 @@
       pointer-events: none;
       transition: opacity 0.22s ease;
     }
-    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
     .modal {
       background: #ffffff;
       border-radius: var(--radius-xl);
@@ -742,7 +1011,11 @@
       transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       border: 1px solid var(--border);
     }
-    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
     .modal-head {
       padding: 20px 26px;
       border-bottom: 1px solid var(--border);
@@ -752,17 +1025,20 @@
       background: #f8fafc;
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
+
     .modal-head-title-wrap {
       display: flex;
       align-items: center;
       gap: 12px;
     }
+
     .modal-head h2 {
       font-size: 1.12rem;
       font-weight: 800;
       color: var(--text);
       letter-spacing: -0.01em;
     }
+
     .month-badge {
       background: var(--primary-light);
       color: var(--primary);
@@ -772,8 +1048,10 @@
       font-size: 0.8rem;
       font-weight: 700;
     }
+
     .modal-close {
-      width: 34px; height: 34px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       border: 1px solid var(--border);
       background: #ffffff;
@@ -785,11 +1063,13 @@
       justify-content: center;
       transition: all 0.15s;
     }
+
     .modal-close:hover {
       background: #fee2e2;
       color: #b91c1c;
       border-color: #fca5a5;
     }
+
     .modal-body {
       flex: 1;
       overflow-y: auto;
@@ -802,10 +1082,22 @@
       font-size: 0.95rem;
       font-weight: 800;
     }
-    .sum-hadir { color: var(--accent-hadir-text); }
-    .sum-izin  { color: var(--accent-izin-text); }
-    .sum-sakit { color: var(--accent-sakit-text); }
-    .sum-alpa  { color: var(--accent-alpa-text); }
+
+    .sum-hadir {
+      color: var(--accent-hadir-text);
+    }
+
+    .sum-izin {
+      color: var(--accent-izin-text);
+    }
+
+    .sum-sakit {
+      color: var(--accent-sakit-text);
+    }
+
+    .sum-alpa {
+      color: var(--accent-alpa-text);
+    }
 
     /* ===== LOADING SPINNER ===== */
     .loading {
@@ -818,14 +1110,21 @@
       font-size: 0.88rem;
       font-weight: 600;
     }
+
     .spin {
-      width: 22px; height: 22px;
+      width: 22px;
+      height: 22px;
       border: 2.5px solid var(--border);
       border-top-color: var(--primary);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     /* ===== TOASTER ===== */
     #toaster {
@@ -837,6 +1136,7 @@
       flex-direction: column;
       gap: 10px;
     }
+
     .toast {
       background: #ffffff;
       border-radius: var(--radius-lg);
@@ -855,42 +1155,129 @@
       border-bottom: 1px solid var(--border);
       animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .toast.error { border-left-color: var(--accent-alpa); }
-    .toast.warning { border-left-color: var(--accent-izin); }
-    @keyframes toastIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-    .hidden { display: none !important; }
-    .flex { display: flex; }
-    .gap-2 { gap: 8px; }
+    .toast.error {
+      border-left-color: var(--accent-alpa);
+    }
+
+    .toast.warning {
+      border-left-color: var(--accent-izin);
+    }
+
+    @keyframes toastIn {
+      from {
+        transform: translateX(50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .gap-2 {
+      gap: 8px;
+    }
 
     /* ===== RESPONSIVE MOBILE ===== */
     @media (max-width: 768px) {
+
       /* Form Layouts */
-      #add-student-form > div { grid-template-columns: 1fr !important; }
-      
+      #add-student-form>div {
+        grid-template-columns: 1fr !important;
+      }
+
       /* Navigation Tabs */
-      .nav-tabs-group { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 5px; }
-      
+      .nav-tabs-group {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 5px;
+      }
+
       /* Tables */
-      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -26px; padding: 0 26px; }
-      table { min-width: 650px; }
-      
+      .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -26px;
+        padding: 0 26px;
+      }
+
+      table {
+        min-width: 650px;
+      }
+
       /* Control Sections */
-      .controls-row { flex-direction: column; }
-      .holiday-ctrl { flex-direction: column; align-items: stretch; text-align: center; }
-      .holiday-ctrl-icon { margin: 0 auto 12px; }
-      .holiday-ctrl-right { flex-direction: column; width: 100%; margin-top: 16px; }
-      .holiday-ctrl-right button { width: 100%; }
-      
+      .controls-row {
+        flex-direction: column;
+      }
+
+      .holiday-ctrl {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+
+      .holiday-ctrl-icon {
+        margin: 0 auto 12px;
+      }
+
+      .holiday-ctrl-right {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 16px;
+      }
+
+      .holiday-ctrl-right button {
+        width: 100%;
+      }
+
       /* Header adjustments */
-      .header-brand { flex-direction: row; text-align: left; gap: 12px; }
-      #app-header { height: auto; padding: 12px 16px; }
-      .header-logo { width: 38px; height: 38px; }
-      .header-logo img { width: 24px; height: 24px; }
-      .header-title { font-size: 1rem; }
-      .header-subtitle { font-size: 0.7rem; white-space: normal; line-height: 1.3; }
-      
-      .header-right { display: none; } /* Hide user profile on very small screens to save space if needed, or adjust */
+      .header-brand {
+        flex-direction: row;
+        text-align: left;
+        gap: 12px;
+      }
+
+      #app-header {
+        height: auto;
+        padding: 12px 16px;
+      }
+
+      .header-logo {
+        width: 38px;
+        height: 38px;
+      }
+
+      .header-logo img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .header-title {
+        font-size: 1rem;
+      }
+
+      .header-subtitle {
+        font-size: 0.7rem;
+        white-space: normal;
+        line-height: 1.3;
+      }
+
+      .header-right {
+        display: none;
+      }
+
+      /* Hide user profile on very small screens to save space if needed, or adjust */
     }
 
     /* ===== HEADER RIGHT (User Info + Logout) ===== */
@@ -899,19 +1286,22 @@
       align-items: center;
       gap: 14px;
     }
+
     .header-user-info {
       display: flex;
       align-items: center;
       gap: 10px;
-      color: rgba(255,255,255,0.9);
+      color: rgba(255, 255, 255, 0.9);
       font-size: 0.82rem;
       font-weight: 600;
     }
+
     .header-user-avatar {
-      width: 34px; height: 34px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: rgba(16, 185, 129, 0.3);
-      border: 2px solid rgba(255,255,255,0.3);
+      border: 2px solid rgba(255, 255, 255, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -919,23 +1309,32 @@
       font-size: 0.78rem;
       font-weight: 700;
     }
-    .header-user-name { display: flex; flex-direction: column; }
-    .header-user-name span:first-child { font-weight: 700; }
+
+    .header-user-name {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-user-name span:first-child {
+      font-weight: 700;
+    }
+
     .header-user-name .role-label {
       font-size: 0.68rem;
       font-weight: 600;
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.6);
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
+
     .btn-logout {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 7px 14px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.9);
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.9);
       border-radius: 99px;
       font-size: 0.78rem;
       font-weight: 700;
@@ -943,288 +1342,575 @@
       cursor: pointer;
       transition: all 0.15s;
     }
+
     .btn-logout:hover {
       background: rgba(239, 68, 68, 0.2);
       border-color: rgba(239, 68, 68, 0.4);
       color: #fecaca;
     }
+
     @media (max-width: 768px) {
-      .header-user-name { display: none; }
-      .btn-logout span { display: none; }
-      .btn-logout { padding: 7px 10px; }
+      .header-user-name {
+        display: none;
+      }
+
+      .btn-logout span {
+        display: none;
+      }
+
+      .btn-logout {
+        padding: 7px 10px;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<div id="toaster"></div>
+  <div id="toaster"></div>
 
-<!-- HEADER -->
-<header id="app-header">
-  <div class="header-brand">
-    <div class="header-logo-wrap">
-      <div class="header-logo">
-        <img src="/logo.png" alt="Logo" />
+  <!-- HEADER -->
+  <header id="app-header">
+    <div class="header-brand">
+      <div class="header-logo-wrap">
+        <div class="header-logo">
+          <img src="/logo.png" alt="Logo" />
+        </div>
+      </div>
+      <div class="header-text">
+        <div class="header-title">
+          Presensi Halaqah
+          <span class="header-badge">Al-Atsar</span>
+        </div>
+        <div class="header-subtitle">Pencatatan Kehadiran Siswa Halaqah Qur'an</div>
       </div>
     </div>
-    <div class="header-text">
-      <div class="header-title">
-        Presensi Halaqah
-        <span class="header-badge">Al-Atsar</span>
+    <div class="header-right" id="header-right">
+      <div class="header-user-info">
+        <div class="header-user-avatar" id="header-avatar">AD</div>
+        <div class="header-user-name">
+          <span id="header-username">Admin</span>
+          <span class="role-label" id="header-role-label">Admin</span>
+        </div>
       </div>
-      <div class="header-subtitle">Pencatatan Kehadiran Siswa Halaqah Qur'an</div>
-    </div>
-  </div>
-  <div class="header-right" id="header-right">
-    <div class="header-user-info">
-      <div class="header-user-avatar" id="header-avatar">AD</div>
-      <div class="header-user-name">
-        <span id="header-username">Admin</span>
-        <span class="role-label" id="header-role-label">Admin</span>
-      </div>
-    </div>
-    <button class="btn-logout" id="btn-logout" title="Logout">
-      <svg class="icon icon-sm" viewBox="0 0 24 24" style="stroke:currentColor;">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-        <polyline points="16 17 21 12 16 7"/>
-        <line x1="21" x2="9" y1="12" y2="12"/>
-      </svg>
-      <span>Logout</span>
-    </button>
-  </div>
-</header>
-
-<!-- SUBNAV -->
-<div id="subnav-wrap">
-  <nav id="subnav">
-    <div class="nav-tabs-group">
-      <button class="nav-btn hidden" data-panel="panel-santri" id="nav-santri">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-        <span>Data Siswa</span>
-      </button>
-      <button class="nav-btn active" data-panel="panel-presensi" id="nav-presensi">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
-        <span>Input Presensi</span>
-      </button>
-      <button class="nav-btn" data-panel="panel-lihat" id="nav-lihat">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-        <span>Lihat Presensi</span>
+      <button class="btn-logout" id="btn-logout" title="Logout">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" style="stroke:currentColor;">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" x2="9" y1="12" y2="12" />
+        </svg>
+        <span>Logout</span>
       </button>
     </div>
-    <div>
-      <button class="btn-rangkum hidden" id="btn-show-summary">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
-        <span>Rangkum Bulan Ini</span>
-      </button>
-    </div>
-  </nav>
-</div>
+  </header>
 
-<!-- APP -->
-<div id="app">
-
-  <!-- ===== PANEL: DATA SANTRI ===== -->
-  <div class="panel" id="panel-santri">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-        </div>
-        <div>
-          <div class="card-title">Tambah Siswa Baru</div>
-          <div class="card-subtitle">Daftarkan siswa baru ke dalam data halaqah</div>
-        </div>
+  <!-- SUBNAV -->
+  <div id="subnav-wrap">
+    <nav id="subnav">
+      <div class="nav-tabs-group">
+        <button class="nav-btn hidden" data-panel="panel-santri" id="nav-santri">
+          <svg class="icon icon-sm" viewBox="0 0 24 24">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="19" x2="19" y1="8" y2="14" />
+            <line x1="22" x2="16" y1="11" y2="11" />
+          </svg>
+          <span>Data Siswa</span>
+        </button>
+        <button class="nav-btn active" data-panel="panel-presensi" id="nav-presensi">
+          <svg class="icon icon-sm" viewBox="0 0 24 24">
+            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+            <line x1="16" x2="16" y1="2" y2="6" />
+            <line x1="8" x2="8" y1="2" y2="6" />
+            <line x1="3" x2="21" y1="10" y2="10" />
+            <path d="m9 16 2 2 4-4" />
+          </svg>
+          <span>Input Presensi</span>
+        </button>
+        <button class="nav-btn" data-panel="panel-lihat" id="nav-lihat">
+          <svg class="icon icon-sm" viewBox="0 0 24 24">
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          <span>Lihat Presensi</span>
+        </button>
       </div>
-      <form id="add-student-form">
-        <div style="display:grid; grid-template-columns: 1fr 2fr 1fr 1fr; gap:16px;">
-          <div class="form-group">
-            <label for="new-student-nis">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
-              NIS (Opsional)
-            </label>
-            <div class="input-wrap has-icon">
-              <span class="input-icon">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
-              </span>
-              <input type="text" id="new-student-nis" placeholder="Contoh: 123456" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="new-student-name">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              Nama Lengkap Siswa
-            </label>
-            <div class="input-wrap has-icon">
-              <span class="input-icon">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              </span>
-              <input type="text" id="new-student-name" placeholder="Contoh: Muhammad Halim" required />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="new-student-class">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-              Tingkat Kelas
-            </label>
-            <div class="input-wrap has-icon">
-              <span class="input-icon">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
-              </span>
-              <select id="new-student-class" required>
-                <option value="10">Kelas 10</option>
-                <option value="11">Kelas 11</option>
-                <option value="12">Kelas 12</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="new-student-type">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              Tipe Siswa
-            </label>
-            <div class="input-wrap has-icon">
-              <span class="input-icon">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-              </span>
-              <select id="new-student-type" required>
-                <option value="boarding">Boarding</option>
-                <option value="reguler">Reguler (PP)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="flex" style="justify-content:flex-end; margin-top:20px;">
-          <button type="submit" id="btn-add-student" class="btn btn-primary">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
-            <span>Tambah Siswa</span>
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Daftar Siswa -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div>
-          <div class="card-title">Daftar Siswa</div>
-          <div class="card-subtitle" id="santri-count-label">Memuat data...</div>
-        </div>
+      <div>
+        <button class="btn-rangkum hidden" id="btn-show-summary">
+          <svg class="icon icon-sm" viewBox="0 0 24 24">
+            <line x1="12" x2="12" y1="20" y2="10" />
+            <line x1="18" x2="18" y1="20" y2="4" />
+            <line x1="6" x2="6" y1="20" y2="16" />
+          </svg>
+          <span>Rangkum Bulan Ini</span>
+        </button>
       </div>
-      <div id="santri-loading" class="loading"><div class="spin"></div> Memuat data siswa...</div>
-      <div id="santri-table-wrap" class="table-wrap hidden">
-        <table>
-          <thead>
-            <tr>
-              <th>Siswa</th>
-              <th>NIS</th>
-              <th>Kelas</th>
-              <th>Tipe</th>
-              <th style="width:140px; text-align:right;">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="santri-table-body"></tbody>
-        </table>
-      </div>
-    </div>
+    </nav>
   </div>
 
-  <!-- ===== PANEL: INPUT PRESENSI ===== -->
-  <div class="panel active" id="panel-presensi">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg class="icon icon-md" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
-        </div>
-        <div>
-          <div class="card-title">Input Presensi Siswa</div>
-          <div class="card-subtitle">Pilih tanggal dan sesi halaqah untuk mengisi absensi kehadiran</div>
-        </div>
-      </div>
+  <!-- APP -->
+  <div id="app">
 
-      <div class="controls-row">
-        <div class="form-group">
-          <label for="main-date">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-            Tanggal Halaqah
-          </label>
-          <div class="input-wrap has-icon">
-            <span class="input-icon">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-            </span>
-            <input type="date" id="main-date" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="main-session">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Sesi Halaqah
-          </label>
-          <div class="input-wrap has-icon">
-            <span class="input-icon">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-            </span>
-            <select id="main-session">
-              <option value="pagi">Sesi Pagi (Subuh)</option>
-              <option value="siang">Sesi Siang (Ashar)</option>
-              <option value="malam">Sesi Malam (Maghrib/Isya)</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Holiday Controls -->
-      <div class="holiday-ctrl" id="holiday-ctrl-box">
-        <div class="holiday-ctrl-left">
-          <div class="holiday-ctrl-icon">
-            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z"/><path d="M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5h-2c0-1.66-1.57-3-3.5-3a3.83 3.83 0 0 0-2.67 1.07"/><path d="M5.8 13.5A7.8 7.8 0 0 0 2 18h2c0-2.21 1.79-4 4-4"/><path d="M11 22v-6.5c0-1.93-1.57-3.5-3.5-3.5H7"/><path d="M18 22v-9a4 4 0 0 0-4-4h-1"/></svg>
+    <!-- ===== PANEL: DATA SANTRI ===== -->
+    <div class="panel" id="panel-santri">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <line x1="19" x2="19" y1="8" y2="14" />
+              <line x1="22" x2="16" y1="11" y2="11" />
+            </svg>
           </div>
           <div>
-            <div class="hl-title">Pengaturan Hari Libur</div>
-            <div class="hl-sub">Kunci presensi jika kegiatan halaqah diliburkan</div>
+            <div class="card-title">Tambah Siswa Baru</div>
+            <div class="card-subtitle">Daftarkan siswa baru ke dalam data halaqah</div>
           </div>
         </div>
-        <div class="holiday-ctrl-right">
-          <button type="button" id="btn-mark-holiday" class="btn btn-amber btn-sm">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364-.707-.707M6.343 6.343l-.707-.707m12.728 0-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/></svg>
-            <span>Libur Hari Ini</span>
-          </button>
-          <button type="button" id="btn-mark-session-holiday" class="btn btn-amber-outline btn-sm">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>Libur Sesi Ini</span>
-          </button>
-          <button type="button" id="btn-cancel-holiday" class="btn btn-amber-outline btn-sm hidden">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
-            <span>Batalkan Libur Hari</span>
-          </button>
-          <button type="button" id="btn-cancel-session-holiday" class="btn btn-amber-outline btn-sm hidden">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
-            <span>Batalkan Libur Sesi</span>
-          </button>
-        </div>
+        <form id="add-student-form">
+          <div style="display:grid; grid-template-columns: 1fr 2fr 1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label for="new-student-nis">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                </svg>
+                NIS
+              </label>
+              <div class="input-wrap has-icon">
+                <span class="input-icon">
+                  <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                  </svg>
+                </span>
+                <input type="text" id="new-student-nis" placeholder="Contoh: 123456" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="new-student-name">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                Nama Lengkap Siswa
+              </label>
+              <div class="input-wrap has-icon">
+                <span class="input-icon">
+                  <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </span>
+                <input type="text" id="new-student-name" placeholder="Contoh: Muhammad" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="new-student-class">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                  <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
+                Tingkat Kelas
+              </label>
+              <div class="input-wrap has-icon">
+                <span class="input-icon">
+                  <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                  </svg>
+                </span>
+                <select id="new-student-class" required>
+                  <option value="10">Kelas 10</option>
+                  <option value="11">Kelas 11</option>
+                  <option value="12">Kelas 12</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="new-student-type">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Tipe Siswa
+              </label>
+              <div class="input-wrap has-icon">
+                <span class="input-icon">
+                  <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  </svg>
+                </span>
+                <select id="new-student-type" required>
+                  <option value="boarding">Boarding</option>
+                  <option value="reguler">Reguler (PP)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="flex" style="justify-content:flex-end; margin-top:20px;">
+            <button type="submit" id="btn-add-student" class="btn btn-primary">
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <line x1="12" x2="12" y1="5" y2="19" />
+                <line x1="5" x2="19" y1="12" y2="12" />
+              </svg>
+              <span>Tambah Siswa</span>
+            </button>
+          </div>
+        </form>
       </div>
 
-      <div id="holiday-weekend-info" class="strip-weekend hidden">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-        <span id="holiday-weekend-text">Hari Sabtu & Minggu adalah jadwal libur rutin akhir pekan.</span>
-      </div>
-
-      <div id="main-holiday-banner" class="alert-libur hidden">
-        <div class="alert-libur-icon">
-          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z"/><path d="M18 22v-9a4 4 0 0 0-4-4h-1"/></svg>
+      <!-- Daftar Siswa -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">Daftar Siswa</div>
+            <div class="card-subtitle" id="santri-count-label">Memuat data...</div>
+          </div>
         </div>
-        <div>
-          <h3 id="main-holiday-title">Hari Ini Libur Halaqah</h3>
-          <p id="main-holiday-reason">Tidak ada kegiatan halaqah pada tanggal ini.</p>
+        <div id="santri-loading" class="loading">
+          <div class="spin"></div> Memuat data siswa...
+        </div>
+        <div id="santri-table-wrap" class="table-wrap hidden">
+          <table>
+            <thead>
+              <tr>
+                <th>Siswa</th>
+                <th>NIS</th>
+                <th>Kelas</th>
+                <th>Tipe</th>
+                <th style="width:140px; text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="santri-table-body"></tbody>
+          </table>
         </div>
       </div>
+    </div>
 
-      <div id="main-loading" class="loading hidden"><div class="spin"></div> Memuat data presensi...</div>
+    <!-- ===== PANEL: INPUT PRESENSI ===== -->
+    <div class="panel active" id="panel-presensi">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24">
+              <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+              <line x1="16" x2="16" y1="2" y2="6" />
+              <line x1="8" x2="8" y1="2" y2="6" />
+              <line x1="3" x2="21" y1="10" y2="10" />
+              <path d="m9 16 2 2 4-4" />
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">Input Presensi Siswa</div>
+            <div class="card-subtitle">Pilih tanggal dan sesi halaqah untuk mengisi absensi kehadiran</div>
+          </div>
+        </div>
 
-      <div id="main-table-container" class="hidden">
-        <form id="attendance-form">
+        <div class="controls-row">
+          <div class="form-group">
+            <label for="main-date">
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                <line x1="16" x2="16" y1="2" y2="6" />
+                <line x1="8" x2="8" y1="2" y2="6" />
+                <line x1="3" x2="21" y1="10" y2="10" />
+              </svg>
+              Tanggal Halaqah
+            </label>
+            <div class="input-wrap has-icon">
+              <span class="input-icon">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                  <line x1="16" x2="16" y1="2" y2="6" />
+                  <line x1="8" x2="8" y1="2" y2="6" />
+                  <line x1="3" x2="21" y1="10" y2="10" />
+                </svg>
+              </span>
+              <input type="date" id="main-date" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="main-session">
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Sesi Halaqah
+            </label>
+            <div class="input-wrap has-icon">
+              <span class="input-icon">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2" />
+                  <path d="M12 20v2" />
+                  <path d="m4.93 4.93 1.41 1.41" />
+                  <path d="m17.66 17.66 1.41 1.41" />
+                  <path d="M2 12h2" />
+                  <path d="M20 12h2" />
+                  <path d="m6.34 17.66-1.41 1.41" />
+                  <path d="m19.07 4.93-1.41 1.41" />
+                </svg>
+              </span>
+              <select id="main-session">
+                <option value="pagi">Sesi Pagi (Subuh)</option>
+                <option value="siang">Sesi Siang (Ashar)</option>
+                <option value="malam">Sesi Malam (Maghrib/Isya)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Holiday Controls -->
+        <div class="holiday-ctrl" id="holiday-ctrl-box">
+          <div class="holiday-ctrl-left">
+            <div class="holiday-ctrl-icon">
+              <svg class="icon icon-md" viewBox="0 0 24 24">
+                <path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z" />
+                <path
+                  d="M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5h-2c0-1.66-1.57-3-3.5-3a3.83 3.83 0 0 0-2.67 1.07" />
+                <path d="M5.8 13.5A7.8 7.8 0 0 0 2 18h2c0-2.21 1.79-4 4-4" />
+                <path d="M11 22v-6.5c0-1.93-1.57-3.5-3.5-3.5H7" />
+                <path d="M18 22v-9a4 4 0 0 0-4-4h-1" />
+              </svg>
+            </div>
+            <div>
+              <div class="hl-title">Pengaturan Hari Libur</div>
+              <div class="hl-sub">Kunci presensi jika kegiatan halaqah diliburkan</div>
+            </div>
+          </div>
+          <div class="holiday-ctrl-right">
+            <button type="button" id="btn-mark-holiday" class="btn btn-amber btn-sm">
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <path
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364-.707-.707M6.343 6.343l-.707-.707m12.728 0-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
+              </svg>
+              <span>Libur Hari Ini</span>
+            </button>
+            <button type="button" id="btn-mark-session-holiday" class="btn btn-amber-outline btn-sm">
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span>Libur Sesi Ini</span>
+            </button>
+            <button type="button" id="btn-cancel-holiday" class="btn btn-amber-outline btn-sm hidden">
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <line x1="18" x2="6" y1="6" y2="18" />
+                <line x1="6" x2="18" y1="6" y2="18" />
+              </svg>
+              <span>Batalkan Libur Hari</span>
+            </button>
+            <button type="button" id="btn-cancel-session-holiday" class="btn btn-amber-outline btn-sm hidden">
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <line x1="18" x2="6" y1="6" y2="18" />
+                <line x1="6" x2="18" y1="6" y2="18" />
+              </svg>
+              <span>Batalkan Libur Sesi</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="holiday-weekend-info" class="strip-weekend hidden">
+          <svg class="icon icon-sm" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" x2="12" y1="8" y2="12" />
+            <line x1="12" x2="12.01" y1="16" y2="16" />
+          </svg>
+          <span id="holiday-weekend-text">Hari Sabtu & Minggu adalah jadwal libur rutin akhir pekan.</span>
+        </div>
+
+        <div id="main-holiday-banner" class="alert-libur hidden">
+          <div class="alert-libur-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24">
+              <path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z" />
+              <path d="M18 22v-9a4 4 0 0 0-4-4h-1" />
+            </svg>
+          </div>
+          <div>
+            <h3 id="main-holiday-title">Hari Ini Libur Halaqah</h3>
+            <p id="main-holiday-reason">Tidak ada kegiatan halaqah pada tanggal ini.</p>
+          </div>
+        </div>
+
+        <div id="main-loading" class="loading hidden">
+          <div class="spin"></div> Memuat data presensi...
+        </div>
+
+        <div id="main-table-container" class="hidden">
+          <form id="attendance-form">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Siswa</th>
+                    <th>Kelas</th>
+                    <th>Tipe</th>
+                    <th style="text-align:center;">Status Kehadiran</th>
+                  </tr>
+                </thead>
+                <tbody id="main-table-body"></tbody>
+              </table>
+            </div>
+            <div id="save-attendance-container" class="save-row hidden">
+              <div id="attendance-message" class="hidden" style="font-size:0.84rem;font-weight:600;"></div>
+              <button type="button" id="btn-save-attendance" class="btn btn-primary">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
+                <span>Simpan Presensi</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PANEL: LIHAT PRESENSI ===== -->
+    <div class="panel" id="panel-lihat">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">Lihat Rekap Presensi</div>
+            <div class="card-subtitle">Laporan presensi harian per sesi halaqah</div>
+          </div>
+        </div>
+
+        <div class="controls-row">
+          <div class="form-group">
+            <label for="view-date">
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                <line x1="16" x2="16" y1="2" y2="6" />
+                <line x1="8" x2="8" y1="2" y2="6" />
+                <line x1="3" x2="21" y1="10" y2="10" />
+              </svg>
+              Pilih Tanggal
+            </label>
+            <div class="input-wrap has-icon">
+              <span class="input-icon">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                  <line x1="16" x2="16" y1="2" y2="6" />
+                  <line x1="8" x2="8" y1="2" y2="6" />
+                  <line x1="3" x2="21" y1="10" y2="10" />
+                </svg>
+              </span>
+              <input type="date" id="view-date" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="view-session">
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Pilih Sesi
+            </label>
+            <div class="input-wrap has-icon">
+              <span class="input-icon">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2" />
+                  <path d="M12 20v2" />
+                </svg>
+              </span>
+              <select id="view-session">
+                <option value="pagi">Sesi Pagi (Subuh)</option>
+                <option value="siang">Sesi Siang (Ashar)</option>
+                <option value="malam">Sesi Malam (Maghrib/Isya)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-row" id="view-stats">
+          <div class="stat-box stat-hadir">
+            <div class="stat-icon-wrap">
+              <svg class="icon icon-md" viewBox="0 0 24 24">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="stat-hadir">0</div>
+              <div class="stat-label">Hadir</div>
+            </div>
+          </div>
+          <div class="stat-box stat-izin">
+            <div class="stat-icon-wrap">
+              <svg class="icon icon-md" viewBox="0 0 24 24">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" x2="8" y1="13" y2="13" />
+                <line x1="16" x2="8" y1="17" y2="17" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="stat-izin">0</div>
+              <div class="stat-label">Izin</div>
+            </div>
+          </div>
+          <div class="stat-box stat-sakit">
+            <div class="stat-icon-wrap">
+              <svg class="icon icon-md" viewBox="0 0 24 24">
+                <path
+                  d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="stat-sakit">0</div>
+              <div class="stat-label">Sakit</div>
+            </div>
+          </div>
+          <div class="stat-box stat-alpa">
+            <div class="stat-icon-wrap">
+              <svg class="icon icon-md" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" x2="9" y1="9" y2="15" />
+                <line x1="9" x2="15" y1="9" y2="15" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="stat-alpa">0</div>
+              <div class="stat-label">Alpa</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="view-holiday-banner" class="alert-libur hidden">
+          <div class="alert-libur-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24">
+              <path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z" />
+              <path d="M18 22v-9a4 4 0 0 0-4-4h-1" />
+            </svg>
+          </div>
+          <div>
+            <h3 id="view-holiday-title">Hari Ini Libur Halaqah</h3>
+            <p id="view-holiday-reason">Tidak ada kegiatan halaqah.</p>
+          </div>
+        </div>
+
+        <div id="view-loading" class="loading hidden">
+          <div class="spin"></div> Memuat rekap presensi...
+        </div>
+
+        <div id="view-table-wrap" class="hidden">
           <div class="table-wrap">
             <table>
               <thead>
@@ -1232,216 +1918,119 @@
                   <th>Siswa</th>
                   <th>Kelas</th>
                   <th>Tipe</th>
-                  <th style="text-align:center;">Status Kehadiran</th>
+                  <th class="center" style="width:160px;">Status Kehadiran</th>
                 </tr>
               </thead>
-              <tbody id="main-table-body"></tbody>
+              <tbody id="view-table-body"></tbody>
             </table>
           </div>
-          <div id="save-attendance-container" class="save-row hidden">
-            <div id="attendance-message" class="hidden" style="font-size:0.84rem;font-weight:600;"></div>
-            <button type="button" id="btn-save-attendance" class="btn btn-primary">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-              <span>Simpan Presensi</span>
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ===== PANEL: LIHAT PRESENSI ===== -->
-  <div class="panel" id="panel-lihat">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+  </div><!-- /#app -->
+
+  <!-- SUMMARY MODAL -->
+  <div id="summary-modal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-head-title-wrap">
+          <div class="card-icon" style="width:36px; height:36px; border-radius:10px;">
+            <svg class="icon icon-sm" viewBox="0 0 24 24">
+              <line x1="12" x2="12" y1="20" y2="10" />
+              <line x1="18" x2="18" y1="20" y2="4" />
+              <line x1="6" x2="6" y1="20" y2="16" />
+            </svg>
+          </div>
+          <h2 id="summary-modal-title">Rangkuman Presensi Bulanan</h2>
+          <span class="month-badge" id="summary-month-badge">—</span>
         </div>
-        <div>
-          <div class="card-title">Lihat Rekap Presensi</div>
-          <div class="card-subtitle">Laporan presensi harian per sesi halaqah</div>
-        </div>
+        <button class="modal-close" id="btn-close-summary" aria-label="Tutup">
+          <svg class="icon icon-sm" viewBox="0 0 24 24">
+            <line x1="18" x2="6" y1="6" y2="18" />
+            <line x1="6" x2="18" y1="6" y2="18" />
+          </svg>
+        </button>
       </div>
+      <div class="modal-body">
+        <div id="summary-loading" class="loading hidden">
+          <div class="spin"></div> Mengkalkulasi data rangkuman...
+        </div>
 
-      <div class="controls-row">
-        <div class="form-group">
-          <label for="view-date">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-            Pilih Tanggal
-          </label>
-          <div class="input-wrap has-icon">
-            <span class="input-icon">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-            </span>
-            <input type="date" id="view-date" />
+        <div id="summary-stats" class="stats-row" style="margin-bottom:20px;">
+          <div class="stat-box stat-hadir">
+            <div class="stat-icon-wrap">
+              <svg class="icon icon-md" viewBox="0 0 24 24">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="sum-stat-hadir">0</div>
+              <div class="stat-label">Total Hadir</div>
+            </div>
+          </div>
+          <div class="stat-box stat-izin">
+            <div class="stat-icon-wrap">
+              <svg class="icon icon-md" viewBox="0 0 24 24">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" x2="8" y1="13" y2="13" />
+                <line x1="16" x2="8" y1="17" y2="17" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="sum-stat-izin">0</div>
+              <div class="stat-label">Total Izin</div>
+            </div>
+          </div>
+          <div class="stat-box stat-sakit">
+            <div class="stat-icon-wrap">
+              <svg class="icon icon-md" viewBox="0 0 24 24">
+                <path
+                  d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="sum-stat-sakit">0</div>
+              <div class="stat-label">Total Sakit</div>
+            </div>
+          </div>
+          <div class="stat-box stat-alpa">
+            <div class="stat-icon-wrap">
+              <svg class="icon icon-md" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" x2="9" y1="9" y2="15" />
+                <line x1="9" x2="15" y1="9" y2="15" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="sum-stat-alpa">0</div>
+              <div class="stat-label">Total Alpa</div>
+            </div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="view-session">
-            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Pilih Sesi
-          </label>
-          <div class="input-wrap has-icon">
-            <span class="input-icon">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/></svg>
-            </span>
-            <select id="view-session">
-              <option value="pagi">Sesi Pagi (Subuh)</option>
-              <option value="siang">Sesi Siang (Ashar)</option>
-              <option value="malam">Sesi Malam (Maghrib/Isya)</option>
-            </select>
-          </div>
-        </div>
-      </div>
 
-      <!-- Stats Grid -->
-      <div class="stats-row" id="view-stats">
-        <div class="stat-box stat-hadir">
-          <div class="stat-icon-wrap">
-            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          </div>
-          <div>
-            <div class="stat-num" id="stat-hadir">0</div>
-            <div class="stat-label">Hadir</div>
-          </div>
-        </div>
-        <div class="stat-box stat-izin">
-          <div class="stat-icon-wrap">
-            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
-          </div>
-          <div>
-            <div class="stat-num" id="stat-izin">0</div>
-            <div class="stat-label">Izin</div>
-          </div>
-        </div>
-        <div class="stat-box stat-sakit">
-          <div class="stat-icon-wrap">
-            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-          </div>
-          <div>
-            <div class="stat-num" id="stat-sakit">0</div>
-            <div class="stat-label">Sakit</div>
-          </div>
-        </div>
-        <div class="stat-box stat-alpa">
-          <div class="stat-icon-wrap">
-            <svg class="icon icon-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
-          </div>
-          <div>
-            <div class="stat-num" id="stat-alpa">0</div>
-            <div class="stat-label">Alpa</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="view-holiday-banner" class="alert-libur hidden">
-        <div class="alert-libur-icon">
-          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2c0-1.66 1.57-3 3.5-3S11 6.34 11 8h2z"/><path d="M18 22v-9a4 4 0 0 0-4-4h-1"/></svg>
-        </div>
-        <div>
-          <h3 id="view-holiday-title">Hari Ini Libur Halaqah</h3>
-          <p id="view-holiday-reason">Tidak ada kegiatan halaqah.</p>
-        </div>
-      </div>
-
-      <div id="view-loading" class="loading hidden"><div class="spin"></div> Memuat rekap presensi...</div>
-
-      <div id="view-table-wrap" class="hidden">
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Siswa</th>
+                <th>Santri</th>
                 <th>Kelas</th>
-                <th>Tipe</th>
-                <th class="center" style="width:160px;">Status Kehadiran</th>
+                <th class="center" style="color:var(--accent-hadir-text)">Hadir</th>
+                <th class="center" style="color:var(--accent-izin-text)">Izin</th>
+                <th class="center" style="color:var(--accent-sakit-text)">Sakit</th>
+                <th class="center" style="color:var(--accent-alpa-text)">Alpa</th>
               </tr>
             </thead>
-            <tbody id="view-table-body"></tbody>
+            <tbody id="summary-table-body"></tbody>
           </table>
         </div>
       </div>
     </div>
   </div>
 
-</div><!-- /#app -->
-
-<!-- SUMMARY MODAL -->
-<div id="summary-modal" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-head-title-wrap">
-        <div class="card-icon" style="width:36px; height:36px; border-radius:10px;">
-          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
-        </div>
-        <h2 id="summary-modal-title">Rangkuman Presensi Bulanan</h2>
-        <span class="month-badge" id="summary-month-badge">—</span>
-      </div>
-      <button class="modal-close" id="btn-close-summary" aria-label="Tutup">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div id="summary-loading" class="loading hidden"><div class="spin"></div> Mengkalkulasi data rangkuman...</div>
-      
-      <div id="summary-stats" class="stats-row" style="margin-bottom:20px;">
-        <div class="stat-box stat-hadir">
-          <div class="stat-icon-wrap">
-            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          </div>
-          <div>
-            <div class="stat-num" id="sum-stat-hadir">0</div>
-            <div class="stat-label">Total Hadir</div>
-          </div>
-        </div>
-        <div class="stat-box stat-izin">
-          <div class="stat-icon-wrap">
-            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
-          </div>
-          <div>
-            <div class="stat-num" id="sum-stat-izin">0</div>
-            <div class="stat-label">Total Izin</div>
-          </div>
-        </div>
-        <div class="stat-box stat-sakit">
-          <div class="stat-icon-wrap">
-            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-          </div>
-          <div>
-            <div class="stat-num" id="sum-stat-sakit">0</div>
-            <div class="stat-label">Total Sakit</div>
-          </div>
-        </div>
-        <div class="stat-box stat-alpa">
-          <div class="stat-icon-wrap">
-            <svg class="icon icon-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
-          </div>
-          <div>
-            <div class="stat-num" id="sum-stat-alpa">0</div>
-            <div class="stat-label">Total Alpa</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Santri</th>
-              <th>Kelas</th>
-              <th class="center" style="color:var(--accent-hadir-text)">Hadir</th>
-              <th class="center" style="color:var(--accent-izin-text)">Izin</th>
-              <th class="center" style="color:var(--accent-sakit-text)">Sakit</th>
-              <th class="center" style="color:var(--accent-alpa-text)">Alpa</th>
-            </tr>
-          </thead>
-          <tbody id="summary-table-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script type="module" src="/src/main.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>
