@@ -77,7 +77,6 @@ function setupRoleUI() {
   } else {
     // Keep hidden for admin biasa
     navSantri?.classList.add('hidden');
-    if (panelSantri) panelSantri.classList.add('hidden');
   }
 }
 
