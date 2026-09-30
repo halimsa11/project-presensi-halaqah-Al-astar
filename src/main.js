@@ -88,16 +88,19 @@ function setupRoleUI() {
 function setupLogout() {
   const btnLogout = document.getElementById('btn-logout');
   btnLogout?.addEventListener('click', () => {
-    if (confirm('Yakin ingin logout?')) {
+    if (confirm('Yakin ingin logout penuh dari akun ini?')) {
+      const role = localStorage.getItem('auth_role');
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_role');
       localStorage.removeItem('auth_username');
+      if (role) localStorage.removeItem('saved_' + role + '_token');
       window.location.href = '/login.html';
     }
   });
 
   const btnMenuUtama = document.getElementById('btn-menu-utama');
   btnMenuUtama?.addEventListener('click', () => {
+    // Hanya hapus active token, tapi biarkan saved token
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_role');
     localStorage.removeItem('auth_username');

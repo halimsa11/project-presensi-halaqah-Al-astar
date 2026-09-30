@@ -454,15 +454,7 @@
 </div>
 
 <script>
-  // If already logged in, redirect to dashboard
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    fetch('/api/auth/me', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    }).then(res => {
-      if (res.ok) window.location.href = '/';
-    }).catch(() => {});
-  }
+  // We remove the old global token redirect block and move it inside the role selection logic.
 
   // Role Selection Logic
   const roleSelection = document.getElementById('role-selection');
@@ -470,8 +462,35 @@
   const usernameInput = document.getElementById('username');
   const selectedRoleText = document.getElementById('selected-role-text');
   const cardHeader = document.getElementById('card-header');
+  const loginBtn = document.getElementById('btn-login');
+  const loginError = document.getElementById('login-error');
+  const loginErrorText = document.getElementById('login-error-text');
 
-  function selectRole(username, roleLabel) {
+  async function selectRole(username, roleLabel) {
+    const roleKey = roleLabel === 'Admin' ? 'admin' : 'superadmin';
+    const savedToken = localStorage.getItem('saved_' + roleKey + '_token');
+
+    // Auto-login check if token is saved for this role
+    if (savedToken) {
+      document.body.style.pointerEvents = 'none';
+      try {
+        const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + savedToken } });
+        if (res.ok) {
+          localStorage.setItem('auth_token', savedToken);
+          localStorage.setItem('auth_role', roleKey);
+          localStorage.setItem('auth_username', username);
+          toast('Sesi ditemukan! Masuk otomatis...');
+          setTimeout(() => window.location.href = '/', 600);
+          return;
+        } else {
+          localStorage.removeItem('saved_' + roleKey + '_token');
+        }
+      } catch(e) {
+        // network error, ignore and let them type password
+      }
+      document.body.style.pointerEvents = 'auto';
+    }
+
     usernameInput.value = username;
     selectedRoleText.textContent = roleLabel;
     
@@ -519,10 +538,6 @@
   }
 
   // Login form submit
-  const loginBtn = document.getElementById('btn-login');
-  const loginError = document.getElementById('login-error');
-  const loginErrorText = document.getElementById('login-error-text');
-
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     loginError.classList.remove('show');
@@ -553,9 +568,15 @@
         return;
       }
 
+      // Save tokens
       localStorage.setItem('auth_token', data.token);
       localStorage.setItem('auth_role', data.role);
       localStorage.setItem('auth_username', data.username);
+      
+      // Save specific role session
+      if (data.role === 'admin') localStorage.setItem('saved_admin_token', data.token);
+      if (data.role === 'superadmin') localStorage.setItem('saved_superadmin_token', data.token);
+
       toast('Login berhasil! Mengalihkan...');
       
       setTimeout(() => {
