@@ -1234,6 +1234,28 @@
       gap: 8px;
     }
 
+    /* ===== MOBILE MENU BTN (hidden on desktop by default) ===== */
+    .btn-mobile-menu {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+    }
+    .btn-mobile-menu:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* ===== MOBILE DROPDOWN (hidden on desktop) ===== */
+    .mobile-dropdown {
+      display: none;
+    }
+
     /* ===== RESPONSIVE MOBILE ===== */
     @media (max-width: 768px) {
 
@@ -1246,7 +1268,12 @@
         grid-template-columns: 1fr !important;
       }
 
-      /* Navigation Tabs */
+      /* Navigation Tabs — NOT sticky on mobile */
+      #subnav-wrap {
+        position: relative;
+        top: auto;
+      }
+
       .nav-tabs-group {
         overflow-x: auto;
         white-space: nowrap;
@@ -1325,6 +1352,7 @@
       #app-header {
         height: auto;
         padding: 12px 16px;
+        position: relative;
       }
 
       .header-logo {
@@ -1345,13 +1373,13 @@
         display: none;
       }
 
-      /* BURGER MENU — hide desktop header-right, show burger */
-      .btn-mobile-menu {
-        display: flex;
-      }
-
+      /* HIDE desktop header-right, SHOW burger */
       .header-right {
         display: none !important;
+      }
+
+      .btn-mobile-menu {
+        display: flex !important;
       }
 
       /* MOBILE DROPDOWN */
@@ -1370,7 +1398,7 @@
       }
 
       .mobile-dropdown.open {
-        display: flex;
+        display: flex !important;
       }
 
       .mobile-dropdown-item {
@@ -1416,39 +1444,6 @@
       }
       .modal-body {
         padding: 16px;
-      }
-      
-      /* Utilities */
-      .hidden-mobile {
-        display: none !important;
-      }
-    }
-
-    /* ===== MOBILE MENU BTN (hidden on desktop) ===== */
-    .btn-mobile-menu {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-      border: none;
-      color: white;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: var(--radius-sm);
-      transition: background 0.2s;
-    }
-    .btn-mobile-menu:hover {
-      background: rgba(255,255,255,0.15);
-    }
-
-    /* ===== MOBILE DROPDOWN (hidden on desktop) ===== */
-    .mobile-dropdown {
-      display: none !important;
-    }
-    /* On mobile, .open overrides */
-    @media (max-width: 768px) {
-      .mobile-dropdown.open {
-        display: flex !important;
       }
     }
 
