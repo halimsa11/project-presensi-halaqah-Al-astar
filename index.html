@@ -1345,84 +1345,57 @@
         display: none;
       }
 
-      /* BURGER MENU STYLES */
+      /* BURGER MENU — hide desktop header-right, show burger */
       .btn-mobile-menu {
         display: flex;
       }
 
       .header-right {
-        display: none; /* Hidden by default, toggled via JS */
+        display: none !important;
+      }
+
+      /* MOBILE DROPDOWN */
+      .mobile-dropdown {
+        display: none;
         flex-direction: column;
         position: absolute;
         top: 100%;
-        right: 16px;
-        background: white;
-        border-radius: var(--radius-md);
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.2);
-        padding: 16px;
+        right: 12px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 12px 36px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
         min-width: 200px;
-        border: 1px solid var(--border);
-        z-index: 200;
-        align-items: flex-start;
-        gap: 8px;
-        margin-top: -4px;
+        z-index: 999;
+        overflow: hidden;
       }
 
-      .header-right.show {
+      .mobile-dropdown.open {
         display: flex;
-        animation: dropDown 0.2s ease forwards;
       }
 
-      @keyframes dropDown {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-
-      .header-user-info {
+      .mobile-dropdown-item {
         display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        font-size: 0.88rem;
+        font-weight: 600;
         color: var(--text);
-        width: 100%;
-        padding-bottom: 12px;
-        margin-bottom: 4px;
-        border-bottom: 1px solid var(--border-light);
+        cursor: pointer;
+        transition: background 0.15s;
+        font-family: inherit;
       }
-
-      .header-user-avatar {
-        background: var(--primary-light);
-        color: var(--primary);
-        border: 1px solid var(--accent-hadir-border);
+      .mobile-dropdown-item:hover {
+        background: #f1f5f9;
       }
-
-      .header-user-name .role-label {
-        color: var(--text-muted);
+      .mobile-dropdown-item + .mobile-dropdown-item {
+        border-top: 1px solid #f1f5f9;
       }
-      
-      .btn-logout {
-        width: 100%;
-        justify-content: flex-start;
-        padding: 12px 14px;
-        border-radius: var(--radius-sm);
-        background: transparent !important;
-        border: none !important;
-        color: var(--text) !important;
-        box-shadow: none !important;
-        font-size: 0.85rem;
+      .mobile-dropdown-logout {
+        color: #ef4444;
       }
-      
-      .btn-logout span {
-        display: inline;
-      }
-      
-      .btn-logout:hover {
-        background: #f1f5f9 !important;
-      }
-      
-      #btn-logout {
-        color: #ef4444 !important;
-      }
-      
-      #btn-logout:hover {
-        background: #fef2f2 !important;
+      .mobile-dropdown-logout:hover {
+        background: #fef2f2;
       }
       
       /* Modal Mobile */
@@ -1454,16 +1427,23 @@
     /* ===== MOBILE MENU BTN ===== */
     .btn-mobile-menu {
       display: none;
+      align-items: center;
+      justify-content: center;
       background: transparent;
       border: none;
       color: white;
       cursor: pointer;
-      padding: 6px;
+      padding: 8px;
       border-radius: var(--radius-sm);
       transition: background 0.2s;
     }
     .btn-mobile-menu:hover {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* MOBILE DROPDOWN — hidden on desktop */
+    .mobile-dropdown {
+      display: none;
     }
 
     /* ===== HEADER RIGHT (User Info + Logout) ===== */
@@ -1542,7 +1522,7 @@
   <div id="toaster"></div>
 
   <!-- HEADER -->
-  <header id="app-header">
+  <header id="app-header" style="position:relative;">
     <div class="header-brand">
       <div class="header-logo-wrap">
         <div class="header-logo">
@@ -1557,18 +1537,17 @@
         <div class="header-subtitle">Pencatatan Kehadiran Siswa Halaqah Qur'an</div>
       </div>
     </div>
-    
-    <button id="btn-mobile-menu" class="btn-mobile-menu" aria-label="Menu" onclick="
-      event.stopPropagation();
-      document.getElementById('header-right').classList.toggle('show');
-    ">
-      <svg class="icon icon-lg" viewBox="0 0 24 24" style="stroke:currentColor;">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
+
+    <!-- BURGER BUTTON (only visible on mobile) -->
+    <button id="btn-burger" class="btn-mobile-menu" aria-label="Menu">
+      <svg id="burger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
       </svg>
     </button>
 
+    <!-- DESKTOP: shown inline / MOBILE: dropdown -->
     <div class="header-right" id="header-right">
       <div class="header-user-info">
         <div class="header-user-avatar" id="header-avatar">AD</div>
@@ -1593,7 +1572,76 @@
         <span>Logout</span>
       </button>
     </div>
+
+    <!-- MOBILE DROPDOWN (separate, only on mobile) -->
+    <div id="mobile-dropdown" class="mobile-dropdown">
+      <div class="mobile-dropdown-item" id="mob-menu-utama">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" style="stroke:currentColor;">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Menu Utama</span>
+      </div>
+      <div class="mobile-dropdown-item mobile-dropdown-logout" id="mob-logout">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" style="stroke:currentColor;">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" x2="9" y1="12" y2="12" />
+        </svg>
+        <span>Logout</span>
+      </div>
+    </div>
   </header>
+
+  <script>
+    // Burger menu toggle — standalone script, not a module
+    (function() {
+      var burger = document.getElementById('btn-burger');
+      var dropdown = document.getElementById('mobile-dropdown');
+      var isOpen = false;
+
+      function toggleMenu() {
+        isOpen = !isOpen;
+        dropdown.classList.toggle('open', isOpen);
+      }
+
+      function closeMenu() {
+        isOpen = false;
+        dropdown.classList.remove('open');
+      }
+
+      burger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMenu();
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target) && e.target !== burger && !burger.contains(e.target)) {
+          closeMenu();
+        }
+      });
+
+      // Menu Utama → go back to login (same as desktop btn-menu-utama)
+      document.getElementById('mob-menu-utama').addEventListener('click', function() {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_role');
+        localStorage.removeItem('auth_username');
+        window.location.href = '/login.html';
+      });
+
+      // Logout → full logout (same as desktop btn-logout)
+      document.getElementById('mob-logout').addEventListener('click', function() {
+        if (confirm('Yakin ingin logout penuh dari akun ini?')) {
+          var role = localStorage.getItem('auth_role');
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('auth_role');
+          localStorage.removeItem('auth_username');
+          if (role) localStorage.removeItem('saved_' + role + '_token');
+          window.location.href = '/login.html';
+        }
+      });
+    })();
+  </script>
 
   <!-- SUBNAV -->
   <div id="subnav-wrap">
