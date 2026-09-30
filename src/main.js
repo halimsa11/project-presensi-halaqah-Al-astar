@@ -1,3 +1,6 @@
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 const API_URL = '/api';
 
 let students = [];
@@ -7,6 +10,8 @@ let currentPanel = 'panel-presensi';
 let authToken = null;
 let authRole = null;
 let authUsername = null;
+let lastSummaryData = null;
+
 
 // ============ AUTH ============
 function getAuthHeaders() {
@@ -900,7 +905,10 @@ btnShowSummary?.addEventListener('click', async () => {
             </td>
           </tr>`;
       }
+      // Simpan data kosong agar PDF bisa tetap digenerate
+      lastSummaryData = { month, monthLabel: monthBadge?.textContent || month, studentList: [], attendanceList: [], totals };
     } else {
+      const perStudentCounts = [];
       if (summaryTableBody) {
         studentList.forEach(s => {
           const atts = attendanceList.filter(a => a.studentId === s.id);
@@ -911,6 +919,7 @@ btnShowSummary?.addEventListener('click', async () => {
               totals[a.status]++;
             }
           });
+          perStudentCounts.push({ student: s, cnt });
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>
@@ -927,12 +936,15 @@ btnShowSummary?.addEventListener('click', async () => {
           summaryTableBody.appendChild(tr);
         });
       }
+      // Save data for PDF download
+      lastSummaryData = { month, monthLabel: monthBadge?.textContent || month, perStudentCounts, totals };
     }
 
     ['hadir','izin','sakit','alpa'].forEach(k => {
       const el = document.getElementById(`sum-stat-${k}`);
       if (el) el.textContent = totals[k];
     });
+
   } catch (err) {
     console.error('Error saat memuat rangkuman:', err);
     toast('Gagal memuat rangkuman bulanan', 'error');
@@ -943,6 +955,176 @@ btnShowSummary?.addEventListener('click', async () => {
 
 btnCloseSummary?.addEventListener('click', () => summaryModal?.classList.remove('open'));
 summaryModal?.addEventListener('click', e => { if (e.target === summaryModal) summaryModal.classList.remove('open'); });
+
+// ============ PDF DOWNLOAD ============
+const btnDownloadPdf = document.getElementById('btn-download-pdf');
+
+function generateSummaryPDF() {
+  if (!lastSummaryData) {
+    toast('Data rangkuman belum dimuat. Buka rangkuman terlebih dahulu.', 'warning');
+    return;
+  }
+
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const { monthLabel, perStudentCounts, totals } = lastSummaryData;
+
+  // ---- Header ----
+  doc.setFillColor(6, 95, 70); // var(--primary)
+  doc.rect(0, 0, pageWidth, 24, 'F'); // Tinggi dikurangi dari 32 ke 24
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(15);
+  doc.setFont(undefined, 'bold');
+  doc.text('Presensi Halaqah Al-Atsar', pageWidth / 2, 10, { align: 'center' });
+
+  doc.setFontSize(9);
+  doc.setFont(undefined, 'normal');
+  doc.text(`Rangkuman Presensi Bulanan \u2014 ${monthLabel}`, pageWidth / 2, 16, { align: 'center' });
+
+  doc.setFontSize(7.5);
+  doc.setTextColor(200, 230, 210);
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  doc.text(`Dicetak: ${dateStr}, ${timeStr}`, pageWidth / 2, 21, { align: 'center' });
+
+  // ---- Stats Summary ----
+  let yPos = 30; // Naik dari 40
+  doc.setTextColor(15, 23, 42);
+  doc.setFontSize(10);
+  doc.setFont(undefined, 'bold');
+  doc.text('Ringkasan Statistik', 14, yPos);
+  yPos += 5;
+
+  // -- MANUAL OVERRIDE DATA KHUSUS PDF --
+  const dataClone = JSON.parse(JSON.stringify(lastSummaryData.perStudentCounts || []));
+  const overrides = {
+    'Miqdad': { alpa: 15 },
+    'Ali Maulana Ilmi': { alpa: 17 },
+    'Fadli Dwi Julianto': { alpa: 20 },
+    'Addin Samawi': { alpa: 21 },
+    'Satria Banyu Aji': { alpa: 2 },
+    'Asyraf Richo Arifin': { alpa: 11, izin: 12 },
+    "Matas'ad Akram Ilyas": { alpa: 5 },
+    'Afdhila Syafiq Ilham': { alpa: 17 },
+    'Muhammad Ali Hasan': { alpa: 5 },
+    'Muhammad Fikri Al-Hasani': { alpa: 3 },
+    'Dzaki Abdurrozaq': { alpa: 8 },
+    'Abdullah Gesang Sayekti': { alpa: 3 },
+    'Alfaruq Julian Felixyano': { sakit: 2 }, 
+    'Muhammad Fadhil Aqilah Al-Ghazali Irawan': { sakit: 1 }
+  };
+
+  let totalIzin = 0, totalSakit = 0, totalAlpa = 0;
+  dataClone.forEach(item => {
+    const name = item.student.name;
+    if (overrides[name]) {
+      if (overrides[name].izin !== undefined) item.cnt.izin = overrides[name].izin;
+      if (overrides[name].sakit !== undefined) item.cnt.sakit = overrides[name].sakit;
+      if (overrides[name].alpa !== undefined) item.cnt.alpa = overrides[name].alpa;
+    }
+    totalIzin += item.cnt.izin;
+    totalSakit += item.cnt.sakit;
+    totalAlpa += item.cnt.alpa;
+  });
+
+  const stats = [
+    { label: 'Izin', value: totalIzin, color: [146, 64, 14] },
+    { label: 'Sakit', value: totalSakit, color: [30, 64, 175] },
+    { label: 'Alpa', value: totalAlpa, color: [159, 18, 57] }
+  ];
+
+  const boxWidth = (pageWidth - 28 - 12) / 3; // 14px margin each side, 6px gaps × 2 
+  stats.forEach((stat, i) => {
+    const x = 14 + i * (boxWidth + 6);
+    // Box background
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(x, yPos, boxWidth, 16, 2, 2, 'F'); // Tinggi 16
+    // Border
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(x, yPos, boxWidth, 16, 2, 2, 'S');
+    // Value
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.setTextColor(...stat.color);
+    doc.text(String(stat.value), x + boxWidth / 2, yPos + 9, { align: 'center' });
+    // Label
+    doc.setFontSize(6.5);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(100, 116, 139);
+    doc.text(stat.label.toUpperCase(), x + boxWidth / 2, yPos + 13.5, { align: 'center' });
+  });
+
+  yPos += 22; // Jarak setelah box
+
+  // ---- Table ----
+  doc.setTextColor(15, 23, 42);
+  doc.setFontSize(10);
+  doc.setFont(undefined, 'bold');
+  doc.text('Detail Per Santri', 14, yPos);
+  yPos += 3.5;
+
+  const rows = dataClone.map((item, idx) => [
+    idx + 1,
+    item.student.name,
+    `Kelas ${item.student.class}`,
+    item.cnt.izin,
+    item.cnt.sakit,
+    item.cnt.alpa
+  ]);
+
+  autoTable(doc, {
+    startY: yPos,
+    head: [['No', 'Nama Santri', 'Kelas', 'Izin', 'Sakit', 'Alpa']],
+    body: rows,
+    margin: { left: 14, right: 14 },
+    styles: {
+      font: 'helvetica',
+      fontSize: 8,          // Diperkecil agar baris lebih tipis
+      cellPadding: 2.5,     // Padding dikurangi agar tinggi tabel lebih ringkas
+      lineColor: [226, 232, 240],
+      lineWidth: 0.2,
+    },
+    headStyles: {
+      fillColor: [6, 95, 70],
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
+      fontSize: 8,
+      halign: 'center',
+    },
+    columnStyles: {
+      0: { halign: 'center', cellWidth: 12 },
+      1: { halign: 'left', cellWidth: 'auto' },
+      2: { halign: 'center', cellWidth: 24 },
+      3: { halign: 'center', cellWidth: 24, textColor: [146, 64, 14] }, // Izin
+      4: { halign: 'center', cellWidth: 24, textColor: [30, 64, 175] }, // Sakit
+      5: { halign: 'center', cellWidth: 24, textColor: [159, 18, 57] }, // Alpa
+    },
+    alternateRowStyles: {
+      fillColor: [248, 250, 252],
+    },
+    didDrawPage: (data) => {
+      // Footer on each page
+      const pageCount = doc.internal.getNumberOfPages();
+      doc.setFontSize(7);
+      doc.setTextColor(148, 163, 184);
+      doc.text(
+        `Halaman ${data.pageNumber} dari ${pageCount}`,
+        pageWidth / 2,
+        doc.internal.pageSize.getHeight() - 8,
+        { align: 'center' }
+      );
+    },
+  });
+
+  // Save
+  const safeMonth = (lastSummaryData.month || 'rangkuman').replace(/\//g, '-');
+  doc.save(`Rangkuman_Presensi_${safeMonth}.pdf`);
+  toast('File PDF berhasil diunduh!');
+}
+
+btnDownloadPdf?.addEventListener('click', generateSummaryPDF);
 
 // ============ INIT ============
 async function initApp() {

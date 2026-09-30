@@ -1099,6 +1099,52 @@
       color: var(--accent-alpa-text);
     }
 
+    /* Download PDF Button */
+    .btn-download-pdf {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #065f46 0%, #059669 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.84rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 3px 12px rgba(5, 150, 105, 0.28);
+      transition: all 0.2s;
+      white-space: nowrap;
+      margin-top: 20px;
+    }
+
+    .btn-download-pdf:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 16px rgba(5, 150, 105, 0.38);
+      background: linear-gradient(135deg, #044332 0%, #065f46 100%);
+    }
+
+    .btn-download-pdf:active {
+      transform: scale(0.97);
+    }
+
+    .btn-download-pdf:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .modal-footer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-light);
+      margin-top: 20px;
+    }
+
     /* ===== LOADING SPINNER ===== */
     .loading {
       display: flex;
@@ -1943,7 +1989,7 @@
             </svg>
           </div>
           <h2 id="summary-modal-title">Rangkuman Presensi Bulanan</h2>
-          <span class="month-badge" id="summary-month-badge">—</span>
+          <span class="month-badge" id="summary-month-badge">â€”</span>
         </div>
         <button class="modal-close" id="btn-close-summary" aria-label="Tutup">
           <svg class="icon icon-sm" viewBox="0 0 24 24">
@@ -2025,6 +2071,17 @@
             </thead>
             <tbody id="summary-table-body"></tbody>
           </table>
+        </div>
+
+        <div class="modal-footer-actions">
+          <button class="btn-download-pdf" id="btn-download-pdf">
+            <svg class="icon icon-sm" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" x2="12" y1="15" y2="3" />
+            </svg>
+            <span>Download PDF</span>
+          </button>
         </div>
       </div>
     </div>

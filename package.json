@@ -5,7 +5,7 @@
   "main": "drizzle.config.js",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently -n \"API,VITE\" -c \"green,cyan\" \"node server.js\" \"vite\"",
     "build": "vite build",
     "server": "node server.js",
     "db:generate": "drizzle-kit generate",
@@ -21,12 +21,15 @@
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.13.3",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "autoprefixer": "^10.5.4",
+    "concurrently": "^10.0.5",
     "drizzle-kit": "^0.31.10",
     "postcss": "^8.5.26",
     "tailwindcss": "^4.3.3",
