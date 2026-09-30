@@ -1558,7 +1558,10 @@
       </div>
     </div>
     
-    <button id="btn-mobile-menu" class="btn-mobile-menu" aria-label="Menu">
+    <button id="btn-mobile-menu" class="btn-mobile-menu" aria-label="Menu" onclick="
+      event.stopPropagation();
+      document.getElementById('header-right').classList.toggle('show');
+    ">
       <svg class="icon icon-lg" viewBox="0 0 24 24" style="stroke:currentColor;">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
