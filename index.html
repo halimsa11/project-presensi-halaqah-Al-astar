@@ -1424,7 +1424,7 @@
       }
     }
 
-    /* ===== MOBILE MENU BTN ===== */
+    /* ===== MOBILE MENU BTN (hidden on desktop) ===== */
     .btn-mobile-menu {
       display: none;
       align-items: center;
@@ -1441,9 +1441,15 @@
       background: rgba(255,255,255,0.15);
     }
 
-    /* MOBILE DROPDOWN — hidden on desktop */
+    /* ===== MOBILE DROPDOWN (hidden on desktop) ===== */
     .mobile-dropdown {
-      display: none;
+      display: none !important;
+    }
+    /* On mobile, .open overrides */
+    @media (max-width: 768px) {
+      .mobile-dropdown.open {
+        display: flex !important;
+      }
     }
 
     /* ===== HEADER RIGHT (User Info + Logout) ===== */
