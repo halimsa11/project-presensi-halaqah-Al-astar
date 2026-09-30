@@ -15,13 +15,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'rahasia_aman_halaqah';
 
 const ADMIN_USERS = [
   {
-    username: 'schooldirector_alatsar',
-    passwordHash: '$2b$10$jSEO1xyZWiL0x8BAtsvl9uZVONtXOhr5AYImp3h8sNuOBrjKjsxUS', // @Alatsarsolo
+    username: 'staf_alatsar',
+    passwordHash: '$2b$10$1XSc.E5uY65q5JifT1L8heUhsLesUUA.e0cqK0Pdgc7Na.l3Zt49m', // staf_alatsar123
     role: 'admin'
   },
   {
-    username: "syafi'i_ikhsan",
-    passwordHash: '$2b$10$Kst1CfyDD5EVpOBNthLpXurTxdtuV6WlzTCXbcKobzPM3NRg5hVeK', // al_atsar
+    username: 'scholldirector',
+    passwordHash: '$2b$10$O5jqlSY2JJn7O4SziiAiKO5SJm/N0UmyFSwLm.UoM.M1YEcMGcLA.', // @Alatsarsolo
     role: 'superadmin'
   }
 ];

@@ -95,6 +95,14 @@ function setupLogout() {
       window.location.href = '/login.html';
     }
   });
+
+  const btnMenuUtama = document.getElementById('btn-menu-utama');
+  btnMenuUtama?.addEventListener('click', () => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_role');
+    localStorage.removeItem('auth_username');
+    window.location.href = '/login.html';
+  });
 }
 
 // ============ SVG ICONS ============
