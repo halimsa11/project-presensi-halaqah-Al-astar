@@ -1345,20 +1345,84 @@
         display: none;
       }
 
+      /* BURGER MENU STYLES */
+      .btn-mobile-menu {
+        display: flex;
+      }
+
       .header-right {
+        display: none; /* Hidden by default, toggled via JS */
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 16px;
+        background: white;
+        border-radius: var(--radius-md);
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.2);
+        padding: 16px;
+        min-width: 200px;
+        border: 1px solid var(--border);
+        z-index: 200;
+        align-items: flex-start;
         gap: 8px;
+        margin-top: -4px;
+      }
+
+      .header-right.show {
+        display: flex;
+        animation: dropDown 0.2s ease forwards;
+      }
+
+      @keyframes dropDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .header-user-info {
-        display: none;
+        display: flex;
+        color: var(--text);
+        width: 100%;
+        padding-bottom: 12px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid var(--border-light);
       }
-      
-      .btn-logout span {
-        display: none;
+
+      .header-user-avatar {
+        background: var(--primary-light);
+        color: var(--primary);
+        border: 1px solid var(--accent-hadir-border);
+      }
+
+      .header-user-name .role-label {
+        color: var(--text-muted);
       }
       
       .btn-logout {
-        padding: 8px 10px;
+        width: 100%;
+        justify-content: flex-start;
+        padding: 12px 14px;
+        border-radius: var(--radius-sm);
+        background: transparent !important;
+        border: none !important;
+        color: var(--text) !important;
+        box-shadow: none !important;
+        font-size: 0.85rem;
+      }
+      
+      .btn-logout span {
+        display: inline;
+      }
+      
+      .btn-logout:hover {
+        background: #f1f5f9 !important;
+      }
+      
+      #btn-logout {
+        color: #ef4444 !important;
+      }
+      
+      #btn-logout:hover {
+        background: #fef2f2 !important;
       }
       
       /* Modal Mobile */
@@ -1385,6 +1449,21 @@
       .hidden-mobile {
         display: none !important;
       }
+    }
+
+    /* ===== MOBILE MENU BTN ===== */
+    .btn-mobile-menu {
+      display: none;
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+    }
+    .btn-mobile-menu:hover {
+      background: rgba(255,255,255,0.1);
     }
 
     /* ===== HEADER RIGHT (User Info + Logout) ===== */
@@ -1478,6 +1557,15 @@
         <div class="header-subtitle">Pencatatan Kehadiran Siswa Halaqah Qur'an</div>
       </div>
     </div>
+    
+    <button id="btn-mobile-menu" class="btn-mobile-menu" aria-label="Menu">
+      <svg class="icon icon-lg" viewBox="0 0 24 24" style="stroke:currentColor;">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
     <div class="header-right" id="header-right">
       <div class="header-user-info">
         <div class="header-user-avatar" id="header-avatar">AD</div>

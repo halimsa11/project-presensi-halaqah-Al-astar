@@ -213,6 +213,22 @@ if (mainDate) mainDate.value = todayStr;
 if (viewDate) viewDate.value = todayStr;
 document.getElementById('attendance-form')?.addEventListener('submit', e => e.preventDefault());
 
+// ============ MOBILE MENU ============
+const btnMobileMenu = document.getElementById('btn-mobile-menu');
+const headerRight = document.getElementById('header-right');
+if (btnMobileMenu && headerRight) {
+  btnMobileMenu.addEventListener('click', (e) => {
+    e.stopPropagation();
+    headerRight.classList.toggle('show');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!headerRight.contains(e.target) && e.target !== btnMobileMenu && !btnMobileMenu.contains(e.target)) {
+      headerRight.classList.remove('show');
+    }
+  });
+}
+
 // ============ TOAST ============
 function toast(msg, type = 'success') {
   const el = document.createElement('div');
