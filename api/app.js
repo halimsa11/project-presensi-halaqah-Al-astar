@@ -311,7 +311,13 @@ app.post('/attendance', async (c) => {
   );
   if (records.length > 0) {
     await db.insert(attendances).values(
-      records.map(r => ({ studentId: r.studentId, date, session, status: r.status }))
+      records.map(r => ({
+        studentId: r.studentId,
+        date,
+        session,
+        status: r.status,
+        note: r.note || null
+      }))
     );
   }
   return c.json({ message: 'Presensi berhasil disimpan' });
@@ -321,7 +327,7 @@ app.post('/attendance', async (c) => {
 
 app.get('/wali/lookup', async (c) => {
   const nis = c.req.query('nis');
-  const month = c.req.query('month'); // YYYY-MM, optional
+  const dateStr = c.req.query('date'); // YYYY-MM-DD, optional
   
   if (!nis) {
     return c.json({ error: 'NIS harus diisi' }, 400);
@@ -335,28 +341,20 @@ app.get('/wali/lookup', async (c) => {
     
     const student = studentList[0];
     
-    // Determine month range
-    const targetMonth = month || new Date().toISOString().substring(0, 7);
-    const [y, m] = targetMonth.split('-').map(Number);
-    const startDate = `${targetMonth}-01`;
-    const lastDay = new Date(y, m, 0).getDate();
-    const endDate = `${targetMonth}-${String(lastDay).padStart(2, '0')}`;
+    // Target specific date
+    const targetDate = dateStr || new Date().toISOString().substring(0, 10);
     
-    // Get attendance records for the month
+    // Get attendance records for the date
     const attRecords = await db.select().from(attendances).where(
       and(
         eq(attendances.studentId, student.id),
-        gte(attendances.date, startDate),
-        lte(attendances.date, endDate)
+        eq(attendances.date, targetDate)
       )
     );
     
-    // Get holidays for the month
+    // Get holidays for the date
     const holidayRecords = await db.select().from(holidays).where(
-      and(
-        gte(holidays.date, startDate),
-        lte(holidays.date, endDate)
-      )
+      eq(holidays.date, targetDate)
     );
     
     // Calculate summary
@@ -372,11 +370,12 @@ app.get('/wali/lookup', async (c) => {
         class: student.class,
         type: student.type
       },
-      month: targetMonth,
+      date: targetDate,
       attendance: attRecords.map(a => ({
         date: a.date,
         session: a.session,
-        status: a.status
+        status: a.status,
+        note: a.note || null
       })),
       holidays: holidayRecords.map(h => ({
         date: h.date,

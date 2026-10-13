@@ -75,24 +75,38 @@
       gap: 14px;
       text-decoration: none;
     }
-    .header-logo {
-      background: white;
-      border-radius: 50%;
-      width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.25);
-      flex-shrink: 0;
-    }
-    .header-logo img { width: 32px; height: 32px; object-fit: contain; }
-    .header-text { display: flex; flex-direction: column; }
-    .header-title {
-      color: #ffffff;
-      font-size: 1.05rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
+    .header-logo-group {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
+    }
+    .header-logo {
+      background: #ffffff;
+      border-radius: 12px;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 0 1.5px rgba(255,255,255,0.25);
+      flex-shrink: 0;
+      padding: 3px;
+      overflow: hidden;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+    }
+    .header-logo:hover {
+      transform: translateY(-1px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.4);
+    }
+    .header-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .header-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .header-title {
+      color: #ffffff;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.25;
     }
     .header-badge {
       background: rgba(16, 185, 129, 0.25);
@@ -100,16 +114,17 @@
       color: #a7f3d0;
       font-size: 0.65rem;
       font-weight: 700;
-      padding: 2px 7px;
+      padding: 2px 8px;
       border-radius: 99px;
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
     .header-subtitle {
-      color: rgba(255,255,255,0.75);
-      font-size: 0.76rem;
+      color: rgba(255,255,255,0.85);
+      font-size: 0.74rem;
       font-weight: 500;
-      margin-top: 1px;
+      letter-spacing: 0.01em;
+      line-height: 1.3;
     }
 
     /* ===== LOGIN CONTAINER ===== */
@@ -335,11 +350,11 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 480px) {
-      #login-header { height: auto; padding: 12px 16px; }
-      .header-logo { width: 38px; height: 38px; }
-      .header-logo img { width: 24px; height: 24px; }
-      .header-title { font-size: 1rem; }
-      .header-subtitle { font-size: 0.7rem; }
+      #login-header { height: auto; padding: 12px 14px; }
+      .header-logo-group { gap: 6px; }
+      .header-logo { width: 36px; height: 36px; border-radius: 8px; padding: 2px; }
+      .header-title { font-size: 0.95rem; gap: 6px; }
+      .header-subtitle { font-size: 0.65rem; max-width: 220px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
       .login-container { padding: 24px 14px; }
       .login-card { padding: 28px 22px; }
@@ -355,15 +370,20 @@
 <!-- HEADER -->
 <header id="login-header">
   <div class="header-brand">
-    <div class="header-logo">
-      <img src="/logo.png" alt="Logo" />
+    <div class="header-logo-group">
+      <div class="header-logo" title="Islamic Entrepreneur School Al-Atsar">
+        <img src="/logo-alatsar.png" alt="Logo Sekolah Al-Atsar" />
+      </div>
+      <div class="header-logo" title="Asrama Al-Atsar">
+        <img src="/logo-asrama.png" alt="Logo Asrama Al-Atsar" />
+      </div>
     </div>
     <div class="header-text">
       <div class="header-title">
-        Presensi Halaqah
+        <span>Presensi Halaqah</span>
         <span class="header-badge">Al-Atsar</span>
       </div>
-      <div class="header-subtitle">Pencatatan Kehadiran Siswa Halaqah Qur'an</div>
+      <div class="header-subtitle">Asrama Islamic Entrepreneur School Al-Atsar Solo</div>
     </div>
   </div>
 </header>

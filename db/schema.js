@@ -25,6 +25,7 @@ export const attendances = pgTable('attendances', {
   date: date('date').notNull(), // format YYYY-MM-DD
   session: sessionEnum('session').notNull(),
   status: statusEnum('status').notNull(),
+  note: varchar('note', { length: 255 }), // Keterangan izin/sakit
 });
 
 export const holidays = pgTable('holidays', {

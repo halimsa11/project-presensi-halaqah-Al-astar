@@ -11,6 +11,7 @@ let authToken = null;
 let authRole = null;
 let authUsername = null;
 let lastSummaryData = null;
+let attendanceNotes = {}; // { studentId: 'keterangan' }
 
 
 // ============ AUTH ============
@@ -206,6 +207,108 @@ const summaryModal     = document.getElementById('summary-modal');
 const btnCloseSummary  = document.getElementById('btn-close-summary');
 const summaryTableBody = document.getElementById('summary-table-body');
 const summaryLoading   = document.getElementById('summary-loading');
+
+const noteModal         = document.getElementById('note-modal');
+const noteModalTitle    = document.getElementById('note-modal-title');
+const noteModalStudent  = document.getElementById('note-modal-student');
+const noteQuickChips    = document.getElementById('note-quick-chips');
+const noteModalInput    = document.getElementById('note-modal-input');
+const btnCloseNoteModal = document.getElementById('btn-close-note-modal');
+const btnNoteCancel     = document.getElementById('btn-note-cancel');
+const btnNoteClear      = document.getElementById('btn-note-clear');
+const btnNoteSave       = document.getElementById('btn-note-save');
+
+let currentNoteStudentId = null;
+let currentNoteStatus    = null;
+
+const NOTE_PRESETS = {
+  izin: ['Pulang Kampung', 'Urusan Keluarga', 'Keperluan Mendesak', 'Acara Keluarga', 'Jadwal Pemeriksaan'],
+  sakit: ['Demam / Flu', 'Sakit Perut / Pusing', 'Istirahat di Asrama', 'Rawat Jalan / Dokter', 'Sakit Gigi']
+};
+
+function openNoteModal(studentId, status) {
+  currentNoteStudentId = studentId;
+  currentNoteStatus = status;
+
+  const student = students.find(s => s.id === studentId);
+  const statusLabel = status === 'izin' ? 'Izin' : 'Sakit';
+
+  if (noteModalTitle) noteModalTitle.textContent = `Keterangan ${statusLabel}`;
+  if (noteModalStudent) {
+    noteModalStudent.textContent = student ? `Santri: ${student.name} (Kelas ${student.class})` : 'Santri: -';
+  }
+
+  const existingNote = attendanceNotes[studentId] || '';
+  if (noteModalInput) {
+    noteModalInput.value = existingNote;
+    noteModalInput.placeholder = `Tulis keterangan ${statusLabel.toLowerCase()} atau pilih opsi...`;
+  }
+
+  if (noteQuickChips) {
+    noteQuickChips.innerHTML = '';
+    const presets = NOTE_PRESETS[status] || [];
+    presets.forEach(text => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'quick-chip' + (existingNote === text ? ' active' : '');
+      chip.textContent = text;
+      chip.addEventListener('click', () => {
+        if (noteModalInput) {
+          noteModalInput.value = text;
+          noteQuickChips.querySelectorAll('.quick-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          noteModalInput.focus();
+        }
+      });
+      noteQuickChips.appendChild(chip);
+    });
+  }
+
+  noteModal?.classList.add('open');
+  setTimeout(() => noteModalInput?.focus(), 80);
+}
+
+function closeNoteModal() {
+  noteModal?.classList.remove('open');
+  currentNoteStudentId = null;
+  currentNoteStatus = null;
+}
+
+btnNoteSave?.addEventListener('click', () => {
+  if (currentNoteStudentId && currentNoteStatus) {
+    const val = noteModalInput?.value.trim() || '';
+    if (val) {
+      attendanceNotes[currentNoteStudentId] = val;
+    } else {
+      delete attendanceNotes[currentNoteStudentId];
+    }
+    updateNoteBadge(currentNoteStudentId, currentNoteStatus);
+  }
+  closeNoteModal();
+});
+
+noteModalInput?.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    btnNoteSave?.click();
+  } else if (e.key === 'Escape') {
+    closeNoteModal();
+  }
+});
+
+btnNoteClear?.addEventListener('click', () => {
+  if (currentNoteStudentId && currentNoteStatus) {
+    delete attendanceNotes[currentNoteStudentId];
+    updateNoteBadge(currentNoteStudentId, currentNoteStatus);
+  }
+  closeNoteModal();
+});
+
+btnNoteCancel?.addEventListener('click', closeNoteModal);
+btnCloseNoteModal?.addEventListener('click', closeNoteModal);
+noteModal?.addEventListener('click', (e) => {
+  if (e.target === noteModal) closeNoteModal();
+});
 
 // ============ INIT ============
 const todayStr = new Date().toISOString().split('T')[0];
@@ -603,22 +706,38 @@ function renderAttendanceTable() {
 
   students.sort((a, b) => a.class !== b.class ? a.class - b.class : a.name.localeCompare(b.name));
 
+  // Initialize notes from existing attendance data
+  attendanceNotes = {};
+  attendances.forEach(a => {
+    if (a.note) attendanceNotes[a.studentId] = a.note;
+  });
+
   students.forEach(s => {
     const att = attendances.find(a => a.studentId === s.id);
     const status = att ? att.status : 'hadir';
+    const note = attendanceNotes[s.id] || '';
     const tr = document.createElement('tr');
 
     let statusCell;
     if (info.isHoliday) {
       statusCell = `<span class="badge ${info.isSessionHoliday ? 'badge-libur-sesi' : 'badge-libur'}">${ICONS.palmtree} ${info.isSessionHoliday ? 'Libur Sesi' : 'Libur'}</span>`;
     } else {
+      const noteDisplay = (status === 'izin' || status === 'sakit') && note
+        ? `<div class="note-badge" data-id="${s.id}" title="Klik untuk ubah keterangan">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" style="width:12px;height:12px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>${note}</span>
+           </div>`
+        : '';
       statusCell = `
-        <select class="status-sel s-${status}" data-id="${s.id}">
-          <option value="hadir" ${status==='hadir'?'selected':''}>Hadir</option>
-          <option value="sakit" ${status==='sakit'?'selected':''}>Sakit</option>
-          <option value="izin"  ${status==='izin' ?'selected':''}>Izin</option>
-          <option value="alpa"  ${status==='alpa' ?'selected':''}>Alpa</option>
-        </select>`;
+        <div class="status-cell-wrap">
+          <select class="status-sel s-${status}" data-id="${s.id}">
+            <option value="hadir" ${status==='hadir'?'selected':''}>Hadir</option>
+            <option value="sakit" ${status==='sakit'?'selected':''}>Sakit</option>
+            <option value="izin"  ${status==='izin' ?'selected':''}>Izin</option>
+            <option value="alpa"  ${status==='alpa' ?'selected':''}>Alpa</option>
+          </select>
+          ${noteDisplay}
+        </div>`;
     }
 
     tr.innerHTML = `
@@ -636,7 +755,26 @@ function renderAttendanceTable() {
 
   mainTableBody.querySelectorAll('.status-sel').forEach(sel => {
     sel.addEventListener('change', e => {
-      e.target.className = `status-sel s-${e.target.value}`;
+      const newStatus = e.target.value;
+      const studentId = e.target.dataset.id;
+      e.target.className = `status-sel s-${newStatus}`;
+
+      if (newStatus === 'izin' || newStatus === 'sakit') {
+        openNoteModal(studentId, newStatus);
+      } else {
+        delete attendanceNotes[studentId];
+        updateNoteBadge(studentId, newStatus);
+      }
+    });
+  });
+
+  // Click on note badge to edit
+  mainTableBody.querySelectorAll('.note-badge').forEach(badge => {
+    badge.addEventListener('click', e => {
+      const studentId = e.currentTarget.dataset.id;
+      const sel = mainTableBody.querySelector(`.status-sel[data-id="${studentId}"]`);
+      const status = sel ? sel.value : '';
+      openNoteModal(studentId, status);
     });
   });
 
@@ -718,12 +856,42 @@ btnCancelSessionHoliday?.addEventListener('click', async () => {
   } catch { toast('Gagal membatalkan libur sesi', 'error'); }
 });
 
+// Helper to update note badge after status change
+function updateNoteBadge(studentId, status) {
+  const wrapEl = mainTableBody?.querySelector(`.status-sel[data-id="${studentId}"]`)?.closest('.status-cell-wrap');
+  if (!wrapEl) return;
+  // Remove existing note badge
+  const existingBadge = wrapEl.querySelector('.note-badge');
+  if (existingBadge) existingBadge.remove();
+
+  const note = attendanceNotes[studentId] || '';
+  if ((status === 'izin' || status === 'sakit') && note) {
+    const badgeEl = document.createElement('div');
+    badgeEl.className = 'note-badge';
+    badgeEl.dataset.id = studentId;
+    badgeEl.title = 'Klik untuk ubah keterangan';
+    badgeEl.innerHTML = `
+      <svg class="icon icon-sm" viewBox="0 0 24 24" style="width:12px;height:12px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span>${note}</span>`;
+    badgeEl.addEventListener('click', () => {
+      const sel = mainTableBody.querySelector(`.status-sel[data-id="${studentId}"]`);
+      const st = sel ? sel.value : status;
+      openNoteModal(studentId, st);
+    });
+    wrapEl.appendChild(badgeEl);
+  }
+}
+
 btnSaveAttendance?.addEventListener('click', async () => {
   const date = mainDate?.value;
   const session = mainSession?.value;
   const sels = mainTableBody?.querySelectorAll('.status-sel') || [];
   if (!sels.length) return toast('Tidak ada siswa untuk diabsen', 'warning');
-  const records = [...sels].map(s => ({ studentId: s.dataset.id, status: s.value }));
+  const records = [...sels].map(s => ({
+    studentId: s.dataset.id,
+    status: s.value,
+    note: attendanceNotes[s.dataset.id] || null
+  }));
 
   if (btnSaveAttendance) {
     btnSaveAttendance.disabled = true;
@@ -805,6 +973,7 @@ async function loadView() {
         viewStudents.forEach(s => {
           const att = viewAtts.find(a => a.studentId === s.id);
           let status = att ? att.status : null;
+          const note = att ? (att.note || '') : '';
 
           let badge;
           if (info.isHoliday) {
@@ -816,6 +985,13 @@ async function loadView() {
             if (counts[status] !== undefined) counts[status]++;
           }
 
+          const noteHtml = (status === 'izin' || status === 'sakit') && note
+            ? `<div class="view-note-badge">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" style="width:11px;height:11px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>${note}</span>
+               </div>`
+            : '';
+
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>
@@ -826,7 +1002,10 @@ async function loadView() {
             </td>
             <td><span class="td-class-badge">Kelas ${s.class}</span></td>
             <td>${getTypeBadge(s.type)}</td>
-            <td class="td-center">${badge}</td>`;
+            <td class="td-center">
+              ${badge}
+              ${noteHtml}
+            </td>`;
           viewTableBody.appendChild(tr);
         });
       }
@@ -859,6 +1038,43 @@ function statusBadgeContent(status) {
 
 viewDate?.addEventListener('change', loadView);
 viewSession?.addEventListener('change', loadView);
+
+// Helper to group attendance notes by date (per hari bukan per sesi)
+function groupNotesByDate(notesArr) {
+  if (!Array.isArray(notesArr) || !notesArr.length) return [];
+  const map = {};
+  notesArr.forEach(n => {
+    if (!n || !n.date) return;
+    if (!map[n.date]) {
+      map[n.date] = {
+        date: n.date,
+        statuses: new Set(),
+        notes: []
+      };
+    }
+    if (n.status) map[n.date].statuses.add(n.status);
+    if (n.note && !map[n.date].notes.includes(n.note)) {
+      map[n.date].notes.push(n.note);
+    }
+  });
+
+  return Object.keys(map).sort().map(d => {
+    const entry = map[d];
+    const dateShort = d.substring(8, 10) + '/' + d.substring(5, 7);
+    const statusLabels = Array.from(entry.statuses).map(s => s === 'izin' ? 'Izin' : 'Sakit');
+    const statusStr = Array.from(new Set(statusLabels)).join('/');
+    const noteStr = entry.notes.length > 0 ? entry.notes.join(', ') : '-';
+    const primaryStatus = entry.statuses.has('izin') ? 'izin' : 'sakit';
+    return {
+      date: d,
+      dateShort,
+      statusStr,
+      noteStr,
+      primaryStatus,
+      formatted: `${dateShort} (${statusStr}): ${noteStr}`
+    };
+  });
+}
 
 // ============ SUMMARY MODAL ============
 btnShowSummary?.addEventListener('click', async () => {
@@ -909,7 +1125,7 @@ btnShowSummary?.addEventListener('click', async () => {
       if (summaryTableBody) {
         summaryTableBody.innerHTML = `
           <tr>
-            <td colspan="6">
+            <td colspan="7">
               <div class="empty">
                 <div class="empty-icon-wrap">${ICONS.inbox}</div>
                 <p>Belum ada siswa terdaftar pada periode ini.</p>
@@ -925,13 +1141,26 @@ btnShowSummary?.addEventListener('click', async () => {
         studentList.forEach(s => {
           const atts = attendanceList.filter(a => a.studentId === s.id);
           const cnt = { hadir: 0, izin: 0, sakit: 0, alpa: 0 };
+          const notes = []; // Collect notes for this student
           atts.forEach(a => {
             if (cnt[a.status] !== undefined) {
               cnt[a.status]++;
               totals[a.status]++;
             }
+            if ((a.status === 'izin' || a.status === 'sakit') && a.note) {
+              notes.push({ date: a.date, session: a.session, status: a.status, note: a.note });
+            }
           });
-          perStudentCounts.push({ student: s, cnt });
+          perStudentCounts.push({ student: s, cnt, notes });
+
+          // Build notes HTML for summary table (per hari)
+          const dailyNotes = groupNotesByDate(notes);
+          const notesHtml = dailyNotes.length > 0
+            ? `<div class="summary-notes">${dailyNotes.map(dn => {
+                return `<span class="summary-note-item note-${dn.primaryStatus}" title="${dn.date}">${dn.formatted}</span>`;
+              }).join('')}</div>`
+            : `<span class="text-muted" style="font-size:0.75rem;">—</span>`;
+
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>
@@ -944,7 +1173,8 @@ btnShowSummary?.addEventListener('click', async () => {
             <td class="sum-count sum-hadir">${cnt.hadir}</td>
             <td class="sum-count sum-izin">${cnt.izin}</td>
             <td class="sum-count sum-sakit">${cnt.sakit}</td>
-            <td class="sum-count sum-alpa">${cnt.alpa}</td>`;
+            <td class="sum-count sum-alpa">${cnt.alpa}</td>
+            <td class="sum-notes">${notesHtml}</td>`;
           summaryTableBody.appendChild(tr);
         });
       }
@@ -971,43 +1201,124 @@ summaryModal?.addEventListener('click', e => { if (e.target === summaryModal) su
 // ============ PDF DOWNLOAD ============
 const btnDownloadPdf = document.getElementById('btn-download-pdf');
 
-function generateSummaryPDF() {
+function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('Failed to load image: ' + url));
+    img.src = url;
+  });
+}
+
+function getCanvasDataUrl(img) {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth || img.width;
+  canvas.height = img.naturalHeight || img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  return canvas.toDataURL('image/png');
+}
+
+let cachedPdfLogos = null;
+
+async function getPdfLogos() {
+  if (cachedPdfLogos) return cachedPdfLogos;
+  try {
+    const [img1, img2] = await Promise.all([
+      loadImage('/logo-alatsar.png'),
+      loadImage('/logo-asrama.png')
+    ]);
+    cachedPdfLogos = {
+      alatsar: getCanvasDataUrl(img1),
+      asrama: getCanvasDataUrl(img2)
+    };
+    return cachedPdfLogos;
+  } catch (err) {
+    console.error('Failed to load logos for PDF:', err);
+    return null;
+  }
+}
+
+async function generateSummaryPDF() {
   if (!lastSummaryData) {
     toast('Data rangkuman belum dimuat. Buka rangkuman terlebih dahulu.', 'warning');
     return;
   }
 
-  const doc = new jsPDF('p', 'mm', 'a4');
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const { monthLabel, perStudentCounts, totals } = lastSummaryData;
+  if (btnDownloadPdf) {
+    btnDownloadPdf.disabled = true;
+    btnDownloadPdf.style.opacity = '0.7';
+  }
 
-  // ---- Header ----
-  doc.setFillColor(6, 95, 70); // var(--primary)
-  doc.rect(0, 0, pageWidth, 24, 'F'); // Tinggi dikurangi dari 32 ke 24
+  try {
+    const logos = await getPdfLogos();
 
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(15);
-  doc.setFont(undefined, 'bold');
-  doc.text('Presensi Halaqah Al-Atsar', pageWidth / 2, 10, { align: 'center' });
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const { monthLabel, perStudentCounts, totals } = lastSummaryData;
 
-  doc.setFontSize(9);
-  doc.setFont(undefined, 'normal');
-  doc.text(`Rangkuman Presensi Bulanan \u2014 ${monthLabel}`, pageWidth / 2, 16, { align: 'center' });
+    // ---- Header ----
+    const bannerHeight = 25;
+    doc.setFillColor(6, 95, 70); // var(--primary)
+    doc.rect(0, 0, pageWidth, bannerHeight, 'F'); // Tinggi 25mm
 
-  doc.setFontSize(7.5);
-  doc.setTextColor(200, 230, 210);
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-  const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-  doc.text(`Dicetak: ${dateStr}, ${timeStr}`, pageWidth / 2, 21, { align: 'center' });
+    let textStartX = 14;
 
-  // ---- Stats Summary ----
-  let yPos = 30; // Naik dari 40
-  doc.setTextColor(15, 23, 42);
-  doc.setFontSize(10);
-  doc.setFont(undefined, 'bold');
-  doc.text('Ringkasan Statistik', 14, yPos);
-  yPos += 5;
+    // Gambar kedua logo di sebelah kiri (Logo Sekolah & Logo Asrama)
+    if (logos && logos.alatsar && logos.asrama) {
+      const logoBoxW = 18;
+      const logoBoxH = 18;
+      const logoY = 3.5;
+
+      // Box & Logo 1: Sekolah Al-Atsar
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(14, logoY, logoBoxW, logoBoxH, 2, 2, 'F');
+      doc.addImage(logos.alatsar, 'PNG', 14.5, logoY + 0.5, 17, 17);
+
+      // Box & Logo 2: Asrama Al-Atsar
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(34, logoY, logoBoxW, logoBoxH, 2, 2, 'F');
+      doc.addImage(logos.asrama, 'PNG', 34.5, logoY + 0.5, 17, 17);
+
+      textStartX = 56;
+    }
+
+    // Judul Utama di Header
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(13);
+    doc.setFont(undefined, 'bold');
+    doc.text('Presensi Halaqah Al-Atsar', textStartX, 9);
+
+    // Subtitle Lembaga
+    doc.setFontSize(8);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(167, 243, 208); // Emerald light mint
+    doc.text('Asrama Islamic Entrepreneur School Al-Atsar Solo', textStartX, 14);
+
+    // Periode Rangkuman
+    doc.setFontSize(7.2);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(241, 245, 249);
+    doc.text(`Rangkuman Presensi Bulanan \u2014 ${monthLabel}`, textStartX, 19);
+
+    // Info Waktu Cetak di Sisi Kanan
+    doc.setFontSize(6.5);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(200, 230, 210);
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    doc.text('Dicetak:', pageWidth - 14, 14, { align: 'right' });
+    doc.text(`${dateStr}, ${timeStr}`, pageWidth - 14, 18.5, { align: 'right' });
+
+    // ---- Stats Summary ----
+    let yPos = 30;
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(8.5);
+    doc.setFont(undefined, 'bold');
+    doc.text('Ringkasan Statistik', 14, yPos);
+    yPos += 3.5;
 
   // -- MANUAL OVERRIDE DATA KHUSUS PDF --
   const dataClone = JSON.parse(JSON.stringify(lastSummaryData.perStudentCounts || []));
@@ -1052,88 +1363,175 @@ function generateSummaryPDF() {
     const x = 14 + i * (boxWidth + 6);
     // Box background
     doc.setFillColor(248, 250, 252);
-    doc.roundedRect(x, yPos, boxWidth, 16, 2, 2, 'F'); // Tinggi 16
+    doc.roundedRect(x, yPos, boxWidth, 13, 2, 2, 'F'); // Tinggi 13
     // Border
     doc.setDrawColor(226, 232, 240);
-    doc.roundedRect(x, yPos, boxWidth, 16, 2, 2, 'S');
+    doc.roundedRect(x, yPos, boxWidth, 13, 2, 2, 'S');
     // Value
-    doc.setFontSize(14);
+    doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
     doc.setTextColor(...stat.color);
-    doc.text(String(stat.value), x + boxWidth / 2, yPos + 9, { align: 'center' });
+    doc.text(String(stat.value), x + boxWidth / 2, yPos + 7.5, { align: 'center' });
     // Label
-    doc.setFontSize(6.5);
+    doc.setFontSize(6);
     doc.setFont(undefined, 'normal');
     doc.setTextColor(100, 116, 139);
-    doc.text(stat.label.toUpperCase(), x + boxWidth / 2, yPos + 13.5, { align: 'center' });
+    doc.text(stat.label.toUpperCase(), x + boxWidth / 2, yPos + 11.5, { align: 'center' });
   });
 
-  yPos += 22; // Jarak setelah box
+  yPos += 17.5; // Jarak setelah box statistik
 
   // ---- Table ----
   doc.setTextColor(15, 23, 42);
-  doc.setFontSize(10);
+  doc.setFontSize(8.5);
   doc.setFont(undefined, 'bold');
   doc.text('Detail Per Santri', 14, yPos);
   yPos += 3.5;
 
-  const rows = dataClone.map((item, idx) => [
-    idx + 1,
-    item.student.name,
-    `Kelas ${item.student.class}`,
-    item.cnt.izin,
-    item.cnt.sakit,
-    item.cnt.alpa
-  ]);
+  // Build notes text per student for PDF (dijadikan per hari, bukan per sesi)
+  const rows = dataClone.map((item, idx) => {
+    const dailyNotes = groupNotesByDate(item.notes);
+    const notesArr = dailyNotes.map(dn => dn.formatted);
+    const notesText = notesArr.length > 0 ? notesArr.join('\n') : '-';
+    return [
+      idx + 1,
+      item.student.name,
+      `Kelas ${item.student.class}`,
+      item.cnt.izin,
+      item.cnt.sakit,
+      item.cnt.alpa,
+      notesText
+    ];
+  });
 
   autoTable(doc, {
     startY: yPos,
-    head: [['No', 'Nama Santri', 'Kelas', 'Izin', 'Sakit', 'Alpa']],
+    head: [['No', 'Nama Santri', 'Kelas', 'Izin', 'Sakit', 'Alpa', 'Keterangan']],
     body: rows,
     margin: { left: 14, right: 14 },
     styles: {
       font: 'helvetica',
-      fontSize: 8,          // Diperkecil agar baris lebih tipis
-      cellPadding: 2.5,     // Padding dikurangi agar tinggi tabel lebih ringkas
+      fontSize: 7,
+      cellPadding: 1.8,
       lineColor: [226, 232, 240],
-      lineWidth: 0.2,
+      lineWidth: 0.15,
     },
     headStyles: {
       fillColor: [6, 95, 70],
       textColor: [255, 255, 255],
       fontStyle: 'bold',
-      fontSize: 8,
+      fontSize: 7.2,
+      cellPadding: 2,
       halign: 'center',
     },
     columnStyles: {
-      0: { halign: 'center', cellWidth: 12 },
-      1: { halign: 'left', cellWidth: 'auto' },
-      2: { halign: 'center', cellWidth: 24 },
-      3: { halign: 'center', cellWidth: 24, textColor: [146, 64, 14] }, // Izin
-      4: { halign: 'center', cellWidth: 24, textColor: [30, 64, 175] }, // Sakit
-      5: { halign: 'center', cellWidth: 24, textColor: [159, 18, 57] }, // Alpa
+      0: { halign: 'center', cellWidth: 10 },
+      1: { halign: 'left', cellWidth: 40 },
+      2: { halign: 'center', cellWidth: 16 },
+      3: { halign: 'center', cellWidth: 12, textColor: [146, 64, 14] }, // Izin
+      4: { halign: 'center', cellWidth: 12, textColor: [30, 64, 175] }, // Sakit
+      5: { halign: 'center', cellWidth: 12, textColor: [159, 18, 57] }, // Alpa
+      6: { halign: 'left', cellWidth: 'auto', fontSize: 6.8, textColor: [71, 85, 105] }, // Keterangan
     },
     alternateRowStyles: {
       fillColor: [248, 250, 252],
     },
-    didDrawPage: (data) => {
-      // Footer on each page
-      const pageCount = doc.internal.getNumberOfPages();
-      doc.setFontSize(7);
-      doc.setTextColor(148, 163, 184);
-      doc.text(
-        `Halaman ${data.pageNumber} dari ${pageCount}`,
-        pageWidth / 2,
-        doc.internal.pageSize.getHeight() - 8,
-        { align: 'center' }
-      );
-    },
   });
 
-  // Save
-  const safeMonth = (lastSummaryData.month || 'rangkuman').replace(/\//g, '-');
-  doc.save(`Rangkuman_Presensi_${safeMonth}.pdf`);
-  toast('File PDF berhasil diunduh!');
+  // ---- APPROVAL SECTION (2 Kolom Tanda Tangan: Bidang Akademik & Musyrif) ----
+  const pageHeight = doc.internal.pageSize.getHeight();
+  let approvalY = (doc.lastAutoTable ? doc.lastAutoTable.finalY : yPos) + 5;
+
+  // Tanggal pengesahan di sisi kanan atas tabel approval (Sukoharjo)
+  const [sumYear, sumMonthNum] = (lastSummaryData.month || '').split('-').map(Number);
+  const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const approvalDateStr = (sumYear && sumMonthNum)
+    ? `Sukoharjo, ${new Date(sumYear, sumMonthNum, 0).getDate()} ${monthNames[sumMonthNum - 1]} ${sumYear}`
+    : `Sukoharjo, ${new Date().getDate()} ${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`;
+
+  doc.setFontSize(7.5);
+  doc.setFont(undefined, 'normal');
+  doc.setTextColor(71, 85, 105);
+  doc.text(approvalDateStr, pageWidth - 14, approvalY, { align: 'right' });
+  approvalY += 3.5;
+
+  // Judul Lembar Pengesahan
+  doc.setFontSize(8);
+  doc.setFont(undefined, 'bold');
+  doc.setTextColor(30, 41, 59);
+  doc.text('LEMBAR PENGESAHAN', 14, approvalY);
+  approvalY += 2.5;
+
+  autoTable(doc, {
+    startY: approvalY,
+    margin: { left: 14, right: 14 },
+    theme: 'grid',
+    styles: {
+      font: 'helvetica',
+      fontSize: 7.5,
+      cellPadding: 2,
+      lineColor: [203, 213, 225],
+      lineWidth: 0.2,
+      halign: 'center',
+      valign: 'middle',
+    },
+    headStyles: {
+      fillColor: [248, 250, 252],
+      textColor: [30, 41, 59],
+      fontStyle: 'bold',
+      fontSize: 7.5,
+      lineColor: [203, 213, 225],
+      lineWidth: 0.2,
+    },
+    head: [
+      [
+        { content: 'Mengetahui,', styles: { halign: 'center' } },
+        { content: 'Yang Melaporkan,', styles: { halign: 'center' } }
+      ]
+    ],
+    body: [
+      [
+        { content: 'Bidang Akademik', styles: { fontSize: 7.2, textColor: [100, 116, 139], fontStyle: 'italic', cellPadding: 1.5 } },
+        { content: 'Musyrif', styles: { fontSize: 7.2, textColor: [100, 116, 139], fontStyle: 'italic', cellPadding: 1.5 } }
+      ],
+      [
+        { content: '', styles: { minCellHeight: 17 } },
+        { content: '', styles: { minCellHeight: 17 } }
+      ],
+      [
+        { content: 'Muhammad Aziz, S.Pd.', styles: { halign: 'center', fontSize: 7.5, fontStyle: 'bold', textColor: [15, 23, 42], cellPadding: 2 } },
+        { content: 'Abdullah Umar Rifa\'i', styles: { halign: 'center', fontSize: 7.5, fontStyle: 'bold', textColor: [15, 23, 42], cellPadding: 2 } }
+      ]
+    ],
+    columnStyles: {
+      0: { cellWidth: (pageWidth - 28) / 2 },
+      1: { cellWidth: (pageWidth - 28) / 2 },
+    }
+  });
+
+  // Footer: Dokumen Resmi 1 Halaman
+  doc.setFontSize(7);
+  doc.setTextColor(148, 163, 184);
+  doc.text(
+    'Halaman 1 dari 1',
+    pageWidth / 2,
+    pageHeight - 6,
+    { align: 'center' }
+  );
+
+    // Save
+    const safeMonth = (lastSummaryData.month || 'rangkuman').replace(/\//g, '-');
+    doc.save(`Rangkuman_Presensi_${safeMonth}.pdf`);
+    toast('File PDF berhasil diunduh!');
+  } catch (err) {
+    console.error('Gagal membuat PDF:', err);
+    toast('Gagal mengunduh file PDF', 'error');
+  } finally {
+    if (btnDownloadPdf) {
+      btnDownloadPdf.disabled = false;
+      btnDownloadPdf.style.opacity = '1';
+    }
+  }
 }
 
 btnDownloadPdf?.addEventListener('click', generateSummaryPDF);

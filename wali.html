@@ -13,11 +13,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --primary: #065f46;
-      --primary-dark: #044332;
-      --primary-light: #ecfdf5;
-      --primary-mid: #059669;
-      --primary-glow: rgba(5, 150, 105, 0.18);
+      --primary: #059669; /* Emerald 600 */
+      --primary-dark: #047857; /* Emerald 700 */
+      --primary-light: #ecfdf5; /* Emerald 50 */
       
       --accent-hadir: #10b981;
       --accent-hadir-bg: #ecfdf5;
@@ -31,38 +29,34 @@
       --accent-sakit-bg: #eff6ff;
       --accent-sakit-text: #1e40af;
       
-      --accent-alpa: #f43f5e;
-      --accent-alpa-bg: #fff1f2;
-      --accent-alpa-text: #9f1239;
+      --accent-alpa: #ef4444;
+      --accent-alpa-bg: #fef2f2;
+      --accent-alpa-text: #991b1b;
 
-      --bg: #f8fafc;
+      --bg: #f3f4f6; /* Soft gray for background */
       --card-bg: #ffffff;
-      --border: #e2e8f0;
-      --border-light: #f1f5f9;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --text-sub: #94a3b8;
+      --border: #e5e7eb;
+      --border-light: #f3f4f6;
+      --text: #111827; /* Darker, high contrast text */
+      --text-muted: #4b5563; /* Readable gray */
       
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
-      --radius-xl: 18px;
-      --radius-lg: 14px;
-      --radius-md: 10px;
-      --radius-sm: 8px;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --radius-xl: 16px;
+      --radius-lg: 12px;
+      --radius-md: 8px;
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       min-height: 100vh;
       color: var(--text);
-      -webkit-font-smoothing: antialiased;
       display: flex;
       flex-direction: column;
     }
 
     .icon {
-      width: 18px; height: 18px;
+      width: 20px; height: 20px;
       display: inline-block;
       vertical-align: middle;
       stroke-width: 2;
@@ -72,22 +66,23 @@
       stroke-linejoin: round;
       flex-shrink: 0;
     }
-    .icon-sm { width: 15px; height: 15px; }
-    .icon-md { width: 20px; height: 20px; }
-    .icon-lg { width: 24px; height: 24px; }
+    .icon-sm { width: 16px; height: 16px; }
+    .icon-md { width: 24px; height: 24px; }
+    .icon-lg { width: 32px; height: 32px; }
 
     /* ===== HEADER ===== */
     #app-header {
-      background: linear-gradient(135deg, #022c22 0%, #064e3b 45%, #047857 100%);
-      padding: 0 24px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 70px;
-      box-shadow: 0 4px 20px rgba(4, 120, 87, 0.25);
+      height: 64px;
       position: sticky;
       top: 0;
       z-index: 100;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     .header-brand {
       display: flex;
@@ -95,47 +90,47 @@
       gap: 14px;
       text-decoration: none;
     }
-    .header-logo {
-      background: white;
-      border-radius: 50%;
-      width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.25);
-      flex-shrink: 0;
-    }
-    .header-logo img { width: 32px; height: 32px; object-fit: contain; }
-    .header-title {
-      color: #ffffff;
-      font-size: 1.05rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
+    .header-logo-group {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
     }
-    .header-badge {
-      background: rgba(16, 185, 129, 0.25);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #a7f3d0;
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 99px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+    .header-logo {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      padding: 3px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: transform 0.2s;
+    }
+    .header-logo:hover {
+      transform: translateY(-1px) scale(1.05);
+    }
+    .header-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .header-text { display: flex; flex-direction: column; gap: 2px; }
+    .header-title {
+      color: var(--primary-dark);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      line-height: 1.25;
     }
     .header-subtitle {
-      color: rgba(255,255,255,0.75);
-      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-size: 0.75rem;
       font-weight: 500;
-      margin-top: 1px;
+      line-height: 1.3;
     }
 
     /* ===== MAIN CONTAINER ===== */
     #app {
       max-width: 600px;
       margin: 0 auto;
-      padding: 32px 16px 64px;
+      padding: 24px 16px 64px;
       flex: 1;
       width: 100%;
     }
@@ -143,84 +138,98 @@
     /* ===== CARDS ===== */
     .card {
       background: var(--card-bg);
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-lg);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
-      padding: 26px;
-      margin-bottom: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
     }
-
+    
     .card-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 22px;
-      padding-bottom: 18px;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
       border-bottom: 1px solid var(--border-light);
     }
     .card-icon {
-      width: 44px; height: 44px;
+      width: 48px; height: 48px;
       background: var(--primary-light);
-      color: var(--primary);
-      border-radius: var(--radius-lg);
+      color: var(--primary-dark);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .card-title {
-      font-size: 1.05rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--text);
-      letter-spacing: -0.01em;
     }
     .card-subtitle {
-      font-size: 0.8rem;
+      font-size: 0.95rem;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-top: 4px;
     }
 
     /* ===== FORM CONTROLS ===== */
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
     label {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.04em;
+      font-size: 0.95rem; font-weight: 600; color: var(--text);
     }
     .input-wrap { position: relative; display: flex; align-items: center; }
-    .input-icon { position: absolute; left: 14px; color: var(--text-sub); pointer-events: none; }
-    input[type="text"], input[type="month"] {
+    .input-icon { 
+      position: absolute; left: 16px; color: var(--text-muted); pointer-events: none;
+    }
+    input[type="text"], input[type="month"], input[type="date"] {
       width: 100%;
-      border: 1.5px solid var(--border);
+      border: 1px solid var(--border);
+      background: #ffffff;
       border-radius: var(--radius-md);
-      padding: 11px 16px 11px 42px;
+      padding: 12px 16px 12px 44px;
       font-size: 1rem;
       font-family: inherit;
-      font-weight: 600;
       color: var(--text);
-      transition: all 0.2s;
       outline: none;
     }
     input:focus {
-      border-color: var(--primary-mid);
-      box-shadow: 0 0 0 3.5px var(--primary-glow);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+    input:focus + .input-icon, .input-wrap:focus-within .input-icon {
+      color: var(--primary);
     }
 
     /* ===== BUTTONS ===== */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 12px 22px; border-radius: var(--radius-md);
-      font-size: 0.95rem; font-weight: 700; font-family: inherit;
-      cursor: pointer; border: none; transition: all 0.18s; width: 100%;
+      padding: 12px 24px; border-radius: var(--radius-md);
+      font-size: 1rem; font-weight: 600; font-family: inherit;
+      cursor: pointer; border: none; width: 100%;
     }
-    .btn:active { transform: scale(0.97); }
     .btn-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
-      color: white; box-shadow: 0 3px 12px var(--primary-glow);
+      background: var(--primary);
+      color: white; 
     }
     .btn-primary:hover {
-      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      background: var(--primary-dark);
     }
-    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: var(--text);
+      border-radius: var(--radius-md);
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
 
     /* ===== STATS GRID ===== */
     .stats-grid {
@@ -228,28 +237,28 @@
     }
     .stat-box {
       background: #ffffff; border-radius: var(--radius-lg); padding: 16px;
-      display: flex; align-items: center; gap: 14px;
-      border: 1.5px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+      border: 1px solid var(--border);
     }
     .stat-icon-wrap {
-      width: 38px; height: 38px; border-radius: var(--radius-md);
+      width: 40px; height: 40px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .stat-hadir .stat-icon-wrap { background: var(--accent-hadir-bg); color: var(--accent-hadir-text); }
     .stat-izin .stat-icon-wrap  { background: var(--accent-izin-bg); color: var(--accent-izin-text); }
     .stat-sakit .stat-icon-wrap { background: var(--accent-sakit-bg); color: var(--accent-sakit-text); }
     .stat-alpa .stat-icon-wrap  { background: var(--accent-alpa-bg); color: var(--accent-alpa-text); }
-    .stat-num { font-size: 1.3rem; font-weight: 800; line-height: 1; }
-    .stat-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
+    .stat-num { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+    .stat-label { font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin-top: 4px; }
     
-    .stat-hadir .stat-num { color: var(--accent-hadir-text); }
-    .stat-izin .stat-num  { color: var(--accent-izin-text); }
-    .stat-sakit .stat-num { color: var(--accent-sakit-text); }
-    .stat-alpa .stat-num  { color: var(--accent-alpa-text); }
+    .stat-hadir .stat-num, .stat-hadir .stat-icon-wrap { color: var(--accent-hadir-text); }
+    .stat-izin .stat-num, .stat-izin .stat-icon-wrap { color: var(--accent-izin-text); }
+    .stat-sakit .stat-num, .stat-sakit .stat-icon-wrap { color: var(--accent-sakit-text); }
+    .stat-alpa .stat-num, .stat-alpa .stat-icon-wrap { color: var(--accent-alpa-text); }
 
     /* ===== PROFILE ===== */
     .profile-card {
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      background: #ffffff;
       border-radius: var(--radius-lg);
       padding: 20px;
       display: flex;
@@ -261,18 +270,18 @@
     .avatar {
       width: 56px; height: 56px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-      color: white; font-size: 1.3rem; font-weight: 700;
+      background: var(--primary-light);
+      color: var(--primary-dark); font-size: 1.5rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+      flex-shrink: 0;
     }
-    .prof-name { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .prof-name { font-size: 1.25rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
     .prof-details { display: flex; gap: 8px; flex-wrap: wrap; }
     
     .badge {
-      display: inline-flex; align-items: center; padding: 4px 10px;
-      border-radius: 99px; font-size: 0.75rem; font-weight: 700;
-      border: 1px solid var(--border); background: white;
+      display: inline-flex; align-items: center; padding: 4px 12px;
+      border-radius: 16px; font-size: 0.85rem; font-weight: 500;
+      background: #f3f4f6; color: var(--text-muted);
     }
     
     /* ===== CALENDAR LIST ===== */
@@ -280,58 +289,114 @@
       display: flex; justify-content: space-between; align-items: center;
       margin-bottom: 16px;
     }
-    .month-nav input[type="month"] { width: auto; padding: 8px 12px 8px 40px; font-size: 0.9rem; }
-    .month-title { font-weight: 800; font-size: 1.05rem; }
+    .month-nav input[type="month"] { width: auto; padding: 8px 12px 8px 40px; font-size: 1rem; border-radius: var(--radius-md); }
+    .month-title { font-weight: 700; font-size: 1.1rem; color: var(--text); }
 
-    .record-list { display: flex; flex-direction: column; gap: 12px; }
+    .record-list { display: flex; flex-direction: column; gap: 8px; }
     .record-item {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 16px; border-radius: var(--radius-md);
-      border: 1px solid var(--border); background: #f8fafc;
+      padding: 16px; border-radius: var(--radius-md);
+      border: 1px solid var(--border); 
+      background: #ffffff;
     }
-    .r-date { font-weight: 700; font-size: 0.95rem; color: var(--text); }
-    .r-session { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
-    .r-status { font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+    .r-date { font-weight: 600; font-size: 1rem; color: var(--text); }
+    .r-session { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; }
+    .r-status { font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
 
     .status-hadir { color: var(--accent-hadir-text); }
     .status-izin { color: var(--accent-izin-text); }
     .status-sakit { color: var(--accent-sakit-text); }
     .status-alpa { color: var(--accent-alpa-text); }
     .status-libur { color: #92400e; }
+    .r-note {
+      font-size: 0.8rem;
+      color: #92400e;
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-sm);
+      padding: 3px 8px;
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 500;
+    }
 
     /* ===== ERROR / EMPTY ===== */
     .error-msg {
-      background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3;
-      padding: 14px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.9rem;
-      margin-bottom: 16px; display: none; align-items: center; gap: 10px;
+      background: #fef2f2; color: #991b1b; border: 1px solid #fecaca;
+      padding: 16px; border-radius: var(--radius-md); font-weight: 500; font-size: 0.95rem;
+      margin-bottom: 20px; display: none; align-items: center; gap: 12px;
     }
-    .empty { text-align: center; padding: 32px 16px; color: var(--text-muted); }
-    .empty-icon { width: 48px; height: 48px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: #64748b; }
+    .empty { text-align: center; padding: 40px 20px; color: var(--text-muted); background: #f9fafb; border-radius: var(--radius-lg); border: 1px dashed var(--border); }
+    .empty-icon { width: 56px; height: 56px; background: #e5e7eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: #9ca3af; }
     
     .hidden { display: none !important; }
 
     /* ANIMATION */
     .spin {
-      width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3);
+      width: 20px; height: 20px; border: 2.5px solid rgba(255,255,255,0.3);
       border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ===== RESPONSIVE MOBILE ===== */
     @media (max-width: 480px) {
-      .header-brand { flex-direction: row; text-align: left; gap: 10px; }
-      #app-header { height: auto; padding: 12px 16px; justify-content: center; }
-      .header-logo { width: 36px; height: 36px; }
-      .header-logo img { width: 22px; height: 22px; }
-      .header-title { font-size: 0.95rem; }
-      .header-subtitle { font-size: 0.7rem; }
+      .header-brand { flex-direction: row; gap: 10px; }
+      #app-header { height: auto; padding: 12px; }
+      .header-title { font-size: 1rem; }
+      .header-subtitle { font-size: 0.8rem; }
       
-      .profile-card { flex-direction: column; text-align: center; }
+      #app { padding: 16px 12px 64px; }
+      .card { padding: 20px 16px; margin-bottom: 16px; }
+      
+      .profile-card { flex-direction: column; text-align: center; padding: 16px; gap: 12px; }
       .prof-details { justify-content: center; }
       
-      .month-nav { flex-direction: column; gap: 12px; align-items: stretch; }
+      .stats-grid { gap: 8px; margin: 20px 0; }
+      .stat-box { padding: 12px; flex-direction: column; text-align: center; gap: 8px; }
+      .stat-num { font-size: 1.3rem; }
+      
+      .month-nav { flex-direction: column; gap: 12px; align-items: stretch; margin-bottom: 12px; }
       .month-nav input[type="month"] { width: 100%; }
-      .month-title { text-align: center; }
+      .month-title { text-align: center; font-size: 1.05rem; }
+      
+      .record-item { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .r-status { align-self: flex-start; }
+    }
+    /* Fix native calendar icon overlapping */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 480px) {
+      .month-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .month-nav .input-wrap {
+        width: 100%;
+      }
+      .month-nav input[type="date"], .month-nav input[type="month"] {
+        width: 100%;
+      }
+      .profile-card {
+        flex-direction: column;
+        text-align: center;
+      }
+      .prof-details {
+        justify-content: center;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -339,10 +404,17 @@
 
 <header id="app-header">
   <div class="header-brand">
-    <div class="header-logo"><img src="/logo.png" alt="Logo" /></div>
+    <div class="header-logo-group">
+      <div class="header-logo" title="Islamic Entrepreneur School Al-Atsar">
+        <img src="/logo-alatsar.png" alt="Logo Sekolah Al-Atsar" />
+      </div>
+      <div class="header-logo" title="Asrama Al-Atsar">
+        <img src="/logo-asrama.png" alt="Logo Asrama Al-Atsar" />
+      </div>
+    </div>
     <div class="header-text">
-      <div class="header-title">Portal Wali Siswa</div>
-      <div class="header-subtitle">Halaqah Al-Atsar</div>
+      <div class="header-title">Portal Wali Santri</div>
+      <div class="header-subtitle">Asrama Islamic Entrepreneur School Al-Atsar Solo</div>
     </div>
   </div>
 </header>
@@ -389,9 +461,9 @@
 
   <!-- RESULT CARD -->
   <div class="card hidden" id="result-card">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-      <h3 style="font-size: 1.1rem; font-weight:800;">Data Siswa</h3>
-      <button id="btn-back" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; font-size:0.9rem; text-decoration:underline;">Cari NIS Lain</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+      <h3 style="font-size: 1.25rem; font-weight:800; letter-spacing:-0.02em;">Data Siswa</h3>
+      <button id="btn-back" class="btn-secondary" type="button">Cari NIS Lain</button>
     </div>
 
     <div class="profile-card">
@@ -407,10 +479,10 @@
     </div>
 
     <div class="month-nav">
-      <div class="month-title" id="month-title">Presensi Bulan Ini</div>
+      <div class="month-title" id="date-title">Presensi Hari Ini</div>
       <div class="input-wrap has-icon">
         <span class="input-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></span>
-        <input type="month" id="month-input" />
+        <input type="date" id="date-input" />
       </div>
     </div>
 
@@ -454,13 +526,14 @@
   const searchCard = document.getElementById('search-card');
   const resultCard = document.getElementById('result-card');
   const btnBack = document.getElementById('btn-back');
-  const monthInput = document.getElementById('month-input');
-  const monthTitle = document.getElementById('month-title');
+  const dateInput = document.getElementById('date-input');
+  const dateTitle = document.getElementById('date-title');
   
-  // Set default month
+  // Set default date (local time)
   const today = new Date();
-  const currentMonth = today.toISOString().substring(0, 7);
-  monthInput.value = currentMonth;
+  const tzOffset = today.getTimezoneOffset() * 60000;
+  const localDate = new Date(today.getTime() - tzOffset).toISOString().substring(0, 10);
+  dateInput.value = localDate;
   
   let currentNis = '';
 
@@ -507,9 +580,9 @@
     document.getElementById('stat-sakit').textContent = summary.sakit;
     document.getElementById('stat-alpa').textContent = summary.alpa;
 
-    // Month Title
-    const [y, m] = monthInput.value.split('-');
-    monthTitle.textContent = `Presensi ${MONTH_NAMES[parseInt(m)-1]} ${y}`;
+    // Date Title
+    const [y, m, d] = dateInput.value.split('-');
+    dateTitle.textContent = `Presensi ${parseInt(d)} ${MONTH_NAMES[parseInt(m)-1]} ${y}`;
 
     // Records
     const container = document.getElementById('record-container');
@@ -519,7 +592,7 @@
       container.innerHTML = `
         <div class="empty">
           <div class="empty-icon"><svg class="icon icon-lg" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></div>
-          <p>Belum ada data presensi di bulan ini.</p>
+          <p>Belum ada data presensi pada tanggal ini.</p>
         </div>`;
       return;
     }
@@ -544,10 +617,14 @@
 
       if (item._type === 'att') {
         const statusLabel = item.status.charAt(0).toUpperCase() + item.status.slice(1);
+        const noteHtml = (item.note && (item.status === 'izin' || item.status === 'sakit'))
+          ? `<div class="r-note"><svg class="icon icon-sm" viewBox="0 0 24 24" style="width:12px;height:12px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg><span>${item.note}</span></div>`
+          : '';
         el.innerHTML = `
           <div>
             <div class="r-date">${dateStr}</div>
             <div class="r-session">Sesi ${SESSION_LABELS[item.session] || item.session}</div>
+            ${noteHtml}
           </div>
           <div class="r-status status-${item.status}">
             ${ICONS[item.status]} ${statusLabel}
@@ -577,13 +654,13 @@
     });
   }
 
-  async function fetchLookup(nis, month) {
+  async function fetchLookup(nis, dateStr) {
     try {
       errorBox.style.display = 'none';
       btnSearch.disabled = true;
       btnSearch.innerHTML = `<div class="spin"></div> <span>Mencari...</span>`;
 
-      const res = await fetch(`${API_URL}/wali/lookup?nis=${encodeURIComponent(nis)}&month=${month}`);
+      const res = await fetch(`${API_URL}/wali/lookup?nis=${encodeURIComponent(nis)}&date=${dateStr}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -609,11 +686,11 @@
   searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const nis = nisInput.value.trim();
-    if (nis) fetchLookup(nis, monthInput.value);
+    if (nis) fetchLookup(nis, dateInput.value);
   });
 
-  monthInput.addEventListener('change', () => {
-    if (currentNis) fetchLookup(currentNis, monthInput.value);
+  dateInput.addEventListener('change', () => {
+    if (currentNis) fetchLookup(currentNis, dateInput.value);
   });
 
   btnBack.addEventListener('click', () => {
