@@ -506,11 +506,11 @@ function renderSantriTable() {
       if (newNis === null) return;
       const newClass = prompt('Ubah Kelas (10 / 11 / 12):', s.class);
       if (newClass === null) return;
-      const newType = prompt('Ubah Tipe (boarding / reguler):', s.type || 'boarding');
+      const newType = prompt('Ubah Program (boarding / reguler):', s.type || 'boarding');
       if (newType === null) return;
       
       if (!newName.trim()) return toast('Nama siswa tidak boleh kosong', 'error');
-      if (newType !== 'boarding' && newType !== 'reguler') return toast('Tipe harus "boarding" atau "reguler"', 'error');
+      if (newType !== 'boarding' && newType !== 'reguler') return toast('Program harus "boarding" atau "reguler"', 'error');
       try {
         const res = await authFetch(`${API_URL}/students/${id}`, {
           method: 'PUT',
