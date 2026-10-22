@@ -781,8 +781,14 @@ function renderAttendanceTable() {
   if (!info.isHoliday) saveAttendanceContainer?.classList.remove('hidden');
 }
 
-mainDate?.addEventListener('change', loadAttendance);
-mainSession?.addEventListener('change', loadAttendance);
+mainDate?.addEventListener('change', () => {
+  if (viewDate) viewDate.value = mainDate.value;
+  loadAttendance();
+});
+mainSession?.addEventListener('change', () => {
+  if (viewSession) viewSession.value = mainSession.value;
+  loadAttendance();
+});
 
 // ============ HOLIDAY ACTIONS ============
 
@@ -1036,8 +1042,14 @@ function statusBadgeContent(status) {
   }
 }
 
-viewDate?.addEventListener('change', loadView);
-viewSession?.addEventListener('change', loadView);
+viewDate?.addEventListener('change', () => {
+  if (mainDate) mainDate.value = viewDate.value;
+  loadView();
+});
+viewSession?.addEventListener('change', () => {
+  if (mainSession) mainSession.value = viewSession.value;
+  loadView();
+});
 
 // Helper to group attendance notes by date (per hari bukan per sesi)
 function groupNotesByDate(notesArr) {
